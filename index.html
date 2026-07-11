@@ -265,6 +265,8 @@
   .course:hover{transform:translateY(-4px);box-shadow:var(--shadow),0 24px 50px -30px rgba(7,42,32,.5)}
   .course .cimg{height:150px;position:relative;display:grid;place-items:center;color:#fff}
   .course .cimg svg{width:52px;height:52px;opacity:.9}
+  .course .cimg{overflow:hidden}
+  .course .cimg svg.thumb-illo{position:absolute;inset:0;width:100%;height:100%;opacity:1}
   .course .badge{position:absolute;top:13px;left:13px;font-size:10px;font-weight:700;letter-spacing:.06em;
     text-transform:uppercase;background:rgba(9,26,20,.72);color:var(--gold-soft);padding:5px 10px;border-radius:8px;
     backdrop-filter:blur(3px)}
@@ -589,9 +591,9 @@
     </div>
     <div class="courses">
       <article class="course">
-        <div class="cimg" style="background:linear-gradient(150deg,#12603f,#0a2b20)">
+        <div class="cimg">
+          <svg class="thumb-illo" viewBox="0 0 360 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="ilCard" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#13623f"/><stop offset="1" stop-color="#07231a"/></linearGradient><radialGradient id="ilCardG" cx="82%" cy="16%" r="60%"><stop offset="0" stop-color="#5cae82" stop-opacity=".5"/><stop offset="1" stop-color="#5cae82" stop-opacity="0"/></radialGradient></defs><rect width="360" height="150" fill="url(#ilCard)"/><rect width="360" height="150" fill="url(#ilCardG)"/><path d="M296 26c44 0 48 50 0 84c-48-34-44-84 0-84z" fill="none" stroke="#CDA968" stroke-opacity=".15" stroke-width="13"/><path d="M0 92H96l10-30 10 54 12-42 8 26H360" fill="none" stroke="#CDA968" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span class="badge">Cardiologia</span><span class="lvl">Intermediário</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 6.6a4.6 4.6 0 00-7.8-2.4L12 5.2l-1-1A4.6 4.6 0 003.2 6.6c0 4.9 8.8 10.4 8.8 10.4s8.8-5.5 8.8-10.4z"/><path d="M2 13h4l1.6-3.4L10 16l2-4 1.4 1.6H22" stroke="#CDA968"/></svg>
         </div>
         <div class="cbody">
           <h3>Cardiologia Clínica de Cães e Gatos</h3>
@@ -606,9 +608,9 @@
         </div>
       </article>
       <article class="course">
-        <div class="cimg" style="background:linear-gradient(150deg,#3a5a4a,#0f2f24)">
+        <div class="cimg">
+          <svg class="thumb-illo" viewBox="0 0 360 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="ilSurg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2c5b4d"/><stop offset="1" stop-color="#0d2b21"/></linearGradient><radialGradient id="ilSurgG" cx="80%" cy="18%" r="60%"><stop offset="0" stop-color="#79c9a8" stop-opacity=".45"/><stop offset="1" stop-color="#79c9a8" stop-opacity="0"/></radialGradient></defs><rect width="360" height="150" fill="url(#ilSurg)"/><rect width="360" height="150" fill="url(#ilSurgG)"/><g transform="translate(238,22) rotate(20)" fill="none" stroke="#CDA968" stroke-opacity=".16" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l40 40-58 58-14 4 4-14z"/></g><path d="M36 92h288" stroke="#EAF1EC" stroke-opacity=".85" stroke-width="2"/><g stroke="#CDA968" stroke-width="2.4" stroke-linecap="round"><path d="M64 80l-14 24M64 104l-14-24M112 80l-14 24M112 104l-14-24M160 80l-14 24M160 104l-14-24M208 80l-14 24M208 104l-14-24M256 80l-14 24M256 104l-14-24M304 80l-14 24M304 104l-14-24"/></g></svg>
           <span class="badge">Cirurgia</span><span class="lvl">Avançado</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3.5l6.5 6.5-9.5 9.5L4 21l1.5-7z"/><path d="M11.5 6l6.5 6.5"/></svg>
         </div>
         <div class="cbody">
           <h3>Cirurgia de Tecidos Moles na Prática</h3>
@@ -623,9 +625,9 @@
         </div>
       </article>
       <article class="course">
-        <div class="cimg" style="background:linear-gradient(150deg,#8a6a2e,#4a3818)">
+        <div class="cimg">
+          <svg class="thumb-illo" viewBox="0 0 360 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="ilDerm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8a6a2e"/><stop offset="1" stop-color="#443113"/></linearGradient><radialGradient id="ilDermG" cx="22%" cy="80%" r="65%"><stop offset="0" stop-color="#f0dcae" stop-opacity=".45"/><stop offset="1" stop-color="#f0dcae" stop-opacity="0"/></radialGradient></defs><rect width="360" height="150" fill="url(#ilDerm)"/><rect width="360" height="150" fill="url(#ilDermG)"/><g fill="#EAF1EC" opacity=".13"><circle cx="72" cy="42" r="11"/><circle cx="118" cy="98" r="7"/><circle cx="52" cy="106" r="6"/><circle cx="150" cy="58" r="5"/></g><g fill="none" stroke="#f6e9c8" stroke-opacity=".82" stroke-width="6"><circle cx="252" cy="64" r="40"/><path d="M282 94l34 34" stroke-width="9" stroke-linecap="round"/></g><g fill="#f6e9c8" opacity=".5"><circle cx="242" cy="58" r="5"/><circle cx="264" cy="72" r="3.4"/><circle cx="254" cy="48" r="2.6"/></g></svg>
           <span class="badge">Dermatologia</span><span class="lvl">Iniciante</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9a4 4 0 010 8h-2l-1 5H8l-1-5H4z"/><path d="M13 7V4M16 8V5"/></svg>
         </div>
         <div class="cbody">
           <h3>Dermatologia: Abordagem Diagnóstica</h3>
@@ -636,6 +638,57 @@
             <span class="rating">★ 4,9</span>
           </div>
           <div class="cfoot"><div class="price">R$ 229<small>/à vista</small></div>
+            <div class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div></div>
+        </div>
+      </article>
+      <article class="course">
+        <div class="cimg">
+          <svg class="thumb-illo" viewBox="0 0 360 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="ilImg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#15484f"/><stop offset="1" stop-color="#0a242a"/></linearGradient><radialGradient id="ilImgG" cx="78%" cy="20%" r="60%"><stop offset="0" stop-color="#6fbfc8" stop-opacity=".45"/><stop offset="1" stop-color="#6fbfc8" stop-opacity="0"/></radialGradient></defs><rect width="360" height="150" fill="url(#ilImg)"/><rect width="360" height="150" fill="url(#ilImgG)"/><g fill="none" stroke="#EAF1EC" stroke-opacity=".16" stroke-width="5" stroke-linecap="round"><path d="M150 22v108"/><path d="M150 42c-34 2-58 12-70 26"/><path d="M150 42c34 2 58 12 70 26"/><path d="M150 66c-30 2-52 12-64 24"/><path d="M150 66c30 2 52 12 64 24"/><path d="M150 90c-26 2-44 10-56 22"/><path d="M150 90c26 2 44 10 56 22"/></g><g fill="none" stroke="#CDA968" stroke-width="3" stroke-linecap="round"><path d="M24 44v-16h16"/><path d="M336 44v-16h-16"/><path d="M24 106v16h16"/><path d="M336 106v16h-16"/></g><g stroke="#CDA968" stroke-width="1.6" opacity=".75" fill="none"><path d="M290 75h30M305 60v30"/><circle cx="305" cy="75" r="11"/></g></svg>
+          <span class="badge">Imagem</span><span class="lvl">Intermediário</span>
+        </div>
+        <div class="cbody">
+          <h3>Ultrassonografia Abdominal na Rotina</h3>
+          <div class="inst"><span class="ci">F</span> Dra. Fernanda Lima · MV, Esp.</div>
+          <div class="cmeta">
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>20h</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>30 aulas</span>
+            <span class="rating">★ 4,8</span>
+          </div>
+          <div class="cfoot"><div class="price">R$ 389<small>/à vista</small></div>
+            <div class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div></div>
+        </div>
+      </article>
+      <article class="course">
+        <div class="cimg">
+          <svg class="thumb-illo" viewBox="0 0 360 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="ilAnes" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#33564a"/><stop offset="1" stop-color="#112a22"/></linearGradient><radialGradient id="ilAnesG" cx="80%" cy="18%" r="60%"><stop offset="0" stop-color="#9fd8c1" stop-opacity=".42"/><stop offset="1" stop-color="#9fd8c1" stop-opacity="0"/></radialGradient></defs><rect width="360" height="150" fill="url(#ilAnes)"/><rect width="360" height="150" fill="url(#ilAnesG)"/><g transform="translate(212,18) rotate(35)" fill="none" stroke="#CDA968" stroke-opacity=".16" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"><path d="M0 30h70"/><rect x="70" y="20" width="46" height="20" rx="3"/><path d="M116 30h20"/><path d="M136 24v12"/><path d="M-10 24v12"/></g><path d="M0 100h118l14-36 10 36 8-20 10 20h190" fill="none" stroke="#CDA968" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><g fill="#EAF1EC" opacity=".2"><circle cx="42" cy="44" r="7"/><circle cx="64" cy="30" r="4.4"/><circle cx="26" cy="30" r="3.4"/></g></svg>
+          <span class="badge">Anestesia</span><span class="lvl">Avançado</span>
+        </div>
+        <div class="cbody">
+          <h3>Anestesia em Pacientes Críticos</h3>
+          <div class="inst"><span class="ci">L</span> Dra. Lúcia Prado · MV, PhD</div>
+          <div class="cmeta">
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>24h</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>32 aulas</span>
+            <span class="rating">★ 4,9</span>
+          </div>
+          <div class="cfoot"><div class="price">R$ 399<small>/à vista</small></div>
+            <div class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div></div>
+        </div>
+      </article>
+      <article class="course">
+        <div class="cimg">
+          <svg class="thumb-illo" viewBox="0 0 360 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="ilExo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#46662f"/><stop offset="1" stop-color="#21331a"/></linearGradient><radialGradient id="ilExoG" cx="22%" cy="82%" r="65%"><stop offset="0" stop-color="#cfe0a0" stop-opacity=".4"/><stop offset="1" stop-color="#cfe0a0" stop-opacity="0"/></radialGradient></defs><rect width="360" height="150" fill="url(#ilExo)"/><rect width="360" height="150" fill="url(#ilExoG)"/><g fill="none" stroke="#CDA968" stroke-opacity=".22" stroke-width="4" stroke-linecap="round"><path d="M304 150c-32-42-30-94 22-124"/></g><g fill="#CDA968" fill-opacity=".16"><path d="M300 58c14-6 27-4 35 4c-10 8-25 8-35-4z"/><path d="M286 86c14-6 27-4 35 4c-10 8-25 8-35-4z"/><path d="M276 114c14-6 27-4 35 4c-10 8-25 8-35-4z"/></g><g fill="#EAF1EC" fill-opacity=".85" transform="translate(58,42)"><ellipse cx="30" cy="42" rx="25" ry="20"/><ellipse cx="7" cy="10" rx="8" ry="11"/><ellipse cx="29" cy="1" rx="8" ry="12"/><ellipse cx="51" cy="9" rx="8" ry="11"/><ellipse cx="66" cy="27" rx="7" ry="9"/></g></svg>
+          <span class="badge">Exóticos</span><span class="lvl">Iniciante</span>
+        </div>
+        <div class="cbody">
+          <h3>Medicina de Aves e Répteis</h3>
+          <div class="inst"><span class="ci">P</span> Dr. Paulo Andrade · MV, MSc</div>
+          <div class="cmeta">
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>22h</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>34 aulas</span>
+            <span class="rating">★ 4,8</span>
+          </div>
+          <div class="cfoot"><div class="price">R$ 359<small>/à vista</small></div>
             <div class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div></div>
         </div>
       </article>
