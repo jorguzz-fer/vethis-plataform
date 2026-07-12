@@ -8,6 +8,7 @@ import { HealthModule } from './health/health.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { CatalogModule } from './catalog/catalog.module';
+import { MeModule } from './me/me.module';
 import { OpenApiModule } from './openapi/openapi.module';
 
 /**
@@ -24,6 +25,7 @@ import { OpenApiModule } from './openapi/openapi.module';
     UsersModule,
     AuthModule,
     CatalogModule,
+    MeModule,
     OpenApiModule,
     HealthModule,
   ],

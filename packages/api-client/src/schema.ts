@@ -288,6 +288,197 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/me/courses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Cursos matriculados do aluno */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["EnrolledCourse"][];
+                    };
+                };
+                /** @description Não autenticado */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/courses/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Player do curso (aulas com vídeo; exige matrícula) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    slug: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CoursePlayer"];
+                    };
+                };
+                /** @description Não matriculado */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/lessons/{lessonId}/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Marca aula como concluída */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    lessonId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Registrado */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Não matriculado */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/secretaria": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Solicitações da secretaria do aluno */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SecretariaRequest"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Abre uma solicitação de secretaria */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateSecretariaInput"];
+                };
+            };
+            responses: {
+                /** @description Criado */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SecretariaRequest"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -379,6 +570,58 @@ export interface components {
                     isFree: boolean;
                 }[];
             }[];
+        };
+        EnrolledCourse: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            title: string;
+            coverUrl: string | null;
+            specialty: {
+                slug: string;
+                name: string;
+            } | null;
+            progress: {
+                completed: number;
+                total: number;
+                pct: number;
+            };
+        };
+        CoursePlayer: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            title: string;
+            subtitle: string | null;
+            modules: {
+                /** Format: uuid */
+                id: string;
+                title: string;
+                position: number;
+                lessons: {
+                    /** Format: uuid */
+                    id: string;
+                    title: string;
+                    durationSeconds: number;
+                    vimeoVideoId: string | null;
+                    completed: boolean;
+                }[];
+            }[];
+        };
+        SecretariaRequest: {
+            /** Format: uuid */
+            id: string;
+            type: string;
+            subject: string;
+            body: string | null;
+            /** @enum {string} */
+            status: "open" | "in_progress" | "resolved";
+            createdAt: string;
+        };
+        CreateSecretariaInput: {
+            type: string;
+            subject: string;
+            body?: string;
         };
     };
     responses: never;

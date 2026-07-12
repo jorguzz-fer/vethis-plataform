@@ -11,6 +11,12 @@ import {
   listCoursesQuerySchema,
   specialtySchema,
 } from '../catalog/dto';
+import {
+  coursePlayerSchema,
+  createSecretariaSchema,
+  enrolledCourseSchema,
+  secretariaRequestSchema,
+} from '../me/dto';
 
 extendZodWithOpenApi(z);
 
@@ -29,6 +35,10 @@ export function buildOpenApiDocument() {
   const Specialty = registry.register('Specialty', specialtySchema);
   const CourseSummary = registry.register('CourseSummary', courseSummarySchema);
   const CourseDetail = registry.register('CourseDetail', courseDetailSchema);
+  const EnrolledCourse = registry.register('EnrolledCourse', enrolledCourseSchema);
+  const CoursePlayer = registry.register('CoursePlayer', coursePlayerSchema);
+  const SecretariaRequest = registry.register('SecretariaRequest', secretariaRequestSchema);
+  const CreateSecretariaInput = registry.register('CreateSecretariaInput', createSecretariaSchema);
 
   const json = (schema: z.ZodTypeAny) => ({ content: { 'application/json': { schema } } });
 
@@ -94,6 +104,51 @@ export function buildOpenApiDocument() {
       200: { description: 'OK', ...json(CourseDetail) },
       404: { description: 'Não encontrado' },
     },
+  });
+
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/me/courses',
+    tags: ['aluno'],
+    summary: 'Cursos matriculados do aluno',
+    responses: {
+      200: { description: 'OK', ...json(z.array(EnrolledCourse)) },
+      401: { description: 'Não autenticado' },
+    },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/me/courses/{slug}',
+    tags: ['aluno'],
+    summary: 'Player do curso (aulas com vídeo; exige matrícula)',
+    request: { params: z.object({ slug: z.string() }) },
+    responses: {
+      200: { description: 'OK', ...json(CoursePlayer) },
+      403: { description: 'Não matriculado' },
+    },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/me/lessons/{lessonId}/complete',
+    tags: ['aluno'],
+    summary: 'Marca aula como concluída',
+    request: { params: z.object({ lessonId: z.string() }) },
+    responses: { 201: { description: 'Registrado' }, 403: { description: 'Não matriculado' } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/me/secretaria',
+    tags: ['aluno'],
+    summary: 'Solicitações da secretaria do aluno',
+    responses: { 200: { description: 'OK', ...json(z.array(SecretariaRequest)) } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/me/secretaria',
+    tags: ['aluno'],
+    summary: 'Abre uma solicitação de secretaria',
+    request: { body: json(CreateSecretariaInput) },
+    responses: { 201: { description: 'Criado', ...json(SecretariaRequest) } },
   });
 
   const generator = new OpenApiGeneratorV31(registry.definitions);

@@ -1,7 +1,10 @@
+import { hash } from '@node-rs/argon2';
 import { eq } from 'drizzle-orm';
 import { loadConfig } from '../config/configuration';
 import { createDb } from './client';
 import { courseModules, courses, instructors, lessons, specialties } from './schema/catalog';
+import { enrollments } from './schema/enrollment';
+import { users } from './schema/identity';
 
 /** Especialidades da marca (VethisDesignSystem §6). */
 const SPECIALTIES = [
@@ -81,6 +84,28 @@ async function main(): Promise<void> {
         ]);
       }
     }
+  }
+
+  // Aluno demo + matrícula no curso de exemplo (para testar a área do aluno).
+  const [course] = await db
+    .select({ id: courses.id })
+    .from(courses)
+    .where(eq(courses.slug, 'ecocardiografia-na-pratica'))
+    .limit(1);
+
+  const passwordHash = await hash('aluno12345');
+  const [student] = await db
+    .insert(users)
+    .values({ email: 'aluno@vethis.dev', passwordHash, name: 'Aluno Demo', role: 'aluno' })
+    .onConflictDoNothing({ target: users.email })
+    .returning();
+
+  if (student && course) {
+    await db
+      .insert(enrollments)
+      .values({ userId: student.id, courseId: course.id, status: 'active' })
+      .onConflictDoNothing({ target: [enrollments.userId, enrollments.courseId] });
+    console.log('Aluno demo: aluno@vethis.dev / aluno12345 (matriculado).');
   }
 
   console.log('Seed concluído.');

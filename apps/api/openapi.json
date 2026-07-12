@@ -374,6 +374,221 @@
           "description",
           "modules"
         ]
+      },
+      "EnrolledCourse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "coverUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "specialty": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "slug": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "slug",
+              "name"
+            ]
+          },
+          "progress": {
+            "type": "object",
+            "properties": {
+              "completed": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer"
+              },
+              "pct": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "completed",
+              "total",
+              "pct"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "coverUrl",
+          "specialty",
+          "progress"
+        ]
+      },
+      "CoursePlayer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "subtitle": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "modules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "position": {
+                  "type": "integer"
+                },
+                "lessons": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "durationSeconds": {
+                        "type": "integer"
+                      },
+                      "vimeoVideoId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "completed": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "title",
+                      "durationSeconds",
+                      "vimeoVideoId",
+                      "completed"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "position",
+                "lessons"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "subtitle",
+          "modules"
+        ]
+      },
+      "SecretariaRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "body": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "in_progress",
+              "resolved"
+            ]
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "subject",
+          "body",
+          "status",
+          "createdAt"
+        ]
+      },
+      "CreateSecretariaInput": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "subject": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        },
+        "required": [
+          "type",
+          "subject"
+        ]
       }
     },
     "parameters": {}
@@ -575,6 +790,141 @@
           },
           "404": {
             "description": "Não encontrado"
+          }
+        }
+      }
+    },
+    "/v1/me/courses": {
+      "get": {
+        "tags": [
+          "aluno"
+        ],
+        "summary": "Cursos matriculados do aluno",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EnrolledCourse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado"
+          }
+        }
+      }
+    },
+    "/v1/me/courses/{slug}": {
+      "get": {
+        "tags": [
+          "aluno"
+        ],
+        "summary": "Player do curso (aulas com vídeo; exige matrícula)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "slug",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoursePlayer"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não matriculado"
+          }
+        }
+      }
+    },
+    "/v1/me/lessons/{lessonId}/complete": {
+      "post": {
+        "tags": [
+          "aluno"
+        ],
+        "summary": "Marca aula como concluída",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "lessonId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Registrado"
+          },
+          "403": {
+            "description": "Não matriculado"
+          }
+        }
+      }
+    },
+    "/v1/me/secretaria": {
+      "get": {
+        "tags": [
+          "aluno"
+        ],
+        "summary": "Solicitações da secretaria do aluno",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SecretariaRequest"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "aluno"
+        ],
+        "summary": "Abre uma solicitação de secretaria",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSecretariaInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretariaRequest"
+                }
+              }
+            }
           }
         }
       }
