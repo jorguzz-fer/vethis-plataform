@@ -7,4 +7,5 @@ export * from './enums';
 export * from './identity';
 export * from './catalog';
 export * from './enrollment';
+export * from './crm';
 export * from './audit';
