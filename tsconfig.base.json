@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "sourceMap": true,
+    "paths": {
+      "@vethis/shared": ["./packages/shared/src/index.ts"],
+      "@vethis/api-client": ["./packages/api-client/src/index.ts"],
+      "@vethis/design-tokens": ["./packages/design-tokens/src/index.ts"],
+      "@vethis/ui": ["./packages/ui/src/index.ts"]
+    }
+  }
+}

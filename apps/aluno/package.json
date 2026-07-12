@@ -1,0 +1,19 @@
+{
+  "name": "@vethis/aluno",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo \"(aluno) React+Vite PWA entra no M4\" && exit 0",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "echo \"(aluno) sem testes ainda\" && exit 0"
+  },
+  "dependencies": {
+    "@vethis/api-client": "workspace:*",
+    "@vethis/ui": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

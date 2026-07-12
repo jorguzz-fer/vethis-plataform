@@ -1,0 +1,20 @@
+# Configuração do gitleaks — secret scanning (Blueprint §6, supply chain).
+# Usa o conjunto de regras padrão do gitleaks e adiciona allowlist para
+# arquivos de exemplo que contêm placeholders (não são segredos reais).
+
+title = "Vethis gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Arquivos e caminhos com placeholders, não segredos reais"
+paths = [
+  '''\.env\.example$''',
+  '''docs/prototype/.*''',
+  '''pnpm-lock\.yaml$''',
+]
+regexes = [
+  '''change-me-in-local-only''',
+  '''replace-with-32-byte-random-hex''',
+]

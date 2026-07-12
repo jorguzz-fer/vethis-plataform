@@ -1,0 +1,26 @@
+# Vethis — ingress único (produção).
+# Caddy é a ÚNICA porta pública (443, TLS automático). Todos os serviços de
+# aplicação ficam na rede privada; o banco, Redis e workers nunca são expostos.
+#
+# Substituir os domínios ‹decidir› na configuração de produção.
+
+vethis.com.br, www.vethis.com.br {
+	encode zstd gzip
+	reverse_proxy site:3000
+}
+
+app.vethis.com.br {
+	encode zstd gzip
+	reverse_proxy aluno:3000
+}
+
+admin.vethis.com.br {
+	encode zstd gzip
+	# Backoffice: restringir por IP/VPN em produção.
+	reverse_proxy backoffice:3000
+}
+
+api.vethis.com.br {
+	encode zstd gzip
+	reverse_proxy api:3333
+}
