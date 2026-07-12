@@ -12,6 +12,7 @@ export default tseslint.config(
       '**/node_modules/**',
       '**/coverage/**',
       'docs/prototype/**',
+      'packages/api-client/src/schema.ts',
     ],
   },
   eslint.configs.recommended,

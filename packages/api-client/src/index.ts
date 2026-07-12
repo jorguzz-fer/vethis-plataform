@@ -1,13 +1,31 @@
 /**
  * @vethis/api-client — cliente HTTP tipado da API Vethis.
  *
- * No M1 este pacote passa a ser GERADO a partir do contrato OpenAPI 3.1 da API
- * (fonte de verdade). Por ora, apenas o tipo base da configuração.
+ * Os tipos em `schema.ts` são GERADOS do contrato OpenAPI 3.1 da API
+ * (`apps/api/openapi.json`) — fonte de verdade. Regerar com `pnpm generate`
+ * sempre que o contrato mudar. Não editar `schema.ts` à mão.
  */
+import createClient, { type Client } from 'openapi-fetch';
+import type { paths } from './schema';
 
-export interface ApiClientConfig {
-  /** Base URL da API, ex.: https://api.vethis.com.br/v1 */
+export interface VethisClientConfig {
+  /** Base URL da API, ex.: https://api.vethis.com.br */
   baseUrl: string;
-  /** Envia cookies de sessão (httpOnly) nas requisições do first-party. */
-  credentials?: RequestCredentials;
+  /** fetch customizado (SSR/testes). Padrão: fetch global. */
+  fetch?: typeof globalThis.fetch;
 }
+
+/**
+ * Cria um client tipado. `credentials: 'include'` envia o cookie de sessão
+ * httpOnly (first-party) nas requisições autenticadas.
+ */
+export function createVethisClient(config: VethisClientConfig): Client<paths> {
+  return createClient<paths>({
+    baseUrl: config.baseUrl,
+    credentials: 'include',
+    ...(config.fetch ? { fetch: config.fetch } : {}),
+  });
+}
+
+export type VethisClient = Client<paths>;
+export type { paths, components } from './schema';
