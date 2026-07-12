@@ -13,6 +13,7 @@ export default tseslint.config(
       '**/coverage/**',
       'docs/prototype/**',
       'packages/api-client/src/schema.ts',
+      '**/next-env.d.ts',
     ],
   },
   eslint.configs.recommended,
