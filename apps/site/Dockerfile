@@ -1,0 +1,20 @@
+# Site Vethis (Next.js standalone). Build a partir da RAIZ do monorepo:
+#   docker build -f apps/site/Dockerfile -t vethis-site .
+
+FROM node:22-alpine AS builder
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN corepack enable
+WORKDIR /repo
+COPY . .
+RUN pnpm install --frozen-lockfile
+RUN pnpm --filter @vethis/site build
+
+FROM node:22-alpine AS runner
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+WORKDIR /app
+COPY --from=builder /repo/apps/site/.next/standalone ./
+COPY --from=builder /repo/apps/site/.next/static ./apps/site/.next/static
+USER node
+EXPOSE 3000
+CMD ["node", "apps/site/server.js"]

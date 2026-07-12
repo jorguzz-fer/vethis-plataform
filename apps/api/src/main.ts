@@ -17,8 +17,11 @@ async function bootstrap(): Promise<void> {
   // Versionamento por URI: rotas ficam sob /v1/... (contrato versionado).
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
 
-  // CORS restrito ao front conhecido; credenciais para cookie de sessão.
-  app.enableCors({ origin: [config.APP_URL], credentials: true });
+  // CORS restrito aos fronts conhecidos; credenciais para cookie de sessão.
+  const origins = config.CORS_ORIGINS
+    ? config.CORS_ORIGINS.split(',').map((o) => o.trim())
+    : [config.APP_URL];
+  app.enableCors({ origin: origins, credentials: true });
 
   app.enableShutdownHooks();
 

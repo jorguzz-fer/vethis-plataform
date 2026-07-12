@@ -1,0 +1,14 @@
+**/node_modules
+**/dist
+**/.next
+**/build
+**/out
+**/coverage
+**/.turbo
+.git
+*.log
+**/.env
+**/.env.*
+!**/.env.example
+apps/aluno/ios
+apps/aluno/android
