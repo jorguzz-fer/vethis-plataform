@@ -55,5 +55,12 @@ pnpm --filter @vethis/api db:seed      # seed de dev (idempotente)
 
 - **M1a** ✅ bootstrap + persistência (identity + audit) + health.
 - **M1b** ✅ auth core: registro/login (Argon2id), sessão Redis, RBAC, rate limit.
-- **M1c** MFA TOTP + Google OIDC + reset de senha (sem enumeração).
-- **M1d** OpenAPI 3.1 + geração do `@vethis/api-client`; domínios catalog/orders/…
+- **M1c** ✅ domínio de catálogo (cursos/módulos/aulas) + OpenAPI 3.1 (`/v1/openapi.json`).
+- **M1d** geração do `@vethis/api-client` a partir do contrato; domínios orders/enrollment.
+- **Hardening (dívida)** MFA TOTP + Google OIDC + reset de senha — adiado (ver ADR 0006).
+
+### Contrato OpenAPI
+
+`buildOpenApiDocument()` monta o doc 3.1 a partir dos MESMOS schemas Zod da validação
+(sem drift). `pnpm --filter @vethis/api openapi:generate` escreve `apps/api/openapi.json`
+(commitado; fonte da geração do api-client). Servido em `GET /v1/openapi.json`.

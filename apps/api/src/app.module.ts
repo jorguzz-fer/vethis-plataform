@@ -7,6 +7,8 @@ import { RedisModule } from './redis/redis.module';
 import { HealthModule } from './health/health.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { CatalogModule } from './catalog/catalog.module';
+import { OpenApiModule } from './openapi/openapi.module';
 
 /**
  * Raiz da API Vethis. Rate limiting global (Blueprint §6); rotas de auth têm
@@ -21,6 +23,8 @@ import { UsersModule } from './users/users.module';
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 120 }]),
     UsersModule,
     AuthModule,
+    CatalogModule,
+    OpenApiModule,
     HealthModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
