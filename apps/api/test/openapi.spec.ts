@@ -1,0 +1,24 @@
+import { describe, expect, it } from 'vitest';
+import { buildOpenApiDocument } from '../src/openapi/document';
+
+describe('buildOpenApiDocument', () => {
+  const doc = buildOpenApiDocument();
+
+  it('gera um documento OpenAPI 3.1 válido', () => {
+    expect(doc.openapi).toBe('3.1.0');
+    expect(doc.info.title).toBe('Vethis API');
+  });
+
+  it('expõe as rotas de auth e catálogo', () => {
+    expect(doc.paths?.['/v1/auth/login']).toBeDefined();
+    expect(doc.paths?.['/v1/catalog/courses']).toBeDefined();
+    expect(doc.paths?.['/v1/catalog/courses/{slug}']).toBeDefined();
+  });
+
+  it('registra os schemas de resposta', () => {
+    const schemas = doc.components?.schemas ?? {};
+    expect(schemas['CourseSummary']).toBeDefined();
+    expect(schemas['CourseDetail']).toBeDefined();
+    expect(schemas['PublicUser']).toBeDefined();
+  });
+});

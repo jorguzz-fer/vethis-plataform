@@ -7,5 +7,6 @@ coverage
 pnpm-lock.yaml
 docs/prototype
 apps/api/drizzle
+apps/api/openapi.json
 *.min.js
 *.min.css
