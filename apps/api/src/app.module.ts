@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { MeModule } from './me/me.module';
+import { CrmModule } from './crm/crm.module';
+import { AdminModule } from './admin/admin.module';
 import { OpenApiModule } from './openapi/openapi.module';
 
 /**
@@ -26,6 +28,8 @@ import { OpenApiModule } from './openapi/openapi.module';
     AuthModule,
     CatalogModule,
     MeModule,
+    CrmModule,
+    AdminModule,
     OpenApiModule,
     HealthModule,
   ],

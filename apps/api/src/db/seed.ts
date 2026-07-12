@@ -5,6 +5,7 @@ import { createDb } from './client';
 import { courseModules, courses, instructors, lessons, specialties } from './schema/catalog';
 import { enrollments } from './schema/enrollment';
 import { users } from './schema/identity';
+import { leads } from './schema/crm';
 
 /** Especialidades da marca (VethisDesignSystem §6). */
 const SPECIALTIES = [
@@ -107,6 +108,29 @@ async function main(): Promise<void> {
       .onConflictDoNothing({ target: [enrollments.userId, enrollments.courseId] });
     console.log('Aluno demo: aluno@vethis.dev / aluno12345 (matriculado).');
   }
+
+  // Usuário staff para o backoffice.
+  const staffHash = await hash('staff12345');
+  await db
+    .insert(users)
+    .values({
+      email: 'staff@vethis.dev',
+      passwordHash: staffHash,
+      name: 'Equipe Vethis',
+      role: 'staff',
+    })
+    .onConflictDoNothing({ target: users.email });
+  console.log('Staff demo: staff@vethis.dev / staff12345.');
+
+  // Leads de exemplo para o CRM.
+  await db
+    .insert(leads)
+    .values([
+      { name: 'Clínica PetVida', email: 'contato@petvida.example', stage: 'new' },
+      { name: 'Dr. Rafael Costa', email: 'rafael@example.com', stage: 'contacted' },
+      { name: 'Hospital Veterinário Sul', email: 'adm@hvsul.example', stage: 'qualified' },
+    ])
+    .onConflictDoNothing();
 
   console.log('Seed concluído.');
   await sql.end();

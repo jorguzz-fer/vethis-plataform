@@ -17,6 +17,8 @@ import {
   enrolledCourseSchema,
   secretariaRequestSchema,
 } from '../me/dto';
+import { createLeadSchema, leadSchema, updateLeadSchema } from '../crm/dto';
+import { adminCourseSchema, kpisSchema, studentSchema, updateCourseSchema } from '../admin/dto';
 
 extendZodWithOpenApi(z);
 
@@ -39,6 +41,11 @@ export function buildOpenApiDocument() {
   const CoursePlayer = registry.register('CoursePlayer', coursePlayerSchema);
   const SecretariaRequest = registry.register('SecretariaRequest', secretariaRequestSchema);
   const CreateSecretariaInput = registry.register('CreateSecretariaInput', createSecretariaSchema);
+  const CreateLeadInput = registry.register('CreateLeadInput', createLeadSchema);
+  const Lead = registry.register('Lead', leadSchema);
+  const Kpis = registry.register('Kpis', kpisSchema);
+  const AdminCourse = registry.register('AdminCourse', adminCourseSchema);
+  const Student = registry.register('Student', studentSchema);
 
   const json = (schema: z.ZodTypeAny) => ({ content: { 'application/json': { schema } } });
 
@@ -149,6 +156,65 @@ export function buildOpenApiDocument() {
     summary: 'Abre uma solicitação de secretaria',
     request: { body: json(CreateSecretariaInput) },
     responses: { 201: { description: 'Criado', ...json(SecretariaRequest) } },
+  });
+
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/leads',
+    tags: ['crm'],
+    summary: 'Captura pública de lead (site)',
+    request: { body: json(CreateLeadInput) },
+    responses: { 201: { description: 'Criado', ...json(Lead) } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/kpis',
+    tags: ['backoffice'],
+    summary: 'KPIs do painel (staff/admin)',
+    responses: { 200: { description: 'OK', ...json(Kpis) }, 403: { description: 'Sem permissão' } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/courses',
+    tags: ['backoffice'],
+    summary: 'Lista todos os cursos (inclui rascunhos)',
+    responses: { 200: { description: 'OK', ...json(z.array(AdminCourse)) } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/students',
+    tags: ['backoffice'],
+    summary: 'Lista alunos com contagem de matrículas',
+    responses: { 200: { description: 'OK', ...json(z.array(Student)) } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/leads',
+    tags: ['backoffice'],
+    summary: 'Lista leads do funil de CRM',
+    responses: { 200: { description: 'OK', ...json(z.array(Lead)) } },
+  });
+  registry.registerPath({
+    method: 'patch',
+    path: '/v1/admin/courses/{id}',
+    tags: ['backoffice'],
+    summary: 'Atualiza/publica um curso',
+    request: {
+      params: z.object({ id: z.string() }),
+      body: json(registry.register('UpdateCourseInput', updateCourseSchema)),
+    },
+    responses: { 200: { description: 'OK', ...json(AdminCourse) } },
+  });
+  registry.registerPath({
+    method: 'patch',
+    path: '/v1/admin/leads/{id}',
+    tags: ['backoffice'],
+    summary: 'Atualiza estágio/notas de um lead',
+    request: {
+      params: z.object({ id: z.string() }),
+      body: json(registry.register('UpdateLeadInput', updateLeadSchema)),
+    },
+    responses: { 200: { description: 'OK', ...json(Lead) } },
   });
 
   const generator = new OpenApiGeneratorV31(registry.definitions);

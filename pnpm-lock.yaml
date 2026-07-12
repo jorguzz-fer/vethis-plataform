@@ -160,13 +160,49 @@ importers:
       '@vethis/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
+      '@vethis/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@vethis/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      react:
+        specifier: ^19.0.0
+        version: 19.2.7
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.7(react@19.2.7)
+      react-router-dom:
+        specifier: ^7.1.1
+        version: 7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
+      '@types/react':
+        specifier: ^19.0.2
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: ^19.0.2
+        version: 19.2.3(@types/react@19.2.17)
+      '@vethis/design-tokens':
+        specifier: workspace:*
+        version: link:../../packages/design-tokens
+      '@vitejs/plugin-react':
+        specifier: ^4.3.4
+        version: 4.7.0(vite@6.4.3(@types/node@22.20.1)(jiti@1.21.7)(terser@5.49.0)(tsx@4.23.0)(yaml@2.9.0))
+      autoprefixer:
+        specifier: ^10.4.20
+        version: 10.5.2(postcss@8.5.17)
+      postcss:
+        specifier: ^8.4.49
+        version: 8.5.17
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.19(tsx@4.23.0)(yaml@2.9.0)
       typescript:
         specifier: ^5.7.2
         version: 5.9.3
+      vite:
+        specifier: ^6.0.7
+        version: 6.4.3(@types/node@22.20.1)(jiti@1.21.7)(terser@5.49.0)(tsx@4.23.0)(yaml@2.9.0)
 
   apps/site:
     dependencies:

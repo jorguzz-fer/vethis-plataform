@@ -26,6 +26,9 @@ export const secretariaStatusEnum = pgEnum('secretaria_status', [
   'resolved',
 ]);
 
+/** Estágio do lead no funil de CRM. */
+export const leadStageEnum = pgEnum('lead_stage', ['new', 'contacted', 'qualified', 'won', 'lost']);
+
 /** Tipo do papel global, derivado do enum (fonte de verdade da API). */
 export type Role = (typeof roleEnum.enumValues)[number];
 export type OrgRole = (typeof orgRoleEnum.enumValues)[number];
@@ -33,3 +36,4 @@ export type CourseLevel = (typeof courseLevelEnum.enumValues)[number];
 export type CourseStatus = (typeof courseStatusEnum.enumValues)[number];
 export type EnrollmentStatus = (typeof enrollmentStatusEnum.enumValues)[number];
 export type SecretariaStatus = (typeof secretariaStatusEnum.enumValues)[number];
+export type LeadStage = (typeof leadStageEnum.enumValues)[number];

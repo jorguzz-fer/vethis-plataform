@@ -479,6 +479,281 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/leads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Captura pública de lead (site) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateLeadInput"];
+                };
+            };
+            responses: {
+                /** @description Criado */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Lead"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/kpis": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** KPIs do painel (staff/admin) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Kpis"];
+                    };
+                };
+                /** @description Sem permissão */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/courses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista todos os cursos (inclui rascunhos) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCourse"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/students": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista alunos com contagem de matrículas */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Student"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/leads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista leads do funil de CRM */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Lead"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/courses/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Atualiza/publica um curso */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateCourseInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCourse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/admin/leads/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Atualiza estágio/notas de um lead */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateLeadInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Lead"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -622,6 +897,74 @@ export interface components {
             type: string;
             subject: string;
             body?: string;
+        };
+        CreateLeadInput: {
+            name: string;
+            /** Format: email */
+            email: string;
+            phone?: string;
+            source?: string;
+        };
+        Lead: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            email: string;
+            phone: string | null;
+            source: string;
+            /** @enum {string} */
+            stage: "new" | "contacted" | "qualified" | "won" | "lost";
+            notes: string | null;
+            createdAt: string;
+        };
+        Kpis: {
+            students: number;
+            activeEnrollments: number;
+            publishedCourses: number;
+            completionRate: number;
+            estimatedRevenueCents: number;
+            leadsByStage: {
+                new: number;
+                contacted: number;
+                qualified: number;
+                won: number;
+                lost: number;
+            };
+        };
+        AdminCourse: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            title: string;
+            /** @enum {string} */
+            status: "draft" | "published";
+            /** @enum {string} */
+            level: "iniciante" | "intermediario" | "avancado";
+            priceCents: number;
+            createdAt: string;
+        };
+        Student: {
+            /** Format: uuid */
+            id: string;
+            name: string | null;
+            email: string;
+            enrollments: number;
+            createdAt: string;
+        };
+        UpdateCourseInput: {
+            title?: string;
+            subtitle?: string;
+            description?: string;
+            priceCents?: number;
+            /** @enum {string} */
+            level?: "iniciante" | "intermediario" | "avancado";
+            /** @enum {string} */
+            status?: "draft" | "published";
+        };
+        UpdateLeadInput: {
+            /** @enum {string} */
+            stage?: "new" | "contacted" | "qualified" | "won" | "lost";
+            notes?: string;
         };
     };
     responses: never;

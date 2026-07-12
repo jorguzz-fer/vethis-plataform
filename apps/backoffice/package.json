@@ -4,16 +4,29 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "echo \"(backoffice) React+Vite entra no M5\" && exit 0",
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "echo \"(backoffice) sem testes ainda\" && exit 0"
+    "dev": "vite --port 3002",
+    "build": "vite build",
+    "preview": "vite preview --port 3002",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"(backoffice) coberto por build/typecheck\" && exit 0"
   },
   "dependencies": {
     "@vethis/api-client": "workspace:*",
-    "@vethis/ui": "workspace:*"
+    "@vethis/shared": "workspace:*",
+    "@vethis/ui": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.1.1"
   },
   "devDependencies": {
-    "typescript": "^5.7.2"
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "@vethis/design-tokens": "workspace:*",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7"
   }
 }

@@ -589,6 +589,272 @@
           "type",
           "subject"
         ]
+      },
+      "CreateLeadInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 40
+          }
+        },
+        "required": [
+          "name",
+          "email"
+        ]
+      },
+      "Lead": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source": {
+            "type": "string"
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "new",
+              "contacted",
+              "qualified",
+              "won",
+              "lost"
+            ]
+          },
+          "notes": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "phone",
+          "source",
+          "stage",
+          "notes",
+          "createdAt"
+        ]
+      },
+      "Kpis": {
+        "type": "object",
+        "properties": {
+          "students": {
+            "type": "integer"
+          },
+          "activeEnrollments": {
+            "type": "integer"
+          },
+          "publishedCourses": {
+            "type": "integer"
+          },
+          "completionRate": {
+            "type": "number"
+          },
+          "estimatedRevenueCents": {
+            "type": "integer"
+          },
+          "leadsByStage": {
+            "type": "object",
+            "properties": {
+              "new": {
+                "type": "integer"
+              },
+              "contacted": {
+                "type": "integer"
+              },
+              "qualified": {
+                "type": "integer"
+              },
+              "won": {
+                "type": "integer"
+              },
+              "lost": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "new",
+              "contacted",
+              "qualified",
+              "won",
+              "lost"
+            ]
+          }
+        },
+        "required": [
+          "students",
+          "activeEnrollments",
+          "publishedCourses",
+          "completionRate",
+          "estimatedRevenueCents",
+          "leadsByStage"
+        ]
+      },
+      "AdminCourse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "published"
+            ]
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "iniciante",
+              "intermediario",
+              "avancado"
+            ]
+          },
+          "priceCents": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "status",
+          "level",
+          "priceCents",
+          "createdAt"
+        ]
+      },
+      "Student": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "email": {
+            "type": "string"
+          },
+          "enrollments": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "enrollments",
+          "createdAt"
+        ]
+      },
+      "UpdateCourseInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "subtitle": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 8000
+          },
+          "priceCents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "iniciante",
+              "intermediario",
+              "avancado"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "published"
+            ]
+          }
+        }
+      },
+      "UpdateLeadInput": {
+        "type": "object",
+        "properties": {
+          "stage": {
+            "type": "string",
+            "enum": [
+              "new",
+              "contacted",
+              "qualified",
+              "won",
+              "lost"
+            ]
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        }
       }
     },
     "parameters": {}
@@ -922,6 +1188,205 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SecretariaRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/leads": {
+      "post": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Captura pública de lead (site)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLeadInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Lead"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/kpis": {
+      "get": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "KPIs do painel (staff/admin)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Kpis"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Sem permissão"
+          }
+        }
+      }
+    },
+    "/v1/admin/courses": {
+      "get": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Lista todos os cursos (inclui rascunhos)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminCourse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/students": {
+      "get": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Lista alunos com contagem de matrículas",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Student"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/leads": {
+      "get": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Lista leads do funil de CRM",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Lead"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/courses/{id}": {
+      "patch": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Atualiza/publica um curso",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCourseInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCourse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/leads/{id}": {
+      "patch": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Atualiza estágio/notas de um lead",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeadInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Lead"
                 }
               }
             }
