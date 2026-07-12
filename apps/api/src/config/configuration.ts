@@ -15,6 +15,10 @@ const EnvSchema = z.object({
 
   SESSION_SECRET: z.string().min(16, 'SESSION_SECRET deve ter ao menos 16 caracteres'),
   COOKIE_DOMAIN: z.string().default('localhost'),
+
+  // Origens permitidas no CORS (separadas por vírgula). Em produção, liste os
+  // domínios do site, área do aluno e backoffice. Default: APP_URL.
+  CORS_ORIGINS: z.string().optional(),
 });
 
 export type AppConfig = Readonly<z.infer<typeof EnvSchema>>;
