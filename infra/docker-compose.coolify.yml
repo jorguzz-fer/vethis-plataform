@@ -1,0 +1,115 @@
+# Vethis — deploy no Coolify (Docker Compose build pack).
+# Diferente do docker-compose.prod.yml: SEM o serviço `caddy` — o Coolify já tem
+# o próprio proxy (Traefik) na 80/443 e cuida de domínios + TLS por serviço.
+#
+# No Coolify:
+#   1. Aplicação Git Based -> Private Repository (with GitHub App)
+#   2. Build Pack: Docker Compose | arquivo: infra/docker-compose.coolify.yml
+#   3. Defina as variáveis de ambiente (aba Environment Variables)
+#   4. Atribua um domínio a cada serviço exposto (site/api/aluno/backoffice)
+#   Ver docs/DEPLOY-COOLIFY.md.
+
+name: vethis
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ['redis-server', '--appendonly', 'yes']
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    # Coolify atribui o domínio (ex.: api.vethis.com.br) a este serviço na porta 3333.
+    expose:
+      - '3333'
+    environment:
+      NODE_ENV: production
+      API_PORT: '3333'
+      APP_URL: ${APP_URL}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      SESSION_SECRET: ${SESSION_SECRET}
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL:-}
+      PAYMENT_GATEWAY: ${PAYMENT_GATEWAY:-fake}
+      ASAAS_API_KEY: ${ASAAS_API_KEY:-}
+      ASAAS_WEBHOOK_SECRET: ${ASAAS_WEBHOOK_SECRET:-}
+      ASAAS_BASE_URL: ${ASAAS_BASE_URL:-}
+      VIMEO_ACCESS_TOKEN: ${VIMEO_ACCESS_TOKEN:-}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  site:
+    build:
+      context: ..
+      dockerfile: apps/site/Dockerfile
+    restart: unless-stopped
+    # Domínio: vethis.com.br -> porta 3000.
+    expose:
+      - '3000'
+    environment:
+      NODE_ENV: production
+      # A API é acessada pela rede privada do Compose (render server-side).
+      API_URL: http://api:3333
+      PORT: '3000'
+    depends_on:
+      - api
+
+  aluno:
+    build:
+      context: ..
+      dockerfile: apps/aluno/Dockerfile
+      args:
+        # URL PÚBLICA da API — assada no bundle. Ex.: https://api.vethis.com.br
+        VITE_API_URL: ${PUBLIC_API_URL}
+    restart: unless-stopped
+    # Domínio: app.vethis.com.br -> porta 80.
+    expose:
+      - '80'
+
+  backoffice:
+    build:
+      context: ..
+      dockerfile: apps/backoffice/Dockerfile
+      args:
+        VITE_API_URL: ${PUBLIC_API_URL}
+    restart: unless-stopped
+    # Domínio: admin.vethis.com.br -> porta 80.
+    expose:
+      - '80'
+
+volumes:
+  pgdata:
+  redisdata:
