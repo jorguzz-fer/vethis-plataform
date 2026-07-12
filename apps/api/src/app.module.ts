@@ -1,13 +1,28 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ConfigModule } from './config/config.module';
 import { DbModule } from './db/db.module';
+import { RedisModule } from './redis/redis.module';
 import { HealthModule } from './health/health.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 /**
- * Raiz da API Vethis. Módulos de domínio (auth, catalog, orders, enrollment,
- * secretaria, crm, analytics) são adicionados nos próximos chunks do M1+.
+ * Raiz da API Vethis. Rate limiting global (Blueprint §6); rotas de auth têm
+ * limites próprios via @Throttle. Domínios (catalog, orders, enrollment,
+ * secretaria, crm, analytics) entram nos próximos chunks do M1+.
  */
 @Module({
-  imports: [ConfigModule, DbModule, HealthModule],
+  imports: [
+    ConfigModule,
+    DbModule,
+    RedisModule,
+    ThrottlerModule.forRoot([{ ttl: 60_000, limit: 120 }]),
+    UsersModule,
+    AuthModule,
+    HealthModule,
+  ],
+  providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule {}
