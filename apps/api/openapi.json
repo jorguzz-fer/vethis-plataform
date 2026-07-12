@@ -799,6 +799,62 @@
           "enrollments",
           "createdAt"
         ]
+      },
+      "UpdateCourseInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "subtitle": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 8000
+          },
+          "priceCents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "iniciante",
+              "intermediario",
+              "avancado"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "published"
+            ]
+          }
+        }
+      },
+      "UpdateLeadInput": {
+        "type": "object",
+        "properties": {
+          "stage": {
+            "type": "string",
+            "enum": [
+              "new",
+              "contacted",
+              "qualified",
+              "won",
+              "lost"
+            ]
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        }
       }
     },
     "parameters": {}
@@ -1253,6 +1309,84 @@
                   "items": {
                     "$ref": "#/components/schemas/Lead"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/courses/{id}": {
+      "patch": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Atualiza/publica um curso",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCourseInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCourse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/leads/{id}": {
+      "patch": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Atualiza estágio/notas de um lead",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeadInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Lead"
                 }
               }
             }

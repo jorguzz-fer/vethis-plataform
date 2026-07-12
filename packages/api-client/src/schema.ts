@@ -670,6 +670,90 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/courses/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Atualiza/publica um curso */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateCourseInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCourse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/admin/leads/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Atualiza estágio/notas de um lead */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateLeadInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Lead"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -866,6 +950,21 @@ export interface components {
             email: string;
             enrollments: number;
             createdAt: string;
+        };
+        UpdateCourseInput: {
+            title?: string;
+            subtitle?: string;
+            description?: string;
+            priceCents?: number;
+            /** @enum {string} */
+            level?: "iniciante" | "intermediario" | "avancado";
+            /** @enum {string} */
+            status?: "draft" | "published";
+        };
+        UpdateLeadInput: {
+            /** @enum {string} */
+            stage?: "new" | "contacted" | "qualified" | "won" | "lost";
+            notes?: string;
         };
     };
     responses: never;
