@@ -1,9 +1,17 @@
 /**
- * @vethis/ui — componentes base React encapsulando o design system Vethis
- * (botões, campos, badges, card de curso, barra de progresso).
- *
- * Preenchido no M2. Encapsular a lib visual aqui mantém as telas trocáveis
- * sem reescrita (Blueprint §9).
+ * @vethis/ui — componentes base React do design system Vethis.
+ * Encapsulam a lib visual (Tailwind + tokens) para manter as telas trocáveis.
+ * Requer o preset `vethisPreset` de @vethis/design-tokens no Tailwind do app.
  */
-
-export const UI_PACKAGE = '@vethis/ui' as const;
+export { cn } from './cn';
+export {
+  Button,
+  buttonClasses,
+  type ButtonProps,
+  type ButtonVariant,
+  type ButtonSize,
+} from './button';
+export { Badge, type BadgeProps, type BadgeVariant } from './badge';
+export { ProgressBar, type ProgressBarProps } from './progress-bar';
+export { Field, type FieldProps } from './field';
+export { CourseCard, type CourseCardProps } from './course-card';

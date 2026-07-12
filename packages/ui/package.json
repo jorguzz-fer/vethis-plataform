@@ -11,15 +11,19 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "echo \"(ui) sem testes ainda\" && exit 0"
+    "test": "vitest run"
   },
   "dependencies": {
-    "@vethis/design-tokens": "workspace:*"
+    "@vethis/design-tokens": "workspace:*",
+    "clsx": "^2.1.1"
   },
   "peerDependencies": {
     "react": "^18 || ^19"
   },
   "devDependencies": {
-    "typescript": "^5.7.2"
+    "@types/react": "^19.0.2",
+    "react": "^19.0.0",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
   }
 }
