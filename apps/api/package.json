@@ -1,0 +1,18 @@
+{
+  "name": "@vethis/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo \"(api) NestJS entra no M1\" && exit 0",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "echo \"(api) sem testes ainda\" && exit 0"
+  },
+  "dependencies": {
+    "@vethis/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

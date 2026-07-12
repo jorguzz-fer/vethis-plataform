@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+# Formata/lint dos arquivos staged.
+pnpm lint-staged
+
+# Secret scan local (Blueprint §6). Skip gracioso se o binário não existir —
+# o CI roda o gitleaks de forma obrigatória de qualquer modo.
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks protect --staged --redact --config .gitleaks.toml
+else
+  echo "ℹ gitleaks não instalado localmente — scan será feito no CI."
+fi

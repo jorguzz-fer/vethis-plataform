@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Env / secrets — NUNCA commitar segredos
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Coverage / test
+coverage/
+.nyc_output/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+Thumbs.db
+
+# Turbo / caches
+.turbo/
+.cache/
+
+# Drizzle
+apps/api/drizzle/meta/_journal.json.bak
+
+# Mobile (Capacitor) — gerados
+apps/aluno/ios/
+apps/aluno/android/
