@@ -1,21 +1,40 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { sql } from 'drizzle-orm';
+import type Redis from 'ioredis';
 import { DB, type Database } from '../db/client';
+import { REDIS } from '../redis/redis.module';
 
-/** Healthcheck — GET /v1/health. Verifica processo + conectividade do banco. */
+type Status = 'up' | 'down';
+
+/** Healthcheck — GET /v1/health. Verifica processo + banco + Redis. */
 @Controller({ path: 'health', version: '1' })
 export class HealthController {
-  constructor(@Inject(DB) private readonly db: Database) {}
+  constructor(
+    @Inject(DB) private readonly db: Database,
+    @Inject(REDIS) private readonly redis: Redis,
+  ) {}
 
   @Get()
-  async check(): Promise<{ status: string; db: 'up' | 'down' }> {
-    let dbStatus: 'up' | 'down' = 'down';
+  async check(): Promise<{ status: string; db: Status; redis: Status }> {
+    const [db, redis] = await Promise.all([this.pingDb(), this.pingRedis()]);
+    return { status: 'ok', db, redis };
+  }
+
+  private async pingDb(): Promise<Status> {
     try {
       await this.db.execute(sql`select 1`);
-      dbStatus = 'up';
+      return 'up';
     } catch {
-      dbStatus = 'down';
+      return 'down';
     }
-    return { status: 'ok', db: dbStatus };
+  }
+
+  private async pingRedis(): Promise<Status> {
+    try {
+      const pong = await this.redis.ping();
+      return pong === 'PONG' ? 'up' : 'down';
+    } catch {
+      return 'down';
+    }
   }
 }

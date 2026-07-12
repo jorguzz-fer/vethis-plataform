@@ -41,8 +41,19 @@ pnpm --filter @vethis/api db:seed      # seed de dev (idempotente)
   alteração manual em prod.
 - Segredos só via ambiente/cofre; `loadConfig()` falha rápido se algo faltar.
 
+## Autenticação (M1b)
+
+- Registro/login com senha **Argon2id** (`@node-rs/argon2`); login com auto-sessão.
+- **Sessão server-side no Redis** — cookie httpOnly assinado com id opaco; revogação
+  imediata. `SessionGuard` resolve o usuário a cada request (papel sempre fresco).
+- **RBAC**: `@Roles('staff','admin')` + `RolesGuard` (usar após `SessionGuard`).
+- Validação de payload por Zod (`ZodValidationPipe`); rate limiting global + por rota
+  de auth (`@nestjs/throttler`). Login com mensagem uniforme (sem enumeração).
+- Rotas: `POST /v1/auth/register|login|logout`, `GET /v1/auth/me`.
+
 ## Roadmap do M1
 
 - **M1a** ✅ bootstrap + persistência (identity + audit) + health.
-- **M1b** auth: registro/login (Argon2id), sessão no Redis, RBAC, MFA TOTP, Google OIDC.
-- **M1c** OpenAPI 3.1 + geração do `@vethis/api-client`; domínios catalog/orders/…
+- **M1b** ✅ auth core: registro/login (Argon2id), sessão Redis, RBAC, rate limit.
+- **M1c** MFA TOTP + Google OIDC + reset de senha (sem enumeração).
+- **M1d** OpenAPI 3.1 + geração do `@vethis/api-client`; domínios catalog/orders/…
