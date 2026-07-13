@@ -460,6 +460,27 @@
               "null"
             ]
           },
+          "instructor": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "avatarUrl": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "avatarUrl"
+            ]
+          },
           "modules": {
             "type": "array",
             "items": {
@@ -524,6 +545,7 @@
           "slug",
           "title",
           "subtitle",
+          "instructor",
           "modules"
         ]
       },

@@ -92,8 +92,11 @@ export class MeService {
         slug: courses.slug,
         title: courses.title,
         subtitle: courses.subtitle,
+        instructorName: instructors.name,
+        instructorAvatar: instructors.avatarUrl,
       })
       .from(courses)
+      .leftJoin(instructors, eq(courses.instructorId, instructors.id))
       .where(eq(courses.slug, slug))
       .limit(1);
     if (!course) throw new NotFoundException('Curso não encontrado');
@@ -142,6 +145,9 @@ export class MeService {
       slug: course.slug,
       title: course.title,
       subtitle: course.subtitle,
+      instructor: course.instructorName
+        ? { name: course.instructorName, avatarUrl: course.instructorAvatar }
+        : null,
       modules,
     };
   }
