@@ -1,11 +1,12 @@
 import { hash } from '@node-rs/argon2';
 import { eq } from 'drizzle-orm';
-import { loadConfig } from '../config/configuration';
+import { loadConfig, type AppConfig } from '../config/configuration';
 import { createDb } from './client';
 import { courseModules, courses, instructors, lessons, specialties } from './schema/catalog';
 import { enrollments } from './schema/enrollment';
 import { users } from './schema/identity';
 import { leads } from './schema/crm';
+import type { CourseLevel } from './schema/enums';
 
 /** Especialidades da marca (VethisDesignSystem §6). */
 const SPECIALTIES = [
@@ -19,12 +20,224 @@ const SPECIALTIES = [
   { slug: 'animais-exoticos', name: 'Animais Exóticos' },
 ];
 
-/**
- * Seed de desenvolvimento idempotente (ON CONFLICT DO NOTHING por slug).
- * Cria especialidades, um instrutor e um curso publicado de exemplo.
- */
+/** Corpo docente — mesmos nomes/fotos da seção "Instrutores" do site. */
+const INSTRUCTORS = [
+  {
+    slug: 'dr-ricardo-mendes',
+    name: 'Dr. Ricardo Mendes',
+    bio: 'Diretor clínico e pesquisador em cardiologia de pequenos animais.',
+    photo: 'ricardo-mendes.webp',
+  },
+  {
+    slug: 'dra-ana-faria',
+    name: 'Dra. Ana B. Faria',
+    bio: 'Cirurgiã de tecidos moles com mais de 15 anos de centro cirúrgico.',
+    photo: 'ana-faria.webp',
+  },
+  {
+    slug: 'dr-carlos-nunes',
+    name: 'Dr. Carlos Nunes',
+    bio: 'Especialista em dermatoses e alergias, referência em citologia.',
+    photo: 'carlos-nunes.webp',
+  },
+  {
+    slug: 'dra-lucia-prado',
+    name: 'Dra. Lúcia Prado',
+    bio: 'Anestesiologista de pacientes críticos e docente de pós-graduação.',
+    photo: 'lucia-prado.webp',
+  },
+];
+
+interface SeedLesson {
+  title: string;
+  min: number;
+  free?: boolean;
+}
+interface SeedModule {
+  title: string;
+  lessons: SeedLesson[];
+}
+interface SeedCourse {
+  slug: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  priceCents: number;
+  level: CourseLevel;
+  specialty: string;
+  instructor: string;
+  modules: SeedModule[];
+}
+
+/** 6 cursos veterinários de exemplo, publicados, com módulos e aulas. */
+const COURSES: SeedCourse[] = [
+  {
+    slug: 'ecocardiografia-na-pratica',
+    title: 'Ecocardiografia na Prática',
+    subtitle: 'Do básico ao laudo, com casos reais.',
+    description:
+      'Curso prático de ecocardiografia para o clínico de pequenos animais: janelas, medidas, Doppler e construção do laudo.',
+    priceCents: 149700,
+    level: 'intermediario',
+    specialty: 'cardiologia',
+    instructor: 'dr-ricardo-mendes',
+    modules: [
+      {
+        title: 'Fundamentos',
+        lessons: [
+          { title: 'Introdução e janelas acústicas', min: 12, free: true },
+          { title: 'Modo B e modo M', min: 18 },
+        ],
+      },
+      {
+        title: 'Avaliação funcional',
+        lessons: [
+          { title: 'Doppler e avaliação de fluxos', min: 20 },
+          { title: 'Medidas, índices e o laudo', min: 16 },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'cirurgia-tecidos-moles',
+    title: 'Cirurgia de Tecidos Moles',
+    subtitle: 'Técnica passo a passo em procedimentos do dia a dia.',
+    description:
+      'Do preparo do centro cirúrgico aos principais procedimentos de tecidos moles, com foco em técnica e segurança.',
+    priceCents: 169700,
+    level: 'avancado',
+    specialty: 'cirurgia',
+    instructor: 'dra-ana-faria',
+    modules: [
+      {
+        title: 'Princípios',
+        lessons: [
+          { title: 'Instrumental e paramentação', min: 10, free: true },
+          { title: 'Padrões de sutura e síntese', min: 15 },
+        ],
+      },
+      {
+        title: 'Procedimentos',
+        lessons: [
+          { title: 'Enterectomia e enteroanastomose', min: 24 },
+          { title: 'Esplenectomia passo a passo', min: 19 },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'radiologia-toracica',
+    title: 'Radiologia Torácica de Pequenos Animais',
+    subtitle: 'Interpretação sistemática do tórax.',
+    description:
+      'Método de leitura do tórax: padrões pulmonares, silhueta cardíaca, mediastino e pleura, com muitos casos.',
+    priceCents: 119700,
+    level: 'intermediario',
+    specialty: 'diagnostico-por-imagem',
+    instructor: 'dr-ricardo-mendes',
+    modules: [
+      {
+        title: 'Bases',
+        lessons: [
+          { title: 'Técnica radiográfica e posicionamento', min: 11, free: true },
+          { title: 'Leitura sistemática do tórax', min: 17 },
+        ],
+      },
+      {
+        title: 'Padrões',
+        lessons: [
+          { title: 'Padrões pulmonares', min: 21 },
+          { title: 'Silhueta cardíaca e vasos', min: 16 },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'dermatologia-clinica',
+    title: 'Dermatologia Clínica: Alergias e Dermatoses',
+    subtitle: 'Do prurido ao diagnóstico, sem mistério.',
+    description:
+      'Abordagem clínica das dermatoses mais comuns: dermatite alérgica, piodermites e o raciocínio diagnóstico.',
+    priceCents: 99700,
+    level: 'iniciante',
+    specialty: 'dermatologia',
+    instructor: 'dr-carlos-nunes',
+    modules: [
+      {
+        title: 'Abordagem do prurido',
+        lessons: [
+          { title: 'Anamnese e exame dermatológico', min: 13, free: true },
+          { title: 'Citologia cutânea na prática', min: 15 },
+        ],
+      },
+      {
+        title: 'Principais dermatoses',
+        lessons: [
+          { title: 'Dermatite alérgica e atopia', min: 20 },
+          { title: 'Piodermites: diagnóstico e manejo', min: 18 },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'anestesia-pacientes-criticos',
+    title: 'Anestesia em Pacientes Críticos',
+    subtitle: 'Protocolos seguros para o paciente instável.',
+    description:
+      'Planejamento anestésico, monitoração e condutas para pacientes críticos e de alto risco.',
+    priceCents: 139700,
+    level: 'avancado',
+    specialty: 'anestesiologia',
+    instructor: 'dra-lucia-prado',
+    modules: [
+      {
+        title: 'Planejamento',
+        lessons: [
+          { title: 'Avaliação de risco e ASA', min: 12, free: true },
+          { title: 'Protocolos e fármacos', min: 19 },
+        ],
+      },
+      {
+        title: 'Monitoração',
+        lessons: [
+          { title: 'Monitoração multiparamétrica', min: 22 },
+          { title: 'Manejo de intercorrências', min: 17 },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'emergencias-uti',
+    title: 'Emergências e Terapia Intensiva',
+    subtitle: 'Estabilização e cuidados na UTI veterinária.',
+    description:
+      'Triagem, ressuscitação e terapia intensiva: do atendimento inicial ao paciente na UTI.',
+    priceCents: 159700,
+    level: 'intermediario',
+    specialty: 'emergencia-uti',
+    instructor: 'dra-ana-faria',
+    modules: [
+      {
+        title: 'Atendimento inicial',
+        lessons: [
+          { title: 'Triagem e ABCs da emergência', min: 14, free: true },
+          { title: 'Ressuscitação e fluidoterapia', min: 20 },
+        ],
+      },
+      {
+        title: 'Terapia intensiva',
+        lessons: [
+          { title: 'Monitoração do paciente crítico', min: 21 },
+          { title: 'Choque: reconhecimento e manejo', min: 18 },
+        ],
+      },
+    ],
+  },
+];
+
+/** Seed de desenvolvimento idempotente (ON CONFLICT DO NOTHING por slug). */
 async function main(): Promise<void> {
-  const config = loadConfig();
+  const config: AppConfig = loadConfig();
   const { db, sql } = createDb(config.DATABASE_URL);
 
   await db
@@ -32,120 +245,81 @@ async function main(): Promise<void> {
     .values(SPECIALTIES)
     .onConflictDoNothing({ target: specialties.slug });
 
-  const [instructor] = await db
-    .insert(instructors)
-    .values({
-      slug: 'dra-marina-alves',
-      name: 'Dra. Marina Alves',
-      bio: 'Especialista em cardiologia veterinária, 15 anos de prática clínica.',
-    })
-    .onConflictDoNothing({ target: instructors.slug })
-    .returning();
+  // Instrutores (upsert): cria e garante bio + foto (idempotente em re-seed).
+  for (const i of INSTRUCTORS) {
+    await db
+      .insert(instructors)
+      .values({ slug: i.slug, name: i.name, bio: i.bio })
+      .onConflictDoNothing({ target: instructors.slug });
+    await db
+      .update(instructors)
+      .set({ bio: i.bio, avatarUrl: `${config.APP_URL}/instrutores/${i.photo}` })
+      .where(eq(instructors.slug, i.slug));
+  }
 
-  // Foto do instrutor servida pelo site (APP_URL). Idempotente: cobre re-seed.
-  await db
-    .update(instructors)
-    .set({ avatarUrl: `${config.APP_URL}/instrutores/ana-faria.webp` })
-    .where(eq(instructors.slug, 'dra-marina-alves'));
+  // Mapas slug → id para especialidades e instrutores.
+  const specialtyId = new Map<string, string>();
+  for (const s of await db
+    .select({ id: specialties.id, slug: specialties.slug })
+    .from(specialties)) {
+    specialtyId.set(s.slug, s.id);
+  }
+  const instructorId = new Map<string, string>();
+  for (const i of await db
+    .select({ id: instructors.id, slug: instructors.slug })
+    .from(instructors)) {
+    instructorId.set(i.slug, i.id);
+  }
 
-  const cardioRows = await db
-    .select({ id: specialties.id })
-    .from(specialties)
-    .where(eq(specialties.slug, 'cardiologia'))
-    .limit(1);
-  const cardio = cardioRows[0];
-
-  if (instructor && cardio) {
+  // Cursos + módulos + aulas.
+  for (const c of COURSES) {
     const [course] = await db
       .insert(courses)
       .values({
-        slug: 'ecocardiografia-na-pratica',
-        title: 'Ecocardiografia na Prática',
-        subtitle: 'Do básico ao laudo, com casos reais.',
-        description: 'Curso prático de ecocardiografia para o clínico de pequenos animais.',
-        priceCents: 149700,
-        level: 'intermediario',
+        slug: c.slug,
+        title: c.title,
+        subtitle: c.subtitle,
+        description: c.description,
+        priceCents: c.priceCents,
+        level: c.level,
         status: 'published',
-        specialtyId: cardio.id,
-        instructorId: instructor.id,
+        specialtyId: specialtyId.get(c.specialty) ?? null,
+        instructorId: instructorId.get(c.instructor) ?? null,
         publishedAt: new Date(),
       })
       .onConflictDoNothing({ target: courses.slug })
-      .returning();
+      .returning({ id: courses.id });
 
-    if (course) {
+    // Só popula módulos/aulas quando o curso foi criado agora (evita duplicar).
+    if (!course) continue;
+    let mPos = 0;
+    for (const m of c.modules) {
+      mPos += 1;
       const [mod] = await db
         .insert(courseModules)
-        .values({ courseId: course.id, title: 'Fundamentos', position: 1 })
-        .returning();
-      if (mod) {
-        await db.insert(lessons).values([
-          {
-            moduleId: mod.id,
-            title: 'Introdução e janelas acústicas',
-            durationSeconds: 720,
-            position: 1,
-            isFree: true,
-          },
-          { moduleId: mod.id, title: 'Modo B e modo M', durationSeconds: 1080, position: 2 },
-        ]);
+        .values({ courseId: course.id, title: m.title, position: mPos })
+        .returning({ id: courseModules.id });
+      if (!mod) continue;
+      let lPos = 0;
+      for (const l of m.lessons) {
+        lPos += 1;
+        await db.insert(lessons).values({
+          moduleId: mod.id,
+          title: l.title,
+          durationSeconds: l.min * 60,
+          position: lPos,
+          isFree: l.free ?? false,
+        });
       }
     }
   }
+  console.log(`Cursos: ${COURSES.length} definidos (idempotente).`);
 
-  // Segundo curso publicado (outra especialidade) — algo comprável no checkout,
-  // já que o aluno demo abaixo só é matriculado em ecocardiografia.
-  const cirurgiaRows = await db
-    .select({ id: specialties.id })
-    .from(specialties)
-    .where(eq(specialties.slug, 'cirurgia'))
-    .limit(1);
-  const cirurgia = cirurgiaRows[0];
-
-  if (instructor && cirurgia) {
-    const [c2] = await db
-      .insert(courses)
-      .values({
-        slug: 'sutura-e-cicatrizacao',
-        title: 'Sutura e Cicatrização',
-        subtitle: 'Técnicas de sutura e manejo de feridas na rotina cirúrgica.',
-        description:
-          'Fundamentos de sutura, materiais e cicatrização para o cirurgião de pequenos animais.',
-        priceCents: 89700,
-        level: 'iniciante',
-        status: 'published',
-        specialtyId: cirurgia.id,
-        instructorId: instructor.id,
-        publishedAt: new Date(),
-      })
-      .onConflictDoNothing({ target: courses.slug })
-      .returning();
-
-    if (c2) {
-      const [mod2] = await db
-        .insert(courseModules)
-        .values({ courseId: c2.id, title: 'Princípios de sutura', position: 1 })
-        .returning();
-      if (mod2) {
-        await db.insert(lessons).values([
-          {
-            moduleId: mod2.id,
-            title: 'Materiais e fios de sutura',
-            durationSeconds: 660,
-            position: 1,
-            isFree: true,
-          },
-          { moduleId: mod2.id, title: 'Padrões de sutura', durationSeconds: 900, position: 2 },
-        ]);
-      }
-    }
-  }
-
-  // Aluno demo + matrícula no curso de exemplo (para testar a área do aluno).
-  const [course] = await db
+  // Aluno demo + matrícula no primeiro curso (para testar a área do aluno).
+  const [firstCourse] = await db
     .select({ id: courses.id })
     .from(courses)
-    .where(eq(courses.slug, 'ecocardiografia-na-pratica'))
+    .where(eq(courses.slug, COURSES[0]!.slug))
     .limit(1);
 
   const passwordHash = await hash('aluno12345');
@@ -155,10 +329,13 @@ async function main(): Promise<void> {
     .onConflictDoNothing({ target: users.email })
     .returning();
 
-  if (student && course) {
+  const studentRow =
+    student ??
+    (await db.select().from(users).where(eq(users.email, 'aluno@vethis.dev')).limit(1))[0];
+  if (studentRow && firstCourse) {
     await db
       .insert(enrollments)
-      .values({ userId: student.id, courseId: course.id, status: 'active' })
+      .values({ userId: studentRow.id, courseId: firstCourse.id, status: 'active' })
       .onConflictDoNothing({ target: [enrollments.userId, enrollments.courseId] });
     console.log('Aluno demo: aluno@vethis.dev / aluno12345 (matriculado).');
   }
