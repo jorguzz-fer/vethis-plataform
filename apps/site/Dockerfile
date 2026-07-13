@@ -12,6 +12,9 @@ RUN pnpm --filter @vethis/site build
 FROM node:22-alpine AS runner
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+# Escutar em todas as interfaces (senão o proxy do Coolify/Traefik não alcança).
+ENV HOSTNAME=0.0.0.0
+ENV PORT=3000
 WORKDIR /app
 COPY --from=builder /repo/apps/site/.next/standalone ./
 COPY --from=builder /repo/apps/site/.next/static ./apps/site/.next/static
