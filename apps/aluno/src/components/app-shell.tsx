@@ -126,7 +126,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-paper lg:flex">
       {/* Sidebar — desktop */}
       <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-border bg-white lg:flex">
-        <Logo className="mx-6 my-6 h-12 w-auto" />
+        <Logo className="mx-6 my-6 h-12 w-auto self-start" />
 
         <nav className="flex flex-1 flex-col gap-1 px-3">
           {navItems.map(({ to, label, icon: Icon }) => (
