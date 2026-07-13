@@ -19,3 +19,9 @@ h3,
 .font-serif {
   font-family: var(--serif);
 }
+
+/* No modo escuro o lockup (verde/dourado escuro) some sobre o fundo escuro:
+   inverte para branco, igual ao rodapé. Só afeta o logo do header. */
+:root[data-theme='dark'] .nav .brand img {
+  filter: brightness(0) invert(1);
+}
