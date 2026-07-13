@@ -17,7 +17,7 @@ export function LoginPage() {
     setBusy(true);
     try {
       await login(email, password);
-      navigate('/meus-cursos');
+      navigate('/inicio');
     } catch {
       setError('E-mail ou senha inválidos.');
     } finally {
@@ -28,8 +28,12 @@ export function LoginPage() {
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6">
       <div className="mb-8 text-center">
-        <span className="font-serif text-3xl font-semibold text-green-800">Vethis</span>
-        <p className="mt-1 text-muted">Área do aluno</p>
+        <img
+          src="/vethis-logo.png"
+          alt="Vethis — Educação Médica Veterinária"
+          className="mx-auto h-20 w-auto"
+        />
+        <p className="mt-3 text-muted">Área do aluno</p>
       </div>
       <form onSubmit={onSubmit} className="flex flex-col gap-4">
         <Field

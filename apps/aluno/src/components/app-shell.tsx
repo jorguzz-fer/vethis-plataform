@@ -4,6 +4,25 @@ import { useAuth } from '../auth';
 
 type IconProps = SVGProps<SVGSVGElement>;
 
+function HomeIcon(props: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...props}
+    >
+      <path d="M4 10.5 12 4l8 6.5" />
+      <path d="M6 9.5V19a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V9.5" />
+      <path d="M10 20v-5h4v5" />
+    </svg>
+  );
+}
+
 function CoursesIcon(props: IconProps) {
   return (
     <svg
@@ -60,21 +79,20 @@ function LogoutIcon(props: IconProps) {
 }
 
 const navItems = [
+  { to: '/inicio', label: 'Início', icon: HomeIcon },
   { to: '/meus-cursos', label: 'Meus cursos', icon: CoursesIcon },
   { to: '/secretaria', label: 'Secretaria', icon: SecretariaIcon },
 ];
 
-function Logo({ className }: { className?: string }) {
+/** Lockup oficial Vethis. `inverted` deixa branco (sobre fundo escuro). */
+function Logo({ className, inverted }: { className?: string; inverted?: boolean }) {
   return (
-    <div className={`flex items-center gap-2 ${className ?? ''}`}>
-      <span
-        aria-hidden
-        className="grid h-8 w-8 place-items-center rounded-md bg-green-700 font-serif text-gold-400"
-      >
-        V
-      </span>
-      <span className="font-serif text-lg font-semibold">Vethis</span>
-    </div>
+    <img
+      src="/vethis-logo.png"
+      alt="Vethis — Educação Médica Veterinária"
+      className={className}
+      style={inverted ? { filter: 'brightness(0) invert(1)' } : undefined}
+    />
   );
 }
 
@@ -89,7 +107,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-paper lg:flex">
       {/* Sidebar — desktop */}
       <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-border bg-white lg:flex">
-        <Logo className="px-6 py-6 text-green-800" />
+        <Logo className="mx-6 my-6 h-12 w-auto" />
 
         <nav className="flex flex-1 flex-col gap-1 px-3">
           {navItems.map(({ to, label, icon: Icon }) => (
@@ -134,7 +152,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       {/* Header — mobile */}
       <header className="flex items-center justify-between bg-green-800 px-5 py-4 text-paper lg:hidden">
-        <Logo />
+        <Logo inverted className="h-9 w-auto" />
         <button
           type="button"
           onClick={() => void logout()}
