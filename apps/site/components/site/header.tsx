@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { ThemeToggle } from './theme-toggle';
 
+/** URL da área do aluno (app). "Área do aluno" leva direto ao login/app. */
+const alunoUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:5173';
+
 export function Header() {
   return (
     <header className="nav">
@@ -21,11 +24,11 @@ export function Header() {
         </nav>
         <div className="nav-right">
           <ThemeToggle />
-          <Link href="/cursos" className="signin">
-            Entrar
-          </Link>
-          <Link href="/#cta" className="btn btn-primary">
-            Começar agora
+          <a href={alunoUrl} className="signin">
+            Área do aluno
+          </a>
+          <Link href="/cursos" className="btn btn-primary">
+            Matricule-se
           </Link>
         </div>
       </div>
