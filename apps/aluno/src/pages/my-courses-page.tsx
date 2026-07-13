@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ProgressBar } from '@vethis/ui';
 import { api, type EnrolledCourse } from '../api';
+import { EmptyCourses } from '../components/empty-courses';
 
 export function MyCoursesPage() {
   const [courses, setCourses] = useState<EnrolledCourse[] | null>(null);
@@ -19,7 +20,7 @@ export function MyCoursesPage() {
     <div>
       <h1 className="mb-6 font-serif text-2xl font-semibold text-green-800">Meus cursos</h1>
       {courses.length === 0 ? (
-        <p className="text-muted">Você ainda não tem cursos.</p>
+        <EmptyCourses />
       ) : (
         <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {courses.map((c) => (

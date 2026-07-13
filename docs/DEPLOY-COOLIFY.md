@@ -20,6 +20,9 @@ Na aba **Environment Variables**, cole (ajustando valores e domínios):
 ```
 APP_URL=https://vethis.com.br
 PUBLIC_API_URL=https://api.vethis.com.br
+# Aluno (Vite) — build args: URL da API e do site (CTA "explorar cursos").
+VITE_API_URL=https://api.vethis.com.br
+VITE_SITE_URL=https://vethis.com.br
 # Site (Next.js) — checkout no navegador. NEXT_PUBLIC_* é assado em `next build`.
 NEXT_PUBLIC_API_URL=https://api.vethis.com.br
 NEXT_PUBLIC_APP_URL=https://app.vethis.com.br

@@ -4,9 +4,11 @@
 FROM node:22-alpine AS builder
 RUN corepack enable
 WORKDIR /repo
-# URL pública da API é "assada" no bundle em tempo de build.
+# URL pública da API e do site são "assadas" no bundle em tempo de build.
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
+ARG VITE_SITE_URL
+ENV VITE_SITE_URL=$VITE_SITE_URL
 COPY . .
 RUN pnpm install --frozen-lockfile
 RUN pnpm --filter @vethis/aluno build

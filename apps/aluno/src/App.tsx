@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from './auth';
 import { AppShell } from './components/app-shell';
 import { LoginPage } from './pages/login-page';
+import { HomePage } from './pages/home-page';
 import { MyCoursesPage } from './pages/my-courses-page';
 import { CoursePlayerPage } from './pages/course-player-page';
 import { SecretariaPage } from './pages/secretaria-page';
@@ -25,10 +26,11 @@ export function App() {
   return (
     <AppShell>
       <Routes>
+        <Route path="/inicio" element={<HomePage />} />
         <Route path="/meus-cursos" element={<MyCoursesPage />} />
         <Route path="/curso/:slug" element={<CoursePlayerPage />} />
         <Route path="/secretaria" element={<SecretariaPage />} />
-        <Route path="*" element={<Navigate to="/meus-cursos" replace />} />
+        <Route path="*" element={<Navigate to="/inicio" replace />} />
       </Routes>
     </AppShell>
   );
