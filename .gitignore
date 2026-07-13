@@ -42,3 +42,6 @@ apps/api/drizzle/meta/_journal.json.bak
 # Mobile (Capacitor) — gerados
 apps/aluno/ios/
 apps/aluno/android/
+
+# Redis dump (artefato de teste local)
+*.rdb
