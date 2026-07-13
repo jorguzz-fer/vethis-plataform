@@ -1,18 +1,34 @@
-import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { and, asc, count, eq, desc } from 'drizzle-orm';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { and, asc, count, eq, desc, ne } from 'drizzle-orm';
 import { DB, type Database } from '../db/client';
-import { courseModules, courses, lessons, specialties } from '../db/schema/catalog';
+import { courseModules, courses, instructors, lessons, specialties } from '../db/schema/catalog';
 import { enrollments, lessonProgress, secretariaRequests } from '../db/schema/enrollment';
+import { users } from '../db/schema/identity';
+import { PasswordService } from '../auth/password.service';
 import type {
+  CertificateDto,
+  ChangePasswordDto,
   CoursePlayer,
   CreateSecretariaDto,
   EnrolledCourse,
+  ProfileDto,
   SecretariaRequestDto,
+  UpdateProfileDto,
 } from './dto';
 
 @Injectable()
 export class MeService {
-  constructor(@Inject(DB) private readonly db: Database) {}
+  constructor(
+    @Inject(DB) private readonly db: Database,
+    @Inject(PasswordService) private readonly passwords: PasswordService,
+  ) {}
 
   private async countLessons(courseId: string): Promise<number> {
     const [row] = await this.db
@@ -145,6 +161,22 @@ export class MeService {
       .insert(lessonProgress)
       .values({ userId, lessonId })
       .onConflictDoNothing({ target: [lessonProgress.userId, lessonProgress.lessonId] });
+
+    // Se concluiu a última aula, marca a matrícula como concluída (libera certificado).
+    const total = await this.countLessons(row.courseId);
+    const done = await this.countCompleted(userId, row.courseId);
+    if (total > 0 && done >= total) {
+      await this.db
+        .update(enrollments)
+        .set({ status: 'completed', completedAt: new Date() })
+        .where(
+          and(
+            eq(enrollments.userId, userId),
+            eq(enrollments.courseId, row.courseId),
+            eq(enrollments.status, 'active'),
+          ),
+        );
+    }
     return { ok: true };
   }
 
@@ -180,7 +212,119 @@ export class MeService {
     };
   }
 
+  async getProfile(userId: string): Promise<ProfileDto> {
+    const [u] = await this.db
+      .select({
+        id: users.id,
+        email: users.email,
+        name: users.name,
+        role: users.role,
+        createdAt: users.createdAt,
+      })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+    if (!u) throw new NotFoundException('Usuário não encontrado');
+    return {
+      id: u.id,
+      email: u.email,
+      name: u.name,
+      role: u.role,
+      createdAt: u.createdAt.toISOString(),
+    };
+  }
+
+  async updateProfile(userId: string, dto: UpdateProfileDto): Promise<ProfileDto> {
+    await this.db
+      .update(users)
+      .set({ name: dto.name, updatedAt: new Date() })
+      .where(eq(users.id, userId));
+    return this.getProfile(userId);
+  }
+
+  async changePassword(userId: string, dto: ChangePasswordDto): Promise<{ ok: true }> {
+    const [u] = await this.db
+      .select({ passwordHash: users.passwordHash })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+    if (!u?.passwordHash) throw new NotFoundException('Usuário não encontrado');
+
+    const ok = await this.passwords.verify(u.passwordHash, dto.currentPassword);
+    if (!ok) throw new UnauthorizedException('Senha atual incorreta');
+    if (dto.currentPassword === dto.newPassword) {
+      throw new BadRequestException('A nova senha deve ser diferente da atual');
+    }
+
+    const passwordHash = await this.passwords.hash(dto.newPassword);
+    await this.db
+      .update(users)
+      .set({ passwordHash, updatedAt: new Date() })
+      .where(eq(users.id, userId));
+    return { ok: true };
+  }
+
+  /** Certificado de conclusão — só quando todas as aulas foram concluídas. */
+  async getCertificate(userId: string, slug: string): Promise<CertificateDto> {
+    const [course] = await this.db
+      .select({
+        id: courses.id,
+        title: courses.title,
+        slug: courses.slug,
+        instructorName: instructors.name,
+      })
+      .from(courses)
+      .leftJoin(instructors, eq(courses.instructorId, instructors.id))
+      .where(eq(courses.slug, slug))
+      .limit(1);
+    if (!course) throw new NotFoundException('Curso não encontrado');
+
+    await this.assertEnrolled(userId, course.id);
+
+    const total = await this.countLessons(course.id);
+    const done = await this.countCompleted(userId, course.id);
+    if (total === 0 || done < total) {
+      throw new ForbiddenException('Conclua todas as aulas para emitir o certificado');
+    }
+
+    const [u] = await this.db
+      .select({ name: users.name, email: users.email })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+
+    // Data de conclusão: da matrícula, ou a última aula concluída.
+    const [enr] = await this.db
+      .select({ completedAt: enrollments.completedAt })
+      .from(enrollments)
+      .where(and(eq(enrollments.userId, userId), eq(enrollments.courseId, course.id)))
+      .limit(1);
+    let completedAt = enr?.completedAt ?? null;
+    if (!completedAt) {
+      const [last] = await this.db
+        .select({ at: lessonProgress.completedAt })
+        .from(lessonProgress)
+        .innerJoin(lessons, eq(lessonProgress.lessonId, lessons.id))
+        .innerJoin(courseModules, eq(lessons.moduleId, courseModules.id))
+        .where(and(eq(courseModules.courseId, course.id), eq(lessonProgress.userId, userId)))
+        .orderBy(desc(lessonProgress.completedAt))
+        .limit(1);
+      completedAt = last?.at ?? new Date();
+    }
+
+    return {
+      studentName: u?.name ?? u?.email.split('@')[0] ?? 'Aluno',
+      courseTitle: course.title,
+      courseSlug: course.slug,
+      instructorName: course.instructorName,
+      lessonsTotal: total,
+      completedAt: completedAt.toISOString(),
+    };
+  }
+
   private async assertEnrolled(userId: string, courseId: string): Promise<void> {
+    // Aceita matrícula ativa OU concluída — só nega as canceladas. Um aluno que
+    // terminou o curso continua com acesso ao player e ao certificado.
     const [enr] = await this.db
       .select({ id: enrollments.id })
       .from(enrollments)
@@ -188,7 +332,7 @@ export class MeService {
         and(
           eq(enrollments.userId, userId),
           eq(enrollments.courseId, courseId),
-          eq(enrollments.status, 'active'),
+          ne(enrollments.status, 'cancelled'),
         ),
       )
       .limit(1);

@@ -5,6 +5,8 @@ export type EnrolledCourse = components['schemas']['EnrolledCourse'];
 export type CoursePlayer = components['schemas']['CoursePlayer'];
 export type SecretariaRequest = components['schemas']['SecretariaRequest'];
 export type CourseSummary = components['schemas']['CourseSummary'];
+export type Profile = components['schemas']['Profile'];
+export type Certificate = components['schemas']['Certificate'];
 
 const baseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3333';
 
