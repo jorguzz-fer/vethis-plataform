@@ -16,11 +16,14 @@ export function SidebarLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen">
       <aside className="flex w-56 flex-col bg-green-900 px-4 py-6 text-[#EAF0EC]">
-        <div className="mb-8 flex items-center gap-2 px-2">
-          <span className="grid h-7 w-7 place-items-center rounded-md bg-green-700 font-serif text-gold-400">
-            V
-          </span>
-          <span className="font-serif text-lg font-semibold">Vethis</span>
+        <div className="mb-8 px-2">
+          {/* Lockup oficial invertido para branco sobre o fundo escuro do admin. */}
+          <img
+            src="/vethis-logo.png"
+            alt="Vethis — Educação Médica Veterinária"
+            className="block h-12 w-auto"
+            style={{ filter: 'brightness(0) invert(1)', opacity: 0.95 }}
+          />
         </div>
         <nav className="flex flex-1 flex-col gap-1">
           {nav.map((item) => (
