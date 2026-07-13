@@ -15,10 +15,18 @@ describe('buildOpenApiDocument', () => {
     expect(doc.paths?.['/v1/catalog/courses/{slug}']).toBeDefined();
   });
 
+  it('expõe as rotas de checkout', () => {
+    expect(doc.paths?.['/v1/checkout']).toBeDefined();
+    expect(doc.paths?.['/v1/orders/{id}']).toBeDefined();
+    expect(doc.paths?.['/v1/webhooks/payments']).toBeDefined();
+  });
+
   it('registra os schemas de resposta', () => {
     const schemas = doc.components?.schemas ?? {};
     expect(schemas['CourseSummary']).toBeDefined();
     expect(schemas['CourseDetail']).toBeDefined();
     expect(schemas['PublicUser']).toBeDefined();
+    expect(schemas['Order']).toBeDefined();
+    expect(schemas['CreateCheckoutInput']).toBeDefined();
   });
 });

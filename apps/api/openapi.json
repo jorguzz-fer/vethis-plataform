@@ -590,6 +590,190 @@
           "subject"
         ]
       },
+      "CreateCheckoutInput": {
+        "type": "object",
+        "properties": {
+          "courseSlug": {
+            "type": "string",
+            "minLength": 1
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "pix",
+              "card",
+              "boleto"
+            ]
+          },
+          "card": {
+            "type": "object",
+            "properties": {
+              "number": {
+                "type": "string",
+                "minLength": 12,
+                "maxLength": 19
+              },
+              "holderName": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 120
+              },
+              "expMonth": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 12
+              },
+              "expYear": {
+                "type": "integer",
+                "minimum": 2024,
+                "maximum": 2100
+              },
+              "cvv": {
+                "type": "string",
+                "minLength": 3,
+                "maxLength": 4
+              },
+              "installments": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 12,
+                "default": 1
+              }
+            },
+            "required": [
+              "number",
+              "holderName",
+              "expMonth",
+              "expYear",
+              "cvv"
+            ]
+          }
+        },
+        "required": [
+          "courseSlug",
+          "method"
+        ]
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "paid",
+              "cancelled",
+              "refunded"
+            ]
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "pix",
+              "card",
+              "boleto"
+            ]
+          },
+          "amountCents": {
+            "type": "integer"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "installments": {
+            "type": "integer"
+          },
+          "course": {
+            "type": "object",
+            "properties": {
+              "slug": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "coverUrl": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "slug",
+              "title",
+              "coverUrl"
+            ]
+          },
+          "pixQrCode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pixCopyPaste": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "boletoUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "simulatable": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "method",
+          "amountCents",
+          "currency",
+          "installments",
+          "course",
+          "pixQrCode",
+          "pixCopyPaste",
+          "boletoUrl",
+          "simulatable",
+          "createdAt"
+        ]
+      },
+      "PaymentWebhookInput": {
+        "type": "object",
+        "properties": {
+          "event": {
+            "type": "string"
+          },
+          "providerChargeId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "paid",
+              "failed",
+              "refunded"
+            ]
+          }
+        },
+        "required": [
+          "event",
+          "providerChargeId",
+          "status"
+        ]
+      },
       "CreateLeadInput": {
         "type": "object",
         "properties": {
@@ -1191,6 +1375,129 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/v1/checkout": {
+      "post": {
+        "tags": [
+          "checkout"
+        ],
+        "summary": "Inicia o checkout de um curso (exige sessão)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCheckoutInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pedido criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado"
+          },
+          "409": {
+            "description": "Já matriculado"
+          }
+        }
+      }
+    },
+    "/v1/orders/{id}": {
+      "get": {
+        "tags": [
+          "checkout"
+        ],
+        "summary": "Consulta o pedido (polling do status de pagamento)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não encontrado"
+          }
+        }
+      }
+    },
+    "/v1/orders/{id}/simulate-payment": {
+      "post": {
+        "tags": [
+          "checkout"
+        ],
+        "summary": "Simula a confirmação do pagamento (dev; substitui o webhook)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Confirmado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Indisponível"
+          }
+        }
+      }
+    },
+    "/v1/webhooks/payments": {
+      "post": {
+        "tags": [
+          "checkout"
+        ],
+        "summary": "Webhook de confirmação do gateway de pagamento",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentWebhookInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Recebido"
           }
         }
       }

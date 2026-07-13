@@ -1,6 +1,7 @@
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { formatBRL } from '@vethis/shared';
-import { Badge, Button } from '@vethis/ui';
+import { Badge, buttonClasses } from '@vethis/ui';
 import { getCourse } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
@@ -34,7 +35,9 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
             <span className="font-serif text-2xl font-semibold text-gold-400">
               {formatBRL(course.priceCents)}
             </span>
-            <Button variant="gold">Comprar curso</Button>
+            <Link href={`/checkout/${course.slug}`} className={buttonClasses('gold')}>
+              Comprar curso
+            </Link>
           </div>
           {course.instructor ? (
             <p className="mt-4 text-sm text-[#9DB0A5]">Com {course.instructor.name}</p>
