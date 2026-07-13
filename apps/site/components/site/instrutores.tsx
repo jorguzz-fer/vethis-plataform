@@ -4,6 +4,8 @@ type Inst = {
   role: string;
   bio: string;
   gradient: string;
+  /** Foto em /public/instrutores; cai para a inicial se o arquivo não existir. */
+  photo?: string;
   stats: { value: string; label: string }[];
 };
 
@@ -14,6 +16,7 @@ const INSTRUTORES: Inst[] = [
     role: 'Cardiologia',
     bio: 'Diretor clínico e pesquisador em cardiologia de pequenos animais.',
     gradient: 'linear-gradient(150deg,#12603f,#0a2b20)',
+    photo: '/instrutores/ricardo-mendes.jpg',
     stats: [
       { value: '18', label: 'cursos' },
       { value: '4,9', label: 'nota' },
@@ -26,6 +29,7 @@ const INSTRUTORES: Inst[] = [
     role: 'Cirurgia',
     bio: 'Cirurgiã de tecidos moles com mais de 15 anos de centro cirúrgico.',
     gradient: 'linear-gradient(150deg,#3a5a4a,#0f2f24)',
+    photo: '/instrutores/ana-faria.jpg',
     stats: [
       { value: '22', label: 'cursos' },
       { value: '4,8', label: 'nota' },
@@ -38,6 +42,7 @@ const INSTRUTORES: Inst[] = [
     role: 'Dermatologia',
     bio: 'Especialista em dermatoses e alergias, referência em citologia.',
     gradient: 'linear-gradient(150deg,#8a6a2e,#4a3818)',
+    photo: '/instrutores/carlos-nunes.jpg',
     stats: [
       { value: '9', label: 'cursos' },
       { value: '4,9', label: 'nota' },
@@ -50,6 +55,7 @@ const INSTRUTORES: Inst[] = [
     role: 'Anestesiologia',
     bio: 'Anestesiologista de pacientes críticos e docente de pós-graduação.',
     gradient: 'linear-gradient(150deg,#2f5b52,#10302a)',
+    photo: '/instrutores/lucia-prado.jpg',
     stats: [
       { value: '8', label: 'cursos' },
       { value: '4,9', label: 'nota' },
@@ -76,7 +82,19 @@ export function Instrutores() {
           {INSTRUTORES.map((i) => (
             <article className="inst-c" key={i.name}>
               <div className="top" style={{ background: i.gradient }}>
-                <div className="ph">{i.initial}</div>
+                <div className="ph">
+                  <span>{i.initial}</span>
+                  {i.photo ? (
+                    // Foto como background: se o arquivo não existir, a camada fica
+                    // transparente e a inicial embaixo aparece (sem imagem quebrada).
+                    <span
+                      className="ph-photo"
+                      role="img"
+                      aria-label={i.name}
+                      style={{ backgroundImage: `url(${i.photo})` }}
+                    />
+                  ) : null}
+                </div>
               </div>
               <div className="ib">
                 <b>{i.name}</b>
