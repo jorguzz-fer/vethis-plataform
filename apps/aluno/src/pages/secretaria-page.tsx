@@ -40,18 +40,19 @@ export function SecretariaPage() {
     <div>
       <h1 className="mb-6 font-serif text-2xl font-semibold text-green-800">Secretaria online</h1>
 
-      <form
-        onSubmit={onSubmit}
-        className="mb-8 flex flex-col gap-3 rounded-lg border border-border bg-white p-4"
-      >
-        <Field
-          label="Assunto"
-          value={subject}
-          onChange={(e) => setSubject(e.target.value)}
-          required
-        />
-        <div className="flex items-end gap-3">
-          <label className="flex flex-1 flex-col gap-1.5 text-sm font-semibold text-ink">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
+        <form
+          onSubmit={onSubmit}
+          className="flex h-fit flex-col gap-3 rounded-lg border border-border bg-white p-5 lg:sticky lg:top-10"
+        >
+          <h2 className="font-serif text-base font-semibold text-green-800">Nova solicitação</h2>
+          <Field
+            label="Assunto"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            required
+          />
+          <label className="flex flex-col gap-1.5 text-sm font-semibold text-ink">
             Tipo
             <select
               value={type}
@@ -63,32 +64,37 @@ export function SecretariaPage() {
               <option value="financeiro">Financeiro</option>
             </select>
           </label>
-          <Button type="submit" disabled={busy}>
+          <Button type="submit" disabled={busy} className="mt-1">
             {busy ? 'Enviando…' : 'Abrir solicitação'}
           </Button>
-        </div>
-      </form>
+        </form>
 
-      {items.length === 0 ? (
-        <p className="text-muted">Nenhuma solicitação ainda.</p>
-      ) : (
-        <ul className="flex flex-col gap-3">
-          {items.map((r) => (
-            <li
-              key={r.id}
-              className="flex items-center justify-between rounded-lg border border-border bg-white p-4"
-            >
-              <div>
-                <span className="text-xs uppercase tracking-wide text-muted">{r.type}</span>
-                <p className="font-medium text-ink">{r.subject}</p>
-              </div>
-              <Badge variant={r.status === 'resolved' ? 'category' : 'highlight'}>
-                {STATUS_LABEL[r.status]}
-              </Badge>
-            </li>
-          ))}
-        </ul>
-      )}
+        <div>
+          <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-muted">
+            Minhas solicitações
+          </h2>
+          {items.length === 0 ? (
+            <p className="text-muted">Nenhuma solicitação ainda.</p>
+          ) : (
+            <ul className="flex flex-col gap-3">
+              {items.map((r) => (
+                <li
+                  key={r.id}
+                  className="flex items-center justify-between rounded-lg border border-border bg-white p-4"
+                >
+                  <div>
+                    <span className="text-xs uppercase tracking-wide text-muted">{r.type}</span>
+                    <p className="font-medium text-ink">{r.subject}</p>
+                  </div>
+                  <Badge variant={r.status === 'resolved' ? 'category' : 'highlight'}>
+                    {STATUS_LABEL[r.status]}
+                  </Badge>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
