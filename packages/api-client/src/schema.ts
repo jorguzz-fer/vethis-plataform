@@ -930,7 +930,31 @@ export interface paths {
             };
         };
         put?: never;
-        post?: never;
+        /** Cria um curso */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateCourseInput"];
+                };
+            };
+            responses: {
+                /** @description Criado */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCourseDetail"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -1016,10 +1040,52 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Detalhe do curso (com módulos e aulas) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCourseDetail"];
+                    };
+                };
+            };
+        };
         put?: never;
         post?: never;
-        delete?: never;
+        /** Exclui (soft-delete) um curso */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
         options?: never;
         head?: never;
         /** Atualiza/publica um curso */
@@ -1091,6 +1157,447 @@ export interface paths {
                 };
             };
         };
+        trace?: never;
+    };
+    "/v1/admin/courses/{id}/modules": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cria um módulo no curso */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateModuleInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCourseDetail"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/modules/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Exclui um módulo */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCourseDetail"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Atualiza um módulo */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateModuleInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCourseDetail"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/admin/modules/{id}/lessons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cria uma aula no módulo */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateLessonInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCourseDetail"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/lessons/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Exclui uma aula */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCourseDetail"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Atualiza uma aula */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateLessonInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCourseDetail"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/admin/instructors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista instrutores */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Instructor"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Cria um instrutor */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateInstructorInput"];
+                };
+            };
+            responses: {
+                /** @description Criado */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Instructor"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista usuários (todos os papéis) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminUser"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Cria um usuário */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateUserInput"];
+                };
+            };
+            responses: {
+                /** @description Criado */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminUser"];
+                    };
+                };
+                /** @description E-mail já cadastrado */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/users/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Desativa (soft-delete) um usuário */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Atualiza nome/papel de um usuário */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateUserInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminUser"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/admin/users/{id}/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Define nova senha para um usuário (reset) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["ResetPasswordInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
 }
@@ -1348,6 +1855,126 @@ export interface components {
             priceCents: number;
             createdAt: string;
         };
+        AdminCourseDetail: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            title: string;
+            subtitle: string | null;
+            description: string | null;
+            priceCents: number;
+            /** @enum {string} */
+            level: "iniciante" | "intermediario" | "avancado";
+            /** @enum {string} */
+            status: "draft" | "published";
+            coverUrl: string | null;
+            /** Format: uuid */
+            specialtyId: string | null;
+            /** Format: uuid */
+            instructorId: string | null;
+            modules: {
+                /** Format: uuid */
+                id: string;
+                title: string;
+                position: number;
+                lessons: {
+                    /** Format: uuid */
+                    id: string;
+                    title: string;
+                    durationSeconds: number;
+                    vimeoVideoId: string | null;
+                    position: number;
+                    isFree: boolean;
+                }[];
+            }[];
+        };
+        CreateCourseInput: {
+            slug?: string;
+            title: string;
+            subtitle?: string | null;
+            description?: string | null;
+            /** @default 0 */
+            priceCents: number;
+            /**
+             * @default iniciante
+             * @enum {string}
+             */
+            level: "iniciante" | "intermediario" | "avancado";
+            /**
+             * @default draft
+             * @enum {string}
+             */
+            status: "draft" | "published";
+            /** Format: uri */
+            coverUrl?: string | null;
+            /** Format: uuid */
+            specialtyId?: string | null;
+            /** Format: uuid */
+            instructorId?: string | null;
+        };
+        CreateModuleInput: {
+            title: string;
+        };
+        UpdateModuleInput: {
+            title: string;
+        };
+        CreateLessonInput: {
+            title: string;
+            /** @default 0 */
+            durationSeconds: number;
+            vimeoVideoId?: string | null;
+            /** @default false */
+            isFree: boolean;
+        };
+        UpdateLessonInput: {
+            title?: string;
+            durationSeconds?: number;
+            vimeoVideoId?: string | null;
+            isFree?: boolean;
+        };
+        Instructor: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            name: string;
+            bio: string | null;
+            avatarUrl: string | null;
+        };
+        CreateInstructorInput: {
+            name: string;
+            bio?: string | null;
+            /** Format: uri */
+            avatarUrl?: string | null;
+        };
+        AdminUser: {
+            /** Format: uuid */
+            id: string;
+            email: string;
+            name: string | null;
+            /** @enum {string} */
+            role: "aluno" | "staff" | "admin";
+            enrollments: number;
+            createdAt: string;
+        };
+        CreateUserInput: {
+            /** Format: email */
+            email: string;
+            name?: string | null;
+            /**
+             * @default aluno
+             * @enum {string}
+             */
+            role: "aluno" | "staff" | "admin";
+            password: string;
+        };
+        UpdateUserInput: {
+            name?: string | null;
+            /** @enum {string} */
+            role?: "aluno" | "staff" | "admin";
+        };
+        ResetPasswordInput: {
+            newPassword: string;
+        };
         Student: {
             /** Format: uuid */
             id: string;
@@ -1357,14 +1984,21 @@ export interface components {
             createdAt: string;
         };
         UpdateCourseInput: {
+            slug?: string;
             title?: string;
-            subtitle?: string;
-            description?: string;
+            subtitle?: string | null;
+            description?: string | null;
             priceCents?: number;
             /** @enum {string} */
             level?: "iniciante" | "intermediario" | "avancado";
             /** @enum {string} */
             status?: "draft" | "published";
+            /** Format: uri */
+            coverUrl?: string | null;
+            /** Format: uuid */
+            specialtyId?: string | null;
+            /** Format: uuid */
+            instructorId?: string | null;
         };
         UpdateLeadInput: {
             /** @enum {string} */
