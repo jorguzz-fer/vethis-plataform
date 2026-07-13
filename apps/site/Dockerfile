@@ -18,6 +18,9 @@ ENV PORT=3000
 WORKDIR /app
 COPY --from=builder /repo/apps/site/.next/standalone ./
 COPY --from=builder /repo/apps/site/.next/static ./apps/site/.next/static
+# `output: standalone` NÃO inclui a pasta public/ — copiar à mão (senão as
+# imagens em /public, como o logo, dão 404).
+COPY --from=builder /repo/apps/site/public ./apps/site/public
 USER node
 EXPOSE 3000
 CMD ["node", "apps/site/server.js"]
