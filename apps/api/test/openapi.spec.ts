@@ -21,6 +21,12 @@ describe('buildOpenApiDocument', () => {
     expect(doc.paths?.['/v1/webhooks/payments']).toBeDefined();
   });
 
+  it('expõe as rotas de perfil e certificado', () => {
+    expect(doc.paths?.['/v1/me/profile']).toBeDefined();
+    expect(doc.paths?.['/v1/me/password']).toBeDefined();
+    expect(doc.paths?.['/v1/me/courses/{slug}/certificate']).toBeDefined();
+  });
+
   it('registra os schemas de resposta', () => {
     const schemas = doc.components?.schemas ?? {};
     expect(schemas['CourseSummary']).toBeDefined();

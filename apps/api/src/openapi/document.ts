@@ -12,10 +12,14 @@ import {
   specialtySchema,
 } from '../catalog/dto';
 import {
+  certificateSchema,
+  changePasswordSchema,
   coursePlayerSchema,
   createSecretariaSchema,
   enrolledCourseSchema,
+  profileSchema,
   secretariaRequestSchema,
+  updateProfileSchema,
 } from '../me/dto';
 import { createCheckoutSchema, orderSchema, paymentWebhookSchema } from '../checkout/dto';
 import { createLeadSchema, leadSchema, updateLeadSchema } from '../crm/dto';
@@ -42,6 +46,10 @@ export function buildOpenApiDocument() {
   const CoursePlayer = registry.register('CoursePlayer', coursePlayerSchema);
   const SecretariaRequest = registry.register('SecretariaRequest', secretariaRequestSchema);
   const CreateSecretariaInput = registry.register('CreateSecretariaInput', createSecretariaSchema);
+  const Profile = registry.register('Profile', profileSchema);
+  const UpdateProfileInput = registry.register('UpdateProfileInput', updateProfileSchema);
+  const ChangePasswordInput = registry.register('ChangePasswordInput', changePasswordSchema);
+  const Certificate = registry.register('Certificate', certificateSchema);
   const CreateCheckoutInput = registry.register('CreateCheckoutInput', createCheckoutSchema);
   const Order = registry.register('Order', orderSchema);
   const PaymentWebhookInput = registry.register('PaymentWebhookInput', paymentWebhookSchema);
@@ -203,6 +211,47 @@ export function buildOpenApiDocument() {
     summary: 'Webhook de confirmação do gateway de pagamento',
     request: { body: json(PaymentWebhookInput) },
     responses: { 200: { description: 'Recebido' } },
+  });
+
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/me/profile',
+    tags: ['aluno'],
+    summary: 'Perfil do aluno',
+    responses: {
+      200: { description: 'OK', ...json(Profile) },
+      401: { description: 'Não autenticado' },
+    },
+  });
+  registry.registerPath({
+    method: 'patch',
+    path: '/v1/me/profile',
+    tags: ['aluno'],
+    summary: 'Atualiza o nome do aluno',
+    request: { body: json(UpdateProfileInput) },
+    responses: { 200: { description: 'OK', ...json(Profile) } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/me/password',
+    tags: ['aluno'],
+    summary: 'Troca a senha (exige a senha atual)',
+    request: { body: json(ChangePasswordInput) },
+    responses: {
+      200: { description: 'Trocada' },
+      401: { description: 'Senha atual incorreta' },
+    },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/me/courses/{slug}/certificate',
+    tags: ['aluno'],
+    summary: 'Certificado de conclusão (curso 100% concluído)',
+    request: { params: z.object({ slug: z.string() }) },
+    responses: {
+      200: { description: 'OK', ...json(Certificate) },
+      403: { description: 'Curso não concluído' },
+    },
   });
 
   registry.registerPath({

@@ -55,3 +55,35 @@ export const createSecretariaSchema = z.object({
   body: z.string().max(4000).optional(),
 });
 export type CreateSecretariaDto = z.infer<typeof createSecretariaSchema>;
+
+/** Perfil do aluno (dados da conta). */
+export const profileSchema = z.object({
+  id: z.string().uuid(),
+  email: z.string().email(),
+  name: z.string().nullable(),
+  role: z.enum(['aluno', 'staff', 'admin']),
+  createdAt: z.string(),
+});
+export type ProfileDto = z.infer<typeof profileSchema>;
+
+export const updateProfileSchema = z.object({
+  name: z.string().min(2).max(120),
+});
+export type UpdateProfileDto = z.infer<typeof updateProfileSchema>;
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(8, 'A nova senha deve ter ao menos 8 caracteres').max(200),
+});
+export type ChangePasswordDto = z.infer<typeof changePasswordSchema>;
+
+/** Dados do certificado de conclusão (emitido só quando o curso é 100% concluído). */
+export const certificateSchema = z.object({
+  studentName: z.string(),
+  courseTitle: z.string(),
+  courseSlug: z.string(),
+  instructorName: z.string().nullable(),
+  lessonsTotal: z.number().int(),
+  completedAt: z.string(),
+});
+export type CertificateDto = z.infer<typeof certificateSchema>;

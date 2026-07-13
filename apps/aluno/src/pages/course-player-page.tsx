@@ -261,6 +261,13 @@ export function CoursePlayerPage() {
             <p className="mt-2 text-sm text-muted">
               {progress.completed}/{progress.total} aulas · {progress.pct}%
             </p>
+            {progress.total > 0 && progress.pct === 100 ? (
+              <Link to={`/curso/${slug}/certificado`} className="mt-4 block">
+                <Button variant="gold" className="w-full">
+                  🎓 Emitir certificado
+                </Button>
+              </Link>
+            ) : null}
           </div>
 
           {otherCourses.length > 0 ? (

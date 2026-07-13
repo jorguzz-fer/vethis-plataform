@@ -60,6 +60,24 @@ function SecretariaIcon(props: IconProps) {
   );
 }
 
+function ProfileIcon(props: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...props}
+    >
+      <circle cx="12" cy="8" r="3.5" />
+      <path d="M5 20a7 7 0 0 1 14 0" />
+    </svg>
+  );
+}
+
 function LogoutIcon(props: IconProps) {
   return (
     <svg
@@ -82,6 +100,7 @@ const navItems = [
   { to: '/inicio', label: 'Início', icon: HomeIcon },
   { to: '/meus-cursos', label: 'Meus cursos', icon: CoursesIcon },
   { to: '/secretaria', label: 'Secretaria', icon: SecretariaIcon },
+  { to: '/perfil', label: 'Perfil', icon: ProfileIcon },
 ];
 
 /** Lockup oficial Vethis. `inverted` deixa branco (sobre fundo escuro). */
