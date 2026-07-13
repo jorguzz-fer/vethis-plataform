@@ -479,6 +479,188 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/checkout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Inicia o checkout de um curso (exige sessão) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateCheckoutInput"];
+                };
+            };
+            responses: {
+                /** @description Pedido criado */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Order"];
+                    };
+                };
+                /** @description Não autenticado */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Já matriculado */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/orders/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Consulta o pedido (polling do status de pagamento) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Order"];
+                    };
+                };
+                /** @description Não encontrado */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/orders/{id}/simulate-payment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Simula a confirmação do pagamento (dev; substitui o webhook) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Confirmado */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Order"];
+                    };
+                };
+                /** @description Indisponível */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/webhooks/payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Webhook de confirmação do gateway de pagamento */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["PaymentWebhookInput"];
+                };
+            };
+            responses: {
+                /** @description Recebido */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/leads": {
         parameters: {
             query?: never;
@@ -897,6 +1079,47 @@ export interface components {
             type: string;
             subject: string;
             body?: string;
+        };
+        CreateCheckoutInput: {
+            courseSlug: string;
+            /** @enum {string} */
+            method: "pix" | "card" | "boleto";
+            card?: {
+                number: string;
+                holderName: string;
+                expMonth: number;
+                expYear: number;
+                cvv: string;
+                /** @default 1 */
+                installments: number;
+            };
+        };
+        Order: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            status: "pending" | "paid" | "cancelled" | "refunded";
+            /** @enum {string} */
+            method: "pix" | "card" | "boleto";
+            amountCents: number;
+            currency: string;
+            installments: number;
+            course: {
+                slug: string;
+                title: string;
+                coverUrl: string | null;
+            };
+            pixQrCode: string | null;
+            pixCopyPaste: string | null;
+            boletoUrl: string | null;
+            simulatable: boolean;
+            createdAt: string;
+        };
+        PaymentWebhookInput: {
+            event: string;
+            providerChargeId: string;
+            /** @enum {string} */
+            status: "paid" | "failed" | "refunded";
         };
         CreateLeadInput: {
             name: string;

@@ -6,10 +6,11 @@ export function Header() {
     <header className="nav">
       <div className="wrap nav-in">
         <Link href="/#top" className="brand" aria-label="Vethis — início">
-          <img src="/vethis-mark.png" alt="" style={{ height: 30, width: 'auto' }} />
-          <span>
-            Vethis<span className="b-sub">Educação Médica Veterinária</span>
-          </span>
+          <img
+            src="/vethis-logo.png"
+            alt="Vethis — Educação Médica Veterinária"
+            style={{ height: 50, width: 'auto' }}
+          />
         </Link>
         <nav className="nav-links" aria-label="Principal">
           <Link href="/#especialidades">Especialidades</Link>

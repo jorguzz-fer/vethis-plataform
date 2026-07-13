@@ -7,21 +7,17 @@ export function Footer() {
         <div className="ft-grid">
           <div>
             <Link href="/#top" className="brand" aria-label="Vethis — início">
-              <img src="/vethis-mark.png" alt="" style={{ height: 30 }} />
-              <span style={{ fontFamily: 'var(--serif)', fontSize: 22, fontWeight: 700 }}>
-                Vethis
-                <span
-                  className="b-sub"
-                  style={{
-                    display: 'block',
-                    fontFamily: 'var(--sans)',
-                    fontSize: '8.5px',
-                    letterSpacing: '.24em',
-                  }}
-                >
-                  EDUCAÇÃO MÉDICA VETERINÁRIA
-                </span>
-              </span>
+              {/* Lockup oficial invertido para branco sobre o fundo escuro do rodapé. */}
+              <img
+                src="/vethis-logo.png"
+                alt="Vethis — Educação Médica Veterinária"
+                style={{
+                  height: 66,
+                  width: 'auto',
+                  filter: 'brightness(0) invert(1)',
+                  opacity: 0.92,
+                }}
+              />
             </Link>
             <p className="ft-about">
               Plataforma de educação continuada em medicina veterinária, feita por quem vive a

@@ -20,6 +20,9 @@ Na aba **Environment Variables**, cole (ajustando valores e domínios):
 ```
 APP_URL=https://vethis.com.br
 PUBLIC_API_URL=https://api.vethis.com.br
+# Site (Next.js) — checkout no navegador. NEXT_PUBLIC_* é assado em `next build`.
+NEXT_PUBLIC_API_URL=https://api.vethis.com.br
+NEXT_PUBLIC_APP_URL=https://app.vethis.com.br
 CORS_ORIGINS=https://vethis.com.br,https://app.vethis.com.br,https://admin.vethis.com.br
 
 POSTGRES_USER=vethis
@@ -35,8 +38,9 @@ COOKIE_DOMAIN=.vethis.com.br
 
 Opcionais (checkout/hardening), quando tiver: `GOOGLE_*`, `ASAAS_*`, `VIMEO_ACCESS_TOKEN`, `SENTRY_DSN`.
 
-> `PUBLIC_API_URL` é usado como **build arg** do aluno/backoffice (assado no bundle).
-> Marque-o como disponível em build time no Coolify (a UI tem essa opção por variável).
+> `PUBLIC_API_URL` (aluno/backoffice) e `NEXT_PUBLIC_*` (site) são **build args**
+> assados no bundle. Marque-os como disponíveis em build time no Coolify (a UI tem
+> essa opção por variável) e faça **rebuild** ao alterá-los.
 
 ## 3. Domínios por serviço
 

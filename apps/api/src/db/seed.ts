@@ -87,6 +87,54 @@ async function main(): Promise<void> {
     }
   }
 
+  // Segundo curso publicado (outra especialidade) — algo comprável no checkout,
+  // já que o aluno demo abaixo só é matriculado em ecocardiografia.
+  const cirurgiaRows = await db
+    .select({ id: specialties.id })
+    .from(specialties)
+    .where(eq(specialties.slug, 'cirurgia'))
+    .limit(1);
+  const cirurgia = cirurgiaRows[0];
+
+  if (instructor && cirurgia) {
+    const [c2] = await db
+      .insert(courses)
+      .values({
+        slug: 'sutura-e-cicatrizacao',
+        title: 'Sutura e Cicatrização',
+        subtitle: 'Técnicas de sutura e manejo de feridas na rotina cirúrgica.',
+        description:
+          'Fundamentos de sutura, materiais e cicatrização para o cirurgião de pequenos animais.',
+        priceCents: 89700,
+        level: 'iniciante',
+        status: 'published',
+        specialtyId: cirurgia.id,
+        instructorId: instructor.id,
+        publishedAt: new Date(),
+      })
+      .onConflictDoNothing({ target: courses.slug })
+      .returning();
+
+    if (c2) {
+      const [mod2] = await db
+        .insert(courseModules)
+        .values({ courseId: c2.id, title: 'Princípios de sutura', position: 1 })
+        .returning();
+      if (mod2) {
+        await db.insert(lessons).values([
+          {
+            moduleId: mod2.id,
+            title: 'Materiais e fios de sutura',
+            durationSeconds: 660,
+            position: 1,
+            isFree: true,
+          },
+          { moduleId: mod2.id, title: 'Padrões de sutura', durationSeconds: 900, position: 2 },
+        ]);
+      }
+    }
+  }
+
   // Aluno demo + matrícula no curso de exemplo (para testar a área do aluno).
   const [course] = await db
     .select({ id: courses.id })

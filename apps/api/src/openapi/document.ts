@@ -17,6 +17,7 @@ import {
   enrolledCourseSchema,
   secretariaRequestSchema,
 } from '../me/dto';
+import { createCheckoutSchema, orderSchema, paymentWebhookSchema } from '../checkout/dto';
 import { createLeadSchema, leadSchema, updateLeadSchema } from '../crm/dto';
 import { adminCourseSchema, kpisSchema, studentSchema, updateCourseSchema } from '../admin/dto';
 
@@ -41,6 +42,9 @@ export function buildOpenApiDocument() {
   const CoursePlayer = registry.register('CoursePlayer', coursePlayerSchema);
   const SecretariaRequest = registry.register('SecretariaRequest', secretariaRequestSchema);
   const CreateSecretariaInput = registry.register('CreateSecretariaInput', createSecretariaSchema);
+  const CreateCheckoutInput = registry.register('CreateCheckoutInput', createCheckoutSchema);
+  const Order = registry.register('Order', orderSchema);
+  const PaymentWebhookInput = registry.register('PaymentWebhookInput', paymentWebhookSchema);
   const CreateLeadInput = registry.register('CreateLeadInput', createLeadSchema);
   const Lead = registry.register('Lead', leadSchema);
   const Kpis = registry.register('Kpis', kpisSchema);
@@ -156,6 +160,49 @@ export function buildOpenApiDocument() {
     summary: 'Abre uma solicitação de secretaria',
     request: { body: json(CreateSecretariaInput) },
     responses: { 201: { description: 'Criado', ...json(SecretariaRequest) } },
+  });
+
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/checkout',
+    tags: ['checkout'],
+    summary: 'Inicia o checkout de um curso (exige sessão)',
+    request: { body: json(CreateCheckoutInput) },
+    responses: {
+      201: { description: 'Pedido criado', ...json(Order) },
+      401: { description: 'Não autenticado' },
+      409: { description: 'Já matriculado' },
+    },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/orders/{id}',
+    tags: ['checkout'],
+    summary: 'Consulta o pedido (polling do status de pagamento)',
+    request: { params: z.object({ id: z.string() }) },
+    responses: {
+      200: { description: 'OK', ...json(Order) },
+      404: { description: 'Não encontrado' },
+    },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/orders/{id}/simulate-payment',
+    tags: ['checkout'],
+    summary: 'Simula a confirmação do pagamento (dev; substitui o webhook)',
+    request: { params: z.object({ id: z.string() }) },
+    responses: {
+      200: { description: 'Confirmado', ...json(Order) },
+      403: { description: 'Indisponível' },
+    },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/webhooks/payments',
+    tags: ['checkout'],
+    summary: 'Webhook de confirmação do gateway de pagamento',
+    request: { body: json(PaymentWebhookInput) },
+    responses: { 200: { description: 'Recebido' } },
   });
 
   registry.registerPath({
