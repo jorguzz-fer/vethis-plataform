@@ -35,6 +35,7 @@ export const coursePlayerSchema = z.object({
   slug: z.string(),
   title: z.string(),
   subtitle: z.string().nullable(),
+  instructor: z.object({ name: z.string(), avatarUrl: z.string().nullable() }).nullable(),
   modules: z.array(playerModuleSchema),
 });
 export type CoursePlayer = z.infer<typeof coursePlayerSchema>;

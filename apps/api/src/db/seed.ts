@@ -42,6 +42,12 @@ async function main(): Promise<void> {
     .onConflictDoNothing({ target: instructors.slug })
     .returning();
 
+  // Foto do instrutor servida pelo site (APP_URL). Idempotente: cobre re-seed.
+  await db
+    .update(instructors)
+    .set({ avatarUrl: `${config.APP_URL}/instrutores/ana-faria.webp` })
+    .where(eq(instructors.slug, 'dra-marina-alves'));
+
   const cardioRows = await db
     .select({ id: specialties.id })
     .from(specialties)

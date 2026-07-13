@@ -253,6 +253,30 @@ export function CoursePlayerPage() {
 
         {/* Painel à direita */}
         <aside className="flex flex-col gap-5">
+          {course.instructor ? (
+            <div className="flex items-center gap-3 rounded-lg border border-border bg-white p-5">
+              {course.instructor.avatarUrl ? (
+                <img
+                  src={course.instructor.avatarUrl}
+                  alt={course.instructor.name}
+                  className="h-12 w-12 shrink-0 rounded-full object-cover"
+                />
+              ) : (
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-green-700 font-serif text-lg font-semibold text-gold-400">
+                  {course.instructor.name.trim().charAt(0).toUpperCase()}
+                </span>
+              )}
+              <div className="min-w-0">
+                <span className="block text-xs font-semibold uppercase tracking-wide text-gold-600">
+                  Instrutor
+                </span>
+                <span className="block truncate font-semibold text-ink">
+                  {course.instructor.name}
+                </span>
+              </div>
+            </div>
+          ) : null}
+
           <div className="rounded-lg border border-border bg-white p-5">
             <h3 className="mb-3 font-serif text-base font-semibold text-green-800">
               Progresso do curso

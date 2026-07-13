@@ -16,7 +16,7 @@ const INSTRUTORES: Inst[] = [
     role: 'Cardiologia',
     bio: 'Diretor clínico e pesquisador em cardiologia de pequenos animais.',
     gradient: 'linear-gradient(150deg,#12603f,#0a2b20)',
-    photo: '/instrutores/ricardo-mendes.jpg',
+    photo: '/instrutores/ricardo-mendes.webp',
     stats: [
       { value: '18', label: 'cursos' },
       { value: '4,9', label: 'nota' },
@@ -29,7 +29,7 @@ const INSTRUTORES: Inst[] = [
     role: 'Cirurgia',
     bio: 'Cirurgiã de tecidos moles com mais de 15 anos de centro cirúrgico.',
     gradient: 'linear-gradient(150deg,#3a5a4a,#0f2f24)',
-    photo: '/instrutores/ana-faria.jpg',
+    photo: '/instrutores/ana-faria.webp',
     stats: [
       { value: '22', label: 'cursos' },
       { value: '4,8', label: 'nota' },
@@ -42,7 +42,7 @@ const INSTRUTORES: Inst[] = [
     role: 'Dermatologia',
     bio: 'Especialista em dermatoses e alergias, referência em citologia.',
     gradient: 'linear-gradient(150deg,#8a6a2e,#4a3818)',
-    photo: '/instrutores/carlos-nunes.jpg',
+    photo: '/instrutores/carlos-nunes.webp',
     stats: [
       { value: '9', label: 'cursos' },
       { value: '4,9', label: 'nota' },
@@ -55,7 +55,7 @@ const INSTRUTORES: Inst[] = [
     role: 'Anestesiologia',
     bio: 'Anestesiologista de pacientes críticos e docente de pós-graduação.',
     gradient: 'linear-gradient(150deg,#2f5b52,#10302a)',
-    photo: '/instrutores/lucia-prado.jpg',
+    photo: '/instrutores/lucia-prado.webp',
     stats: [
       { value: '8', label: 'cursos' },
       { value: '4,9', label: 'nota' },

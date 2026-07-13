@@ -1714,6 +1714,10 @@ export interface components {
             slug: string;
             title: string;
             subtitle: string | null;
+            instructor: {
+                name: string;
+                avatarUrl: string | null;
+            } | null;
             modules: {
                 /** Format: uuid */
                 id: string;
