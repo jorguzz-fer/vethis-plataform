@@ -9,7 +9,7 @@ export function Header() {
           <img
             src="/vethis-logo.png"
             alt="Vethis — Educação Médica Veterinária"
-            style={{ height: 50, width: 'auto' }}
+            style={{ height: 68, width: 'auto' }}
           />
         </Link>
         <nav className="nav-links" aria-label="Principal">
