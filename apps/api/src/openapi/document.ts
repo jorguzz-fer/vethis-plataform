@@ -23,7 +23,24 @@ import {
 } from '../me/dto';
 import { createCheckoutSchema, orderSchema, paymentWebhookSchema } from '../checkout/dto';
 import { createLeadSchema, leadSchema, updateLeadSchema } from '../crm/dto';
-import { adminCourseSchema, kpisSchema, studentSchema, updateCourseSchema } from '../admin/dto';
+import {
+  adminCourseDetailSchema,
+  adminCourseSchema,
+  adminUserSchema,
+  createCourseSchema,
+  createInstructorSchema,
+  createLessonSchema,
+  createModuleSchema,
+  createUserSchema,
+  instructorSchema,
+  kpisSchema,
+  resetPasswordSchema,
+  studentSchema,
+  updateCourseSchema,
+  updateLessonSchema,
+  updateModuleSchema,
+  updateUserSchema,
+} from '../admin/dto';
 
 extendZodWithOpenApi(z);
 
@@ -57,6 +74,18 @@ export function buildOpenApiDocument() {
   const Lead = registry.register('Lead', leadSchema);
   const Kpis = registry.register('Kpis', kpisSchema);
   const AdminCourse = registry.register('AdminCourse', adminCourseSchema);
+  const AdminCourseDetail = registry.register('AdminCourseDetail', adminCourseDetailSchema);
+  const CreateCourseInput = registry.register('CreateCourseInput', createCourseSchema);
+  const CreateModuleInput = registry.register('CreateModuleInput', createModuleSchema);
+  const UpdateModuleInput = registry.register('UpdateModuleInput', updateModuleSchema);
+  const CreateLessonInput = registry.register('CreateLessonInput', createLessonSchema);
+  const UpdateLessonInput = registry.register('UpdateLessonInput', updateLessonSchema);
+  const Instructor = registry.register('Instructor', instructorSchema);
+  const CreateInstructorInput = registry.register('CreateInstructorInput', createInstructorSchema);
+  const AdminUser = registry.register('AdminUser', adminUserSchema);
+  const CreateUserInput = registry.register('CreateUserInput', createUserSchema);
+  const UpdateUserInput = registry.register('UpdateUserInput', updateUserSchema);
+  const ResetPasswordInput = registry.register('ResetPasswordInput', resetPasswordSchema);
   const Student = registry.register('Student', studentSchema);
 
   const json = (schema: z.ZodTypeAny) => ({ content: { 'application/json': { schema } } });
@@ -311,6 +340,137 @@ export function buildOpenApiDocument() {
       body: json(registry.register('UpdateLeadInput', updateLeadSchema)),
     },
     responses: { 200: { description: 'OK', ...json(Lead) } },
+  });
+
+  const idParam = { params: z.object({ id: z.string() }) };
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/admin/courses',
+    tags: ['backoffice'],
+    summary: 'Cria um curso',
+    request: { body: json(CreateCourseInput) },
+    responses: { 201: { description: 'Criado', ...json(AdminCourseDetail) } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/courses/{id}',
+    tags: ['backoffice'],
+    summary: 'Detalhe do curso (com módulos e aulas)',
+    request: idParam,
+    responses: { 200: { description: 'OK', ...json(AdminCourseDetail) } },
+  });
+  registry.registerPath({
+    method: 'delete',
+    path: '/v1/admin/courses/{id}',
+    tags: ['backoffice'],
+    summary: 'Exclui (soft-delete) um curso',
+    request: idParam,
+    responses: { 200: { description: 'OK' } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/admin/courses/{id}/modules',
+    tags: ['backoffice'],
+    summary: 'Cria um módulo no curso',
+    request: { ...idParam, body: json(CreateModuleInput) },
+    responses: { 201: { description: 'OK', ...json(AdminCourseDetail) } },
+  });
+  registry.registerPath({
+    method: 'patch',
+    path: '/v1/admin/modules/{id}',
+    tags: ['backoffice'],
+    summary: 'Atualiza um módulo',
+    request: { ...idParam, body: json(UpdateModuleInput) },
+    responses: { 200: { description: 'OK', ...json(AdminCourseDetail) } },
+  });
+  registry.registerPath({
+    method: 'delete',
+    path: '/v1/admin/modules/{id}',
+    tags: ['backoffice'],
+    summary: 'Exclui um módulo',
+    request: idParam,
+    responses: { 200: { description: 'OK', ...json(AdminCourseDetail) } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/admin/modules/{id}/lessons',
+    tags: ['backoffice'],
+    summary: 'Cria uma aula no módulo',
+    request: { ...idParam, body: json(CreateLessonInput) },
+    responses: { 201: { description: 'OK', ...json(AdminCourseDetail) } },
+  });
+  registry.registerPath({
+    method: 'patch',
+    path: '/v1/admin/lessons/{id}',
+    tags: ['backoffice'],
+    summary: 'Atualiza uma aula',
+    request: { ...idParam, body: json(UpdateLessonInput) },
+    responses: { 200: { description: 'OK', ...json(AdminCourseDetail) } },
+  });
+  registry.registerPath({
+    method: 'delete',
+    path: '/v1/admin/lessons/{id}',
+    tags: ['backoffice'],
+    summary: 'Exclui uma aula',
+    request: idParam,
+    responses: { 200: { description: 'OK', ...json(AdminCourseDetail) } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/instructors',
+    tags: ['backoffice'],
+    summary: 'Lista instrutores',
+    responses: { 200: { description: 'OK', ...json(z.array(Instructor)) } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/admin/instructors',
+    tags: ['backoffice'],
+    summary: 'Cria um instrutor',
+    request: { body: json(CreateInstructorInput) },
+    responses: { 201: { description: 'Criado', ...json(Instructor) } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/users',
+    tags: ['backoffice'],
+    summary: 'Lista usuários (todos os papéis)',
+    responses: { 200: { description: 'OK', ...json(z.array(AdminUser)) } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/admin/users',
+    tags: ['backoffice'],
+    summary: 'Cria um usuário',
+    request: { body: json(CreateUserInput) },
+    responses: {
+      201: { description: 'Criado', ...json(AdminUser) },
+      409: { description: 'E-mail já cadastrado' },
+    },
+  });
+  registry.registerPath({
+    method: 'patch',
+    path: '/v1/admin/users/{id}',
+    tags: ['backoffice'],
+    summary: 'Atualiza nome/papel de um usuário',
+    request: { ...idParam, body: json(UpdateUserInput) },
+    responses: { 200: { description: 'OK', ...json(AdminUser) } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/admin/users/{id}/password',
+    tags: ['backoffice'],
+    summary: 'Define nova senha para um usuário (reset)',
+    request: { ...idParam, body: json(ResetPasswordInput) },
+    responses: { 200: { description: 'OK' } },
+  });
+  registry.registerPath({
+    method: 'delete',
+    path: '/v1/admin/users/{id}',
+    tags: ['backoffice'],
+    summary: 'Desativa (soft-delete) um usuário',
+    request: idParam,
+    responses: { 200: { description: 'OK' } },
   });
 
   const generator = new OpenApiGeneratorV31(registry.definitions);

@@ -27,6 +27,15 @@ describe('buildOpenApiDocument', () => {
     expect(doc.paths?.['/v1/me/courses/{slug}/certificate']).toBeDefined();
   });
 
+  it('expõe as rotas de CRUD do backoffice (cursos/aulas/usuários)', () => {
+    expect(doc.paths?.['/v1/admin/courses/{id}']).toBeDefined();
+    expect(doc.paths?.['/v1/admin/modules/{id}']).toBeDefined();
+    expect(doc.paths?.['/v1/admin/lessons/{id}']).toBeDefined();
+    expect(doc.paths?.['/v1/admin/instructors']).toBeDefined();
+    expect(doc.paths?.['/v1/admin/users']).toBeDefined();
+    expect(doc.paths?.['/v1/admin/users/{id}/password']).toBeDefined();
+  });
+
   it('registra os schemas de resposta', () => {
     const schemas = doc.components?.schemas ?? {};
     expect(schemas['CourseSummary']).toBeDefined();

@@ -1055,6 +1055,474 @@
           "createdAt"
         ]
       },
+      "AdminCourseDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "subtitle": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "priceCents": {
+            "type": "integer"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "iniciante",
+              "intermediario",
+              "avancado"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "published"
+            ]
+          },
+          "coverUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "specialtyId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "instructorId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "modules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "position": {
+                  "type": "integer"
+                },
+                "lessons": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "durationSeconds": {
+                        "type": "integer"
+                      },
+                      "vimeoVideoId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "position": {
+                        "type": "integer"
+                      },
+                      "isFree": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "title",
+                      "durationSeconds",
+                      "vimeoVideoId",
+                      "position",
+                      "isFree"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "position",
+                "lessons"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "subtitle",
+          "description",
+          "priceCents",
+          "level",
+          "status",
+          "coverUrl",
+          "specialtyId",
+          "instructorId",
+          "modules"
+        ]
+      },
+      "CreateCourseInput": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "subtitle": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 300
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 8000
+          },
+          "priceCents": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "iniciante",
+              "intermediario",
+              "avancado"
+            ],
+            "default": "iniciante"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "published"
+            ],
+            "default": "draft"
+          },
+          "coverUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1000,
+            "format": "uri"
+          },
+          "specialtyId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "instructorId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "CreateModuleInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "UpdateModuleInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "CreateLessonInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "durationSeconds": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+          },
+          "vimeoVideoId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 60
+          },
+          "isFree": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "UpdateLessonInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "durationSeconds": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "vimeoVideoId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 60
+          },
+          "isFree": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Instructor": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "bio": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "avatarUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "bio",
+          "avatarUrl"
+        ]
+      },
+      "CreateInstructorInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 160
+          },
+          "bio": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2000
+          },
+          "avatarUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1000,
+            "format": "uri"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "AdminUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "aluno",
+              "staff",
+              "admin"
+            ]
+          },
+          "enrollments": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "role",
+          "enrollments",
+          "createdAt"
+        ]
+      },
+      "CreateUserInput": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "aluno",
+              "staff",
+              "admin"
+            ],
+            "default": "aluno"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "UpdateUserInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "aluno",
+              "staff",
+              "admin"
+            ]
+          }
+        }
+      },
+      "ResetPasswordInput": {
+        "type": "object",
+        "properties": {
+          "newPassword": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "newPassword"
+        ]
+      },
       "Student": {
         "type": "object",
         "properties": {
@@ -1089,17 +1557,29 @@
       "UpdateCourseInput": {
         "type": "object",
         "properties": {
+          "slug": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[a-z0-9-]+$"
+          },
           "title": {
             "type": "string",
             "minLength": 1,
             "maxLength": 200
           },
           "subtitle": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "maxLength": 300
           },
           "description": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "maxLength": 8000
           },
           "priceCents": {
@@ -1120,6 +1600,28 @@
               "draft",
               "published"
             ]
+          },
+          "coverUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1000,
+            "format": "uri"
+          },
+          "specialtyId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "instructorId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
           }
         }
       },
@@ -1785,6 +2287,33 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Cria um curso",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCourseInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCourseDetail"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/v1/admin/students": {
@@ -1870,6 +2399,55 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Detalhe do curso (com módulos e aulas)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCourseDetail"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Exclui (soft-delete) um curso",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/v1/admin/leads/{id}": {
@@ -1907,6 +2485,413 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/v1/admin/courses/{id}/modules": {
+      "post": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Cria um módulo no curso",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateModuleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCourseDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/modules/{id}": {
+      "patch": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Atualiza um módulo",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateModuleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCourseDetail"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Exclui um módulo",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCourseDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/modules/{id}/lessons": {
+      "post": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Cria uma aula no módulo",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLessonInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCourseDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/lessons/{id}": {
+      "patch": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Atualiza uma aula",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLessonInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCourseDetail"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Exclui uma aula",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCourseDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/instructors": {
+      "get": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Lista instrutores",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Instructor"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Cria um instrutor",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInstructorInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Instructor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/users": {
+      "get": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Lista usuários (todos os papéis)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminUser"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Cria um usuário",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUser"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "E-mail já cadastrado"
+          }
+        }
+      }
+    },
+    "/v1/admin/users/{id}": {
+      "patch": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Atualiza nome/papel de um usuário",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUser"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Desativa (soft-delete) um usuário",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/admin/users/{id}/password": {
+      "post": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Define nova senha para um usuário (reset)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

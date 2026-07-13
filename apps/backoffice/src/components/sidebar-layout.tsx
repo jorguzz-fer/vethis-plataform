@@ -5,6 +5,7 @@ import { useAuth } from '../auth';
 const nav = [
   { to: '/', label: 'Painel', end: true },
   { to: '/cursos', label: 'Cursos' },
+  { to: '/usuarios', label: 'Usuários' },
   { to: '/alunos', label: 'Alunos' },
   { to: '/crm', label: 'CRM' },
 ];
