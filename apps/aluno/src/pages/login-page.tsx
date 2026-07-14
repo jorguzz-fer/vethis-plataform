@@ -38,7 +38,7 @@ export function LoginPage() {
       <BrandPanel />
       <main className="flex flex-col justify-center bg-paper px-6 py-12 sm:px-12">
         <div className="mx-auto w-full max-w-sm">
-          <img src="/vethis-logo.png" alt="Vethis" className="mb-8 h-12 w-auto lg:hidden" />
+          <img src="/vethis-logo.png" alt="Vethis" className="mb-8 h-14 w-auto" />
           <h1 className="font-serif text-3xl font-semibold text-ink">Bem-vindo de volta</h1>
           <p className="mt-2 text-muted">Acesse sua área do aluno para continuar seus estudos.</p>
 
