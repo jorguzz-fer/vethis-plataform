@@ -2047,6 +2047,17 @@ export interface components {
                 /** @default 1 */
                 installments: number;
             };
+            attribution?: {
+                utmSource?: string;
+                utmMedium?: string;
+                utmCampaign?: string;
+                utmContent?: string;
+                utmTerm?: string;
+                referrer?: string;
+                landingPath?: string;
+                gclid?: string;
+                fbclid?: string;
+            };
         };
         Order: {
             /** Format: uuid */
@@ -2081,6 +2092,17 @@ export interface components {
             email: string;
             phone?: string;
             source?: string;
+            attribution?: {
+                utmSource?: string;
+                utmMedium?: string;
+                utmCampaign?: string;
+                utmContent?: string;
+                utmTerm?: string;
+                referrer?: string;
+                landingPath?: string;
+                gclid?: string;
+                fbclid?: string;
+            };
         };
         Lead: {
             /** Format: uuid */
@@ -2092,6 +2114,9 @@ export interface components {
             /** @enum {string} */
             stage: "new" | "contacted" | "qualified" | "won" | "lost";
             notes: string | null;
+            utmSource: string | null;
+            utmMedium: string | null;
+            utmCampaign: string | null;
             createdAt: string;
         };
         Opportunity: {

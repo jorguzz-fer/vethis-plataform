@@ -61,7 +61,12 @@ export class CheckoutService {
 
     const [order] = await this.db
       .insert(orders)
-      .values({ userId: user.id, courseId: course.id, amountCents: course.priceCents })
+      .values({
+        userId: user.id,
+        courseId: course.id,
+        amountCents: course.priceCents,
+        ...(dto.attribution ?? {}),
+      })
       .returning();
     if (!order) throw new BadRequestException('Falha ao criar pedido');
 
@@ -215,6 +220,16 @@ export class CheckoutService {
           email: buyer.email,
           source: 'checkout',
           stage: 'won',
+          // Atribuição first-touch do comprador, capturada no checkout.
+          utmSource: order.utmSource,
+          utmMedium: order.utmMedium,
+          utmCampaign: order.utmCampaign,
+          utmContent: order.utmContent,
+          utmTerm: order.utmTerm,
+          referrer: order.referrer,
+          landingPath: order.landingPath,
+          gclid: order.gclid,
+          fbclid: order.fbclid,
         })
         .returning({ id: leads.id });
       leadId = lead?.id;

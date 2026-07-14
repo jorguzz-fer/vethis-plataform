@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { attributionInputSchema } from '../crm/dto';
 
 /** Meio de pagamento escolhido no checkout (Pix como padrão de conversão). */
 export const paymentMethodSchema = z.enum(['pix', 'card', 'boleto']);
@@ -24,6 +25,7 @@ export const createCheckoutSchema = z
     courseSlug: z.string().min(1),
     method: paymentMethodSchema,
     card: cardSchema.optional(),
+    attribution: attributionInputSchema.optional(),
   })
   .refine((v) => v.method !== 'card' || v.card != null, {
     message: 'Dados do cartão são obrigatórios para pagamento com cartão',

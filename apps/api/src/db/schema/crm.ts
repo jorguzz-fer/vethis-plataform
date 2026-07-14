@@ -1,5 +1,6 @@
 import { date, integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { leadStageEnum, opportunityStageEnum } from './enums';
+import { attributionColumns } from './attribution';
 import { users } from './identity';
 
 /** Leads capturados no site (newsletter/contato) e geridos no CRM do backoffice. */
@@ -11,6 +12,8 @@ export const leads = pgTable('leads', {
   source: text('source').notNull().default('site'),
   stage: leadStageEnum('stage').notNull().default('new'),
   notes: text('notes'),
+  // Atribuição first-touch (de onde o lead veio).
+  ...attributionColumns(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
