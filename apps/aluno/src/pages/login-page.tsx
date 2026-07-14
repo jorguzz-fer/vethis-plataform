@@ -1,7 +1,15 @@
-import { useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Field, PasswordField } from '@vethis/ui';
 import { useAuth } from '../auth';
+
+/** Frases que se alternam no painel de marca (efeito máquina de escrever). */
+const HEADLINES = [
+  'Toda a sua formação veterinária em uma tela só.',
+  'Sua evolução na medicina veterinária começa aqui.',
+  'Do estudo ao certificado, num só app.',
+  'No ritmo da sua rotina clínica.',
+];
 
 export function LoginPage() {
   const { login } = useAuth();
@@ -104,8 +112,8 @@ function BrandPanel() {
           <span className="h-1.5 w-1.5 rounded-full bg-gold-400" />
           Educação médica veterinária continuada
         </span>
-        <h2 className="mt-5 font-serif text-4xl font-semibold leading-tight">
-          Toda a sua formação veterinária em uma tela só.
+        <h2 className="mt-5 min-h-[9.5rem] font-serif text-4xl font-semibold leading-tight">
+          <Typewriter phrases={HEADLINES} />
         </h2>
         <p className="mt-4 text-white/70">
           Cursos, aulas e sua secretaria acadêmica reunidos em um único lugar — no ritmo da sua
@@ -131,6 +139,70 @@ function BrandPanel() {
         />
       </div>
     </aside>
+  );
+}
+
+/** Respeita a preferência do sistema por menos movimento. */
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+    const onChange = () => setReduced(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+  return reduced;
+}
+
+/**
+ * Efeito "máquina de escrever": digita uma frase, apaga e passa para a próxima,
+ * em loop. Acessível: o leitor de tela lê uma frase fixa (`sr-only`) e as partes
+ * animadas ficam `aria-hidden`. Com `prefers-reduced-motion`, mostra estático.
+ */
+function Typewriter({ phrases }: { phrases: string[] }) {
+  const reduced = usePrefersReducedMotion();
+  const [text, setText] = useState('');
+  const [index, setIndex] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    if (reduced) return;
+    const full = phrases[index % phrases.length] ?? '';
+
+    if (!deleting && text === full) {
+      const hold = setTimeout(() => setDeleting(true), 1900);
+      return () => clearTimeout(hold);
+    }
+    if (deleting && text === '') {
+      setDeleting(false);
+      setIndex((i) => (i + 1) % phrases.length);
+      return;
+    }
+    const step = setTimeout(
+      () => {
+        setText((cur) =>
+          deleting ? full.slice(0, cur.length - 1) : full.slice(0, cur.length + 1),
+        );
+      },
+      deleting ? 30 : 55,
+    );
+    return () => clearTimeout(step);
+  }, [text, deleting, index, phrases, reduced]);
+
+  if (reduced) {
+    return <>{phrases[0]}</>;
+  }
+  return (
+    <>
+      <span className="sr-only">{phrases[0]}</span>
+      <span aria-hidden="true">{text}</span>
+      <span
+        aria-hidden="true"
+        className="ml-1 inline-block w-[3px] animate-pulse rounded-full bg-gold-400 align-baseline"
+        style={{ height: '0.9em' }}
+      />
+    </>
   );
 }
 
