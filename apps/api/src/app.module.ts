@@ -11,6 +11,7 @@ import { CatalogModule } from './catalog/catalog.module';
 import { CheckoutModule } from './checkout/checkout.module';
 import { MeModule } from './me/me.module';
 import { CrmModule } from './crm/crm.module';
+import { ChannelsModule } from './channels/channels.module';
 import { AdminModule } from './admin/admin.module';
 import { OpenApiModule } from './openapi/openapi.module';
 
@@ -31,6 +32,7 @@ import { OpenApiModule } from './openapi/openapi.module';
     CheckoutModule,
     MeModule,
     CrmModule,
+    ChannelsModule,
     AdminModule,
     OpenApiModule,
     HealthModule,

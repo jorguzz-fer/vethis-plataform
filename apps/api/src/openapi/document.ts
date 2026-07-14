@@ -31,6 +31,15 @@ import {
   updateOpportunitySchema,
 } from '../crm/dto';
 import {
+  channelSchema,
+  createChannelSchema,
+  createChannelRuleSchema,
+  leadsFlowSchema,
+  unmappedOriginSchema,
+  updateChannelSchema,
+  updateChannelRuleSchema,
+} from '../channels/dto';
+import {
   adminCourseDetailSchema,
   adminCourseSchema,
   adminEnrollmentSchema,
@@ -93,6 +102,19 @@ export function buildOpenApiDocument() {
   );
   const Kpis = registry.register('Kpis', kpisSchema);
   const MonthlyKpi = registry.register('MonthlyKpi', monthlyKpiSchema);
+  const Channel = registry.register('Channel', channelSchema);
+  const CreateChannelInput = registry.register('CreateChannelInput', createChannelSchema);
+  const UpdateChannelInput = registry.register('UpdateChannelInput', updateChannelSchema);
+  const CreateChannelRuleInput = registry.register(
+    'CreateChannelRuleInput',
+    createChannelRuleSchema,
+  );
+  const UpdateChannelRuleInput = registry.register(
+    'UpdateChannelRuleInput',
+    updateChannelRuleSchema,
+  );
+  const LeadsFlow = registry.register('LeadsFlow', leadsFlowSchema);
+  const UnmappedOrigin = registry.register('UnmappedOrigin', unmappedOriginSchema);
   const AdminCourse = registry.register('AdminCourse', adminCourseSchema);
   const AdminCourseDetail = registry.register('AdminCourseDetail', adminCourseDetailSchema);
   const CreateCourseInput = registry.register('CreateCourseInput', createCourseSchema);
@@ -558,6 +580,81 @@ export function buildOpenApiDocument() {
     summary: 'Remove a matrícula de um usuário em um curso',
     request: { params: z.object({ id: z.string(), courseId: z.string() }) },
     responses: { 200: { description: 'OK', ...json(z.array(AdminEnrollment)) } },
+  });
+
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/channels',
+    tags: ['backoffice'],
+    summary: 'Lista canais de aquisição (com regras)',
+    responses: { 200: { description: 'OK', ...json(z.array(Channel)) } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/admin/channels',
+    tags: ['backoffice'],
+    summary: 'Cria um canal',
+    request: { body: json(CreateChannelInput) },
+    responses: { 201: { description: 'Criado', ...json(Channel) } },
+  });
+  registry.registerPath({
+    method: 'patch',
+    path: '/v1/admin/channels/{id}',
+    tags: ['backoffice'],
+    summary: 'Atualiza um canal',
+    request: { ...idParam, body: json(UpdateChannelInput) },
+    responses: { 200: { description: 'OK', ...json(Channel) } },
+  });
+  registry.registerPath({
+    method: 'delete',
+    path: '/v1/admin/channels/{id}',
+    tags: ['backoffice'],
+    summary: 'Exclui um canal',
+    request: idParam,
+    responses: { 200: { description: 'OK' } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/admin/channels/{id}/rules',
+    tags: ['backoffice'],
+    summary: 'Adiciona uma regra ao canal',
+    request: { ...idParam, body: json(CreateChannelRuleInput) },
+    responses: { 200: { description: 'OK', ...json(Channel) } },
+  });
+  registry.registerPath({
+    method: 'patch',
+    path: '/v1/admin/channels/rules/{ruleId}',
+    tags: ['backoffice'],
+    summary: 'Atualiza uma regra',
+    request: {
+      params: z.object({ ruleId: z.string() }),
+      body: json(UpdateChannelRuleInput),
+    },
+    responses: { 200: { description: 'OK', ...json(Channel) } },
+  });
+  registry.registerPath({
+    method: 'delete',
+    path: '/v1/admin/channels/rules/{ruleId}',
+    tags: ['backoffice'],
+    summary: 'Remove uma regra',
+    request: { params: z.object({ ruleId: z.string() }) },
+    responses: { 200: { description: 'OK', ...json(Channel) } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/channels/leads-flow',
+    tags: ['backoffice'],
+    summary: 'Fluxo de leads por canal × estágio (janela opcional from/to)',
+    request: { query: z.object({ from: z.string().optional(), to: z.string().optional() }) },
+    responses: { 200: { description: 'OK', ...json(LeadsFlow) } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/channels/unmapped-origins',
+    tags: ['backoffice'],
+    summary: 'Origens (utm) sem regra de canal',
+    request: { query: z.object({ from: z.string().optional(), to: z.string().optional() }) },
+    responses: { 200: { description: 'OK', ...json(z.array(UnmappedOrigin)) } },
   });
 
   const generator = new OpenApiGeneratorV31(registry.definitions);

@@ -6,7 +6,8 @@ import { courseModules, courses, instructors, lessons, specialties } from './sch
 import { enrollments } from './schema/enrollment';
 import { users } from './schema/identity';
 import { leads } from './schema/crm';
-import type { CourseLevel } from './schema/enums';
+import { channelRules, channels } from './schema/channels';
+import type { ChannelGroup, CourseLevel } from './schema/enums';
 
 /** Especialidades/áreas do catálogo Vethis. */
 const SPECIALTIES = [
@@ -393,6 +394,151 @@ async function main(): Promise<void> {
       { name: 'Hospital Veterinário Sul', email: 'adm@hvsul.example', stage: 'qualified' },
     ])
     .onConflictDoNothing();
+
+  // Canais de aquisição do CRM (template do mapa de fluxo) + regras UTM→canal.
+  type SeedChannel = {
+    name: string;
+    group: ChannelGroup;
+    color: string;
+    sortOrder: number;
+    rules: Array<{ s: string; m: string | null }>;
+  };
+  const GOLD = '#B58D4F';
+  const GREEN = '#3E7D5F';
+  const BLUE = '#2B6CB0';
+  const SEED_CHANNELS: SeedChannel[] = [
+    {
+      name: 'Google Ads',
+      group: 'pago',
+      color: GOLD,
+      sortOrder: 1,
+      rules: [
+        { s: 'google', m: 'cpc' },
+        { s: 'google', m: 'paid' },
+      ],
+    },
+    {
+      name: 'Meta Ads',
+      group: 'pago',
+      color: GOLD,
+      sortOrder: 2,
+      rules: [
+        { s: 'facebook', m: 'paid' },
+        { s: 'instagram', m: 'paid' },
+        { s: 'ig', m: 'paid' },
+        { s: 'meta', m: null },
+      ],
+    },
+    {
+      name: 'TikTok Ads',
+      group: 'pago',
+      color: GOLD,
+      sortOrder: 3,
+      rules: [{ s: 'tiktok', m: null }],
+    },
+    {
+      name: 'LinkedIn',
+      group: 'pago',
+      color: GOLD,
+      sortOrder: 4,
+      rules: [{ s: 'linkedin', m: null }],
+    },
+    {
+      name: 'Landing pages',
+      group: 'organico',
+      color: GREEN,
+      sortOrder: 5,
+      rules: [{ s: 'landing', m: null }],
+    },
+    {
+      name: 'Blog',
+      group: 'organico',
+      color: GREEN,
+      sortOrder: 6,
+      rules: [{ s: 'blog', m: null }],
+    },
+    {
+      name: 'Instagram',
+      group: 'organico',
+      color: GREEN,
+      sortOrder: 7,
+      rules: [
+        { s: 'instagram', m: 'organic' },
+        { s: 'instagram', m: null },
+      ],
+    },
+    {
+      name: 'E-mail mkt',
+      group: 'organico',
+      color: GREEN,
+      sortOrder: 8,
+      rules: [
+        { s: 'newsletter', m: null },
+        { s: 'email', m: null },
+      ],
+    },
+    {
+      name: 'Quiz vocacional',
+      group: 'organico',
+      color: GREEN,
+      sortOrder: 9,
+      rules: [{ s: 'quiz', m: null }],
+    },
+    {
+      name: 'Base própria',
+      group: 'base_propria',
+      color: BLUE,
+      sortOrder: 10,
+      rules: [
+        { s: 'crm', m: null },
+        { s: 'base', m: null },
+      ],
+    },
+    {
+      name: 'Upsell',
+      group: 'base_propria',
+      color: BLUE,
+      sortOrder: 11,
+      rules: [{ s: 'upsell', m: null }],
+    },
+    {
+      name: 'Egressos',
+      group: 'base_propria',
+      color: BLUE,
+      sortOrder: 12,
+      rules: [{ s: 'egressos', m: null }],
+    },
+    {
+      name: 'Cross-sell',
+      group: 'base_propria',
+      color: BLUE,
+      sortOrder: 13,
+      rules: [{ s: 'crosssell', m: null }],
+    },
+  ];
+  for (const ch of SEED_CHANNELS) {
+    const [inserted] = await db
+      .insert(channels)
+      .values({ name: ch.name, group: ch.group, color: ch.color, sortOrder: ch.sortOrder })
+      .onConflictDoNothing({ target: channels.name })
+      .returning({ id: channels.id });
+    let channelId = inserted?.id;
+    if (!channelId) {
+      const [ex] = await db
+        .select({ id: channels.id })
+        .from(channels)
+        .where(eq(channels.name, ch.name))
+        .limit(1);
+      channelId = ex?.id;
+    }
+    if (channelId) {
+      await db
+        .insert(channelRules)
+        .values(ch.rules.map((r) => ({ channelId, utmSource: r.s, utmMedium: r.m })))
+        .onConflictDoNothing();
+    }
+  }
+  console.log(`Canais: ${SEED_CHANNELS.length} definidos (idempotente).`);
 
   console.log('Seed concluído.');
   await sql.end();

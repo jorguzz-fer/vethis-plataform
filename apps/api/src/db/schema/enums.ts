@@ -29,6 +29,9 @@ export const secretariaStatusEnum = pgEnum('secretaria_status', [
 /** Estágio do lead no funil de CRM. */
 export const leadStageEnum = pgEnum('lead_stage', ['new', 'contacted', 'qualified', 'won', 'lost']);
 
+/** Grupo/raia de um canal de aquisição no mapa de fluxo. */
+export const channelGroupEnum = pgEnum('channel_group', ['pago', 'organico', 'base_propria']);
+
 /** Estágio da oportunidade (negócio) no funil de vendas do CRM. */
 export const opportunityStageEnum = pgEnum('opportunity_stage', [
   'prospeccao',
@@ -62,6 +65,7 @@ export type EnrollmentStatus = (typeof enrollmentStatusEnum.enumValues)[number];
 export type SecretariaStatus = (typeof secretariaStatusEnum.enumValues)[number];
 export type LeadStage = (typeof leadStageEnum.enumValues)[number];
 export type OpportunityStage = (typeof opportunityStageEnum.enumValues)[number];
+export type ChannelGroup = (typeof channelGroupEnum.enumValues)[number];
 export type OrderStatus = (typeof orderStatusEnum.enumValues)[number];
 export type PaymentMethod = (typeof paymentMethodEnum.enumValues)[number];
 export type PaymentStatus = (typeof paymentStatusEnum.enumValues)[number];

@@ -9,4 +9,5 @@ export * from './catalog';
 export * from './enrollment';
 export * from './commerce';
 export * from './crm';
+export * from './channels';
 export * from './audit';

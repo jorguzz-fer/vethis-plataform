@@ -1348,6 +1348,376 @@
           "wonCents"
         ]
       },
+      "Channel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "group": {
+            "type": "string",
+            "enum": [
+              "pago",
+              "organico",
+              "base_propria"
+            ]
+          },
+          "color": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "sortOrder": {
+            "type": "integer"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "channelId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "utmSource": {
+                  "type": "string"
+                },
+                "utmMedium": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "priority": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "id",
+                "channelId",
+                "utmSource",
+                "utmMedium",
+                "priority"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "group",
+          "color",
+          "active",
+          "sortOrder",
+          "rules"
+        ]
+      },
+      "CreateChannelInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "group": {
+            "type": "string",
+            "enum": [
+              "pago",
+              "organico",
+              "base_propria"
+            ],
+            "default": "organico"
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$",
+            "default": "#3E7D5F"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "sortOrder": {
+            "type": "integer"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "utmSource": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "utmMedium": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200
+                },
+                "priority": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1000
+                }
+              },
+              "required": [
+                "utmSource"
+              ]
+            }
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "UpdateChannelInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "group": {
+            "type": "string",
+            "enum": [
+              "pago",
+              "organico",
+              "base_propria"
+            ]
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "sortOrder": {
+            "type": "integer"
+          }
+        }
+      },
+      "CreateChannelRuleInput": {
+        "type": "object",
+        "properties": {
+          "utmSource": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "utmMedium": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          }
+        },
+        "required": [
+          "utmSource"
+        ]
+      },
+      "UpdateChannelRuleInput": {
+        "type": "object",
+        "properties": {
+          "utmSource": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "utmMedium": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          }
+        }
+      },
+      "LeadsFlow": {
+        "type": "object",
+        "properties": {
+          "channels": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "group": {
+                  "type": "string",
+                  "enum": [
+                    "pago",
+                    "organico",
+                    "base_propria"
+                  ]
+                },
+                "color": {
+                  "type": "string"
+                },
+                "byStage": {
+                  "type": "object",
+                  "properties": {
+                    "new": {
+                      "type": "integer"
+                    },
+                    "contacted": {
+                      "type": "integer"
+                    },
+                    "qualified": {
+                      "type": "integer"
+                    },
+                    "won": {
+                      "type": "integer"
+                    },
+                    "lost": {
+                      "type": "integer"
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "new",
+                    "contacted",
+                    "qualified",
+                    "won",
+                    "lost",
+                    "total"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "group",
+                "color",
+                "byStage"
+              ]
+            }
+          },
+          "unmapped": {
+            "type": "object",
+            "properties": {
+              "new": {
+                "type": "integer"
+              },
+              "contacted": {
+                "type": "integer"
+              },
+              "qualified": {
+                "type": "integer"
+              },
+              "won": {
+                "type": "integer"
+              },
+              "lost": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "new",
+              "contacted",
+              "qualified",
+              "won",
+              "lost",
+              "total"
+            ]
+          },
+          "totals": {
+            "type": "object",
+            "properties": {
+              "new": {
+                "type": "integer"
+              },
+              "contacted": {
+                "type": "integer"
+              },
+              "qualified": {
+                "type": "integer"
+              },
+              "won": {
+                "type": "integer"
+              },
+              "lost": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "new",
+              "contacted",
+              "qualified",
+              "won",
+              "lost",
+              "total"
+            ]
+          }
+        },
+        "required": [
+          "channels",
+          "unmapped",
+          "totals"
+        ]
+      },
+      "UnmappedOrigin": {
+        "type": "object",
+        "properties": {
+          "utmSource": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "utmMedium": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "utmSource",
+          "utmMedium",
+          "count"
+        ]
+      },
       "AdminCourse": {
         "type": "object",
         "properties": {
@@ -3518,6 +3888,301 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/AdminEnrollment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/channels": {
+      "get": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Lista canais de aquisição (com regras)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Channel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Cria um canal",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateChannelInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Channel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/channels/{id}": {
+      "patch": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Atualiza um canal",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChannelInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Channel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Exclui um canal",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/admin/channels/{id}/rules": {
+      "post": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Adiciona uma regra ao canal",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateChannelRuleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Channel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/channels/rules/{ruleId}": {
+      "patch": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Atualiza uma regra",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "ruleId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChannelRuleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Channel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Remove uma regra",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "ruleId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Channel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/channels/leads-flow": {
+      "get": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Fluxo de leads por canal × estágio (janela opcional from/to)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "from",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "to",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeadsFlow"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/channels/unmapped-origins": {
+      "get": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Origens (utm) sem regra de canal",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "from",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "to",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UnmappedOrigin"
                   }
                 }
               }
