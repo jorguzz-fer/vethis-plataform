@@ -2159,6 +2159,7 @@ export interface components {
             label: string;
             enrollments: number;
             revenueCents: number;
+            wonCents: number;
         };
         AdminCourse: {
             /** Format: uuid */

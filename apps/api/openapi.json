@@ -1232,13 +1232,17 @@
           },
           "revenueCents": {
             "type": "integer"
+          },
+          "wonCents": {
+            "type": "integer"
           }
         },
         "required": [
           "month",
           "label",
           "enrollments",
-          "revenueCents"
+          "revenueCents",
+          "wonCents"
         ]
       },
       "AdminCourse": {

@@ -2,11 +2,36 @@ import { useState, type PointerEvent } from 'react';
 import { formatBRL } from '@vethis/shared';
 import type { MonthlyKpi } from '../api';
 
-type Metric = 'enrollments' | 'revenue';
+type Metric = 'enrollments' | 'revenue' | 'won';
 
-const METRICS: Array<{ key: Metric; label: string; title: string }> = [
-  { key: 'enrollments', label: 'Matrículas', title: 'Novas matrículas por mês' },
-  { key: 'revenue', label: 'Receita', title: 'Receita estimada por mês' },
+const METRICS: Array<{
+  key: Metric;
+  label: string;
+  title: string;
+  money: boolean;
+  get: (d: MonthlyKpi) => number;
+}> = [
+  {
+    key: 'enrollments',
+    label: 'Matrículas',
+    title: 'Novas matrículas por mês',
+    money: false,
+    get: (d) => d.enrollments,
+  },
+  {
+    key: 'revenue',
+    label: 'Receita',
+    title: 'Receita estimada por mês',
+    money: true,
+    get: (d) => d.revenueCents,
+  },
+  {
+    key: 'won',
+    label: 'Vendas',
+    title: 'Oportunidades ganhas por mês',
+    money: true,
+    get: (d) => d.wonCents,
+  },
 ];
 
 // Geometria do gráfico (viewBox fixo; largura fluida via CSS).
@@ -36,9 +61,9 @@ export function KpiChart({ data }: { data: MonthlyKpi[] }) {
   const [hover, setHover] = useState<number | null>(null);
 
   const active = METRICS.find((m) => m.key === metric)!;
-  const values = data.map((d) => (metric === 'enrollments' ? d.enrollments : d.revenueCents));
+  const values = data.map(active.get);
   const rawMax = Math.max(...values, 0);
-  const yMax = metric === 'revenue' ? niceMax(rawMax / 100) * 100 : Math.max(niceMax(rawMax), 2); // contagem: ticks inteiros (evita "0,5")
+  const yMax = active.money ? niceMax(rawMax / 100) * 100 : Math.max(niceMax(rawMax), 2); // contagem: ticks inteiros (evita "0,5")
 
   const n = data.length;
   const x = (i: number) => M.left + (n <= 1 ? PLOT_W / 2 : (PLOT_W * i) / (n - 1));
@@ -48,9 +73,9 @@ export function KpiChart({ data }: { data: MonthlyKpi[] }) {
   const linePath = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
   const areaPath = `${linePath} L ${x(n - 1)} ${M.top + PLOT_H} L ${x(0)} ${M.top + PLOT_H} Z`;
 
-  const fmt = (v: number) => (metric === 'revenue' ? formatBRL(v) : String(v));
+  const fmt = (v: number) => (active.money ? formatBRL(v) : String(v));
   const fmtAxis = (v: number) => {
-    if (metric !== 'revenue') return String(Math.round(v));
+    if (!active.money) return String(Math.round(v));
     const k = v / 100 / 1000;
     if (k >= 1) return `R$${k % 1 === 0 ? k.toFixed(0) : k.toFixed(1)}k`;
     return `R$${Math.round(v / 100)}`;

@@ -25,6 +25,7 @@ export const monthlyKpiSchema = z.object({
   label: z.string(), // rótulo curto do mês (ex.: 'jul')
   enrollments: z.number().int(),
   revenueCents: z.number().int(),
+  wonCents: z.number().int(), // valor de oportunidades ganhas no mês
 });
 export type MonthlyKpiDto = z.infer<typeof monthlyKpiSchema>;
 
