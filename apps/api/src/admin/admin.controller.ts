@@ -55,6 +55,7 @@ import {
   type CreateUserDto,
   type InstructorDto,
   type KpisDto,
+  type MonthlyKpiDto,
   type ResetPasswordDto,
   type StudentDto,
   type UpdateCourseDto,
@@ -76,6 +77,11 @@ export class AdminController {
   @Get('kpis')
   kpis(): Promise<KpisDto> {
     return this.admin.getKpis();
+  }
+
+  @Get('kpis/monthly')
+  monthlyKpis(): Promise<MonthlyKpiDto[]> {
+    return this.admin.getMonthlyKpis();
   }
 
   @Get('courses')

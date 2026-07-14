@@ -2,6 +2,7 @@ import { createVethisClient, type components } from '@vethis/api-client';
 
 export type AuthUser = components['schemas']['AuthUser'];
 export type Kpis = components['schemas']['Kpis'];
+export type MonthlyKpi = components['schemas']['MonthlyKpi'];
 export type AdminCourse = components['schemas']['AdminCourse'];
 export type AdminCourseDetail = components['schemas']['AdminCourseDetail'];
 export type Lead = components['schemas']['Lead'];

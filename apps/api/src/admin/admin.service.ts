@@ -1,5 +1,5 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { and, asc, count, desc, eq, isNull, max, sql } from 'drizzle-orm';
+import { and, asc, count, desc, eq, gte, isNull, max, sql } from 'drizzle-orm';
 import { DB, type Database } from '../db/client';
 import { courseModules, courses, instructors, lessons } from '../db/schema/catalog';
 import { enrollments } from '../db/schema/enrollment';
@@ -18,6 +18,7 @@ import type {
   CreateUserDto,
   InstructorDto,
   KpisDto,
+  MonthlyKpiDto,
   ResetPasswordDto,
   StudentDto,
   UpdateCourseDto,
@@ -101,6 +102,50 @@ export class AdminService {
       estimatedRevenueCents: rev?.n ?? 0,
       leadsByStage: await this.crm.countByStage(),
     };
+  }
+
+  /** Série mensal dos últimos 6 meses: matrículas e receita estimada por mês. */
+  async getMonthlyKpis(): Promise<MonthlyKpiDto[]> {
+    const MONTHS_PT = [
+      'jan',
+      'fev',
+      'mar',
+      'abr',
+      'mai',
+      'jun',
+      'jul',
+      'ago',
+      'set',
+      'out',
+      'nov',
+      'dez',
+    ];
+    const now = new Date();
+    const buckets = Array.from({ length: 6 }, (_, i) => {
+      const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - (5 - i), 1));
+      const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+      return { key, label: MONTHS_PT[d.getUTCMonth()]! };
+    });
+    const cutoff = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 5, 1));
+
+    const rows = await this.db
+      .select({
+        ym: sql<string>`to_char(${enrollments.createdAt}, 'YYYY-MM')`,
+        enrollments: sql<number>`count(*)::int`,
+        revenue: sql<number>`coalesce(sum(${courses.priceCents}), 0)::int`,
+      })
+      .from(enrollments)
+      .innerJoin(courses, eq(enrollments.courseId, courses.id))
+      .where(gte(enrollments.createdAt, cutoff))
+      .groupBy(sql`to_char(${enrollments.createdAt}, 'YYYY-MM')`);
+
+    const byKey = new Map(rows.map((r) => [r.ym, r]));
+    return buckets.map((b) => ({
+      month: b.key,
+      label: b.label,
+      enrollments: byKey.get(b.key)?.enrollments ?? 0,
+      revenueCents: byKey.get(b.key)?.revenue ?? 0,
+    }));
   }
 
   async listCourses(): Promise<AdminCourseDto[]> {

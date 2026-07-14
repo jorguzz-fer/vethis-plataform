@@ -901,6 +901,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/kpis/monthly": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Série mensal de matrículas e receita (últimos 6 meses) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["MonthlyKpi"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/admin/courses": {
         parameters: {
             query?: never;
@@ -2117,6 +2153,12 @@ export interface components {
                 won: number;
                 lost: number;
             };
+        };
+        MonthlyKpi: {
+            month: string;
+            label: string;
+            enrollments: number;
+            revenueCents: number;
         };
         AdminCourse: {
             /** Format: uuid */
