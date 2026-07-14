@@ -3,6 +3,7 @@ import { and, asc, count, desc, eq, gte, isNull, max, sql } from 'drizzle-orm';
 import { DB, type Database } from '../db/client';
 import { courseModules, courses, instructors, lessons } from '../db/schema/catalog';
 import { enrollments } from '../db/schema/enrollment';
+import { opportunities } from '../db/schema/crm';
 import { users } from '../db/schema/identity';
 import { CrmService } from '../crm/crm.service';
 import { PasswordService } from '../auth/password.service';
@@ -139,12 +140,23 @@ export class AdminService {
       .where(gte(enrollments.createdAt, cutoff))
       .groupBy(sql`to_char(${enrollments.createdAt}, 'YYYY-MM')`);
 
+    const wonRows = await this.db
+      .select({
+        ym: sql<string>`to_char(${opportunities.updatedAt}, 'YYYY-MM')`,
+        won: sql<number>`coalesce(sum(${opportunities.valueCents}), 0)::int`,
+      })
+      .from(opportunities)
+      .where(and(eq(opportunities.stage, 'ganho'), gte(opportunities.updatedAt, cutoff)))
+      .groupBy(sql`to_char(${opportunities.updatedAt}, 'YYYY-MM')`);
+
     const byKey = new Map(rows.map((r) => [r.ym, r]));
+    const wonByKey = new Map(wonRows.map((r) => [r.ym, r]));
     return buckets.map((b) => ({
       month: b.key,
       label: b.label,
       enrollments: byKey.get(b.key)?.enrollments ?? 0,
       revenueCents: byKey.get(b.key)?.revenue ?? 0,
+      wonCents: wonByKey.get(b.key)?.won ?? 0,
     }));
   }
 
