@@ -43,6 +43,7 @@ import {
   createUserSchema,
   instructorSchema,
   kpisSchema,
+  monthlyKpiSchema,
   resetPasswordSchema,
   studentSchema,
   updateCourseSchema,
@@ -91,6 +92,7 @@ export function buildOpenApiDocument() {
     updateOpportunitySchema,
   );
   const Kpis = registry.register('Kpis', kpisSchema);
+  const MonthlyKpi = registry.register('MonthlyKpi', monthlyKpiSchema);
   const AdminCourse = registry.register('AdminCourse', adminCourseSchema);
   const AdminCourseDetail = registry.register('AdminCourseDetail', adminCourseDetailSchema);
   const CreateCourseInput = registry.register('CreateCourseInput', createCourseSchema);
@@ -317,6 +319,13 @@ export function buildOpenApiDocument() {
     tags: ['backoffice'],
     summary: 'KPIs do painel (staff/admin)',
     responses: { 200: { description: 'OK', ...json(Kpis) }, 403: { description: 'Sem permissão' } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/kpis/monthly',
+    tags: ['backoffice'],
+    summary: 'Série mensal de matrículas e receita (últimos 6 meses)',
+    responses: { 200: { description: 'OK', ...json(z.array(MonthlyKpi)) } },
   });
   registry.registerPath({
     method: 'get',

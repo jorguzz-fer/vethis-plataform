@@ -1218,6 +1218,29 @@
           "leadsByStage"
         ]
       },
+      "MonthlyKpi": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "enrollments": {
+            "type": "integer"
+          },
+          "revenueCents": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "month",
+          "label",
+          "enrollments",
+          "revenueCents"
+        ]
+      },
       "AdminCourse": {
         "type": "object",
         "properties": {
@@ -2515,6 +2538,29 @@
           },
           "403": {
             "description": "Sem permissão"
+          }
+        }
+      }
+    },
+    "/v1/admin/kpis/monthly": {
+      "get": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Série mensal de matrículas e receita (últimos 6 meses)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MonthlyKpi"
+                  }
+                }
+              }
+            }
           }
         }
       }

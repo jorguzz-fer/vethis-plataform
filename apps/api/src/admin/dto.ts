@@ -19,6 +19,15 @@ export const kpisSchema = z.object({
 });
 export type KpisDto = z.infer<typeof kpisSchema>;
 
+/** Ponto mensal do gráfico de KPIs (últimos meses). */
+export const monthlyKpiSchema = z.object({
+  month: z.string(), // 'YYYY-MM'
+  label: z.string(), // rótulo curto do mês (ex.: 'jul')
+  enrollments: z.number().int(),
+  revenueCents: z.number().int(),
+});
+export type MonthlyKpiDto = z.infer<typeof monthlyKpiSchema>;
+
 export const adminCourseSchema = z.object({
   id: z.string().uuid(),
   slug: z.string(),

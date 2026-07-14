@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { formatBRL } from '@vethis/shared';
-import { api, type Kpis } from '../api';
+import { api, type Kpis, type MonthlyKpi } from '../api';
+import { KpiChart } from '../components/kpi-chart';
 
 function Card({ label, value }: { label: string; value: string }) {
   return (
@@ -21,6 +22,7 @@ const STAGE_LABEL: Record<keyof Kpis['leadsByStage'], string> = {
 
 export function DashboardPage() {
   const [kpis, setKpis] = useState<Kpis | null>(null);
+  const [monthly, setMonthly] = useState<MonthlyKpi[] | null>(null);
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -28,6 +30,10 @@ export function DashboardPage() {
       .GET('/v1/admin/kpis')
       .then(({ data, error }) => (error || !data ? setError(true) : setKpis(data)))
       .catch(() => setError(true));
+    api
+      .GET('/v1/admin/kpis/monthly')
+      .then(({ data }) => setMonthly(data ?? []))
+      .catch(() => setMonthly([]));
   }, []);
 
   if (error) return <p className="text-muted">Não foi possível carregar os KPIs.</p>;
@@ -43,6 +49,12 @@ export function DashboardPage() {
         <Card label="Taxa de conclusão" value={`${Math.round(kpis.completionRate * 100)}%`} />
         <Card label="Receita estimada" value={formatBRL(kpis.estimatedRevenueCents)} />
       </div>
+
+      {monthly && monthly.length > 0 ? (
+        <div className="mt-8">
+          <KpiChart data={monthly} />
+        </div>
+      ) : null}
 
       <h2 className="mb-3 mt-10 font-serif text-xl font-semibold text-green-800">Funil de leads</h2>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
