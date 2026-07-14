@@ -1,32 +1,42 @@
 import { useEffect, useMemo, useState } from 'react';
-import { api, type Kpis } from '../api';
+import { api, type Kpis, type LeadsFlow } from '../api';
 
 /**
- * Mapa de fluxo (experimental) — jornada ponta a ponta:
+ * Mapa de fluxo — jornada ponta a ponta:
  * Canais → Qualificação (SDR·IA) → CRM → Matrícula → Aluno.
- * As conexões têm fluxo animado (traços + partículas). Os nós de CRM,
- * matrícula e alunos usam dados reais; os canais são o template de aquisição.
+ * Canais e funil usam dados reais (endpoint leads-flow + KPIs). Sem dados,
+ * cai no template de aquisição. Conexões com fluxo animado; largura ~ volume.
  */
 
-const GROUPS = [
-  {
-    key: 'pago',
-    label: 'Pago',
+type ChannelRow = { label: string; color: string; group: string; total: number };
+
+const GROUP_META: Record<string, { label: string; order: number }> = {
+  pago: { label: 'Pago', order: 0 },
+  organico: { label: 'Orgânico', order: 1 },
+  base_propria: { label: 'Base própria', order: 2 },
+  unmapped: { label: 'Sem origem', order: 3 },
+};
+
+// Template usado como fallback quando ainda não há dados de canais/leads.
+const TEMPLATE: ChannelRow[] = [
+  ...['Google Ads', 'Meta Ads', 'TikTok Ads', 'LinkedIn'].map((label) => ({
+    label,
     color: '#B58D4F',
-    channels: ['Google Ads', 'Meta Ads', 'TikTok Ads', 'LinkedIn'],
-  },
-  {
-    key: 'organico',
-    label: 'Orgânico',
+    group: 'pago',
+    total: 0,
+  })),
+  ...['Landing pages', 'Blog', 'Instagram', 'E-mail mkt', 'Quiz vocacional'].map((label) => ({
+    label,
     color: '#3E7D5F',
-    channels: ['Landing pages', 'Blog', 'Instagram', 'E-mail mkt', 'Quiz vocacional'],
-  },
-  {
-    key: 'base',
-    label: 'Base própria',
+    group: 'organico',
+    total: 0,
+  })),
+  ...['Base própria', 'Upsell', 'Egressos', 'Cross-sell'].map((label) => ({
+    label,
     color: '#2B6CB0',
-    channels: ['Base própria', 'Upsell', 'Egressos', 'Cross-sell'],
-  },
+    group: 'base_propria',
+    total: 0,
+  })),
 ];
 
 const CRM_STAGES: Array<{ key: keyof Kpis['leadsByStage']; label: string; color: string }> = [
@@ -57,29 +67,66 @@ const NODE_H = 78;
 
 export function FunnelMapPage() {
   const [kpis, setKpis] = useState<Kpis | null>(null);
+  const [flow, setFlow] = useState<LeadsFlow | null>(null);
 
   useEffect(() => {
     api
       .GET('/v1/admin/kpis')
       .then(({ data }) => setKpis(data ?? null))
       .catch(() => setKpis(null));
+    api
+      .GET('/v1/admin/channels/leads-flow')
+      .then(({ data }) => setFlow(data ?? null))
+      .catch(() => setFlow(null));
   }, []);
 
+  // Canais reais (com contagem) ou template como fallback.
+  const channelRows = useMemo<ChannelRow[]>(() => {
+    if (flow && flow.channels.length) {
+      const rows: ChannelRow[] = flow.channels.map((c) => ({
+        label: c.name,
+        color: c.color,
+        group: c.group,
+        total: c.byStage.total,
+      }));
+      if (flow.unmapped.total > 0) {
+        rows.push({
+          label: 'Não mapeado',
+          color: '#94a3b8',
+          group: 'unmapped',
+          total: flow.unmapped.total,
+        });
+      }
+      return rows;
+    }
+    return TEMPLATE;
+  }, [flow]);
+
+  const maxTotal = Math.max(1, ...channelRows.map((r) => r.total));
+
   const layout = useMemo(() => {
+    const groupsPresent = [...new Set(channelRows.map((r) => r.group))].sort(
+      (a, b) => (GROUP_META[a]?.order ?? 9) - (GROUP_META[b]?.order ?? 9),
+    );
     let y = TOP;
-    const chips: Array<{ label: string; color: string; y: number }> = [];
+    const chips: Array<ChannelRow & { y: number }> = [];
     const groups: Array<{ label: string; color: string; y: number }> = [];
-    for (const g of GROUPS) {
+    for (const gk of groupsPresent) {
+      const items = channelRows.filter((r) => r.group === gk);
       const start = y;
-      for (const c of g.channels) {
-        chips.push({ label: c, color: g.color, y: y + CHIP_H / 2 });
+      for (const c of items) {
+        chips.push({ ...c, y: y + CHIP_H / 2 });
         y += CHIP_H + CHIP_GAP;
       }
-      groups.push({ label: g.label, color: g.color, y: (start + (y - CHIP_GAP)) / 2 });
+      groups.push({
+        label: GROUP_META[gk]?.label ?? gk,
+        color: items[0]?.color ?? '#5C665F',
+        y: (start + (y - CHIP_GAP)) / 2,
+      });
       y += GROUP_GAP;
     }
     return { chips, groups, bottom: y - GROUP_GAP };
-  }, []);
+  }, [channelRows]);
 
   const midY = (TOP + layout.bottom) / 2;
   const VH = layout.bottom + 40;
@@ -113,8 +160,9 @@ export function FunnelMapPage() {
         </span>
       </div>
       <p className="mb-5 text-sm text-muted">
-        Jornada ponta a ponta: canais → qualificação (SDR por IA) → CRM → matrícula → aluno. As
-        conexões mostram o fluxo; os nós de CRM, matrícula e alunos usam dados reais.
+        Jornada ponta a ponta: canais → qualificação (SDR por IA) → CRM → matrícula → aluno. Canais
+        e funil usam dados reais — a largura das conexões cresce com o volume de leads; canais sem
+        dados ficam apagados.
       </p>
 
       <div className="mb-4 flex flex-wrap gap-3">
@@ -145,25 +193,31 @@ export function FunnelMapPage() {
             </text>
           ))}
 
-          {/* canal → SDR */}
-          {layout.chips.map((c, i) => (
-            <g key={`edge-${i}`}>
-              <path
-                id={`fmap-p${i}`}
-                d={chipPath(c.y)}
-                fill="none"
-                stroke={c.color}
-                strokeOpacity="0.5"
-                strokeWidth="1.5"
-                className="fmap-flow"
-              />
-              <circle r="3" fill={c.color}>
-                <animateMotion dur="3s" begin={`${(i % 6) * 0.42}s`} repeatCount="indefinite">
-                  <mpath href={`#fmap-p${i}`} />
-                </animateMotion>
-              </circle>
-            </g>
-          ))}
+          {/* canal → SDR (largura/opacidade ~ volume de leads) */}
+          {layout.chips.map((c, i) => {
+            const w = 1.2 + (c.total / maxTotal) * 3.5;
+            const op = c.total > 0 ? 0.35 + (c.total / maxTotal) * 0.5 : 0.16;
+            return (
+              <g key={`edge-${i}`}>
+                <path
+                  id={`fmap-p${i}`}
+                  d={chipPath(c.y)}
+                  fill="none"
+                  stroke={c.color}
+                  strokeOpacity={op}
+                  strokeWidth={w}
+                  className={c.total > 0 ? 'fmap-flow' : undefined}
+                />
+                {c.total > 0 ? (
+                  <circle r="3" fill={c.color}>
+                    <animateMotion dur="3s" begin={`${(i % 6) * 0.42}s`} repeatCount="indefinite">
+                      <mpath href={`#fmap-p${i}`} />
+                    </animateMotion>
+                  </circle>
+                ) : null}
+              </g>
+            );
+          })}
 
           {/* SDR → CRM → Matrícula → Aluno (trilha principal) */}
           {[
@@ -191,7 +245,7 @@ export function FunnelMapPage() {
             </g>
           ))}
 
-          {/* chips */}
+          {/* chips (com contagem real; apagados quando sem volume) */}
           {layout.chips.map((c, i) => (
             <g key={`chip-${i}`}>
               <rect
@@ -202,13 +256,36 @@ export function FunnelMapPage() {
                 rx="7"
                 fill="#fff"
                 stroke={c.color}
-                strokeOpacity="0.55"
+                strokeOpacity={c.total > 0 ? 0.7 : 0.3}
                 strokeWidth="1.5"
               />
-              <circle cx={CHIP_X + 14} cy={c.y} r="3.5" fill={c.color} />
-              <text x={CHIP_X + 26} y={c.y + 4} fontSize="12" fill="#16201B">
+              <circle
+                cx={CHIP_X + 14}
+                cy={c.y}
+                r="3.5"
+                fill={c.color}
+                opacity={c.total > 0 ? 1 : 0.4}
+              />
+              <text
+                x={CHIP_X + 26}
+                y={c.y + 4}
+                fontSize="12"
+                fill={c.total > 0 ? '#16201B' : '#9aa39c'}
+              >
                 {c.label}
               </text>
+              {c.total > 0 ? (
+                <text
+                  x={CHIP_X + CHIP_W - 8}
+                  y={c.y + 4}
+                  textAnchor="end"
+                  fontSize="11"
+                  fontWeight="700"
+                  fill={c.color}
+                >
+                  {c.total}
+                </text>
+              ) : null}
             </g>
           ))}
 
