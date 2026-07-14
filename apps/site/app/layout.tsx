@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { Header } from '@/components/site/header';
 import { Footer } from '@/components/site/footer';
+import { AttributionTracker } from '@/components/site/attribution-tracker';
 import './globals.css';
 import './prototype.css';
 
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="pt-BR" suppressHydrationWarning>
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+        <AttributionTracker />
         <Header />
         <main id="top">{children}</main>
         <Footer />

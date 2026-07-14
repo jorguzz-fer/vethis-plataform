@@ -1,5 +1,6 @@
 import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { orderStatusEnum, paymentMethodEnum, paymentStatusEnum } from './enums';
+import { attributionColumns } from './attribution';
 import { users } from './identity';
 import { courses } from './catalog';
 
@@ -19,6 +20,8 @@ export const orders = pgTable('orders', {
   status: orderStatusEnum('status').notNull().default('pending'),
   amountCents: integer('amount_cents').notNull(),
   currency: text('currency').notNull().default('BRL'),
+  // Atribuição first-touch do comprador (propagada ao lead na compra confirmada).
+  ...attributionColumns(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   paidAt: timestamp('paid_at', { withTimezone: true }),

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { LeadFormTrigger } from './lead-form';
 
 export function Cta() {
   return (
@@ -17,8 +18,8 @@ export function Cta() {
           >
             Criar conta grátis
           </Link>
-          <Link
-            href="/#clinicas"
+          <LeadFormTrigger
+            source="site-cta"
             className="btn btn-ghost"
             style={{
               padding: '14px 26px',
@@ -28,7 +29,7 @@ export function Cta() {
             }}
           >
             Falar com a equipe
-          </Link>
+          </LeadFormTrigger>
         </div>
         <p className="fine">Já formamos mais de 15.000 veterinários em todo o Brasil.</p>
       </div>

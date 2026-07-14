@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { formatBRL } from '@vethis/shared';
 import { Badge, Button, Field } from '@vethis/ui';
 import type { CourseDetail } from '@/lib/api';
+import { readAttribution } from '@/lib/attribution';
 import {
   alunoUrl,
   browserApi,
@@ -216,7 +217,7 @@ function PaymentPanel({
             }
           : undefined;
       const { data, error: err } = await browserApi.POST('/v1/checkout', {
-        body: { courseSlug: course.slug, method, card },
+        body: { courseSlug: course.slug, method, card, attribution: readAttribution() },
       });
       if (err || !data) throw new Error('Não foi possível iniciar o pagamento. Tente novamente.');
       onOrder(data);

@@ -22,6 +22,9 @@ function toDto(l: typeof leads.$inferSelect): LeadDto {
     source: l.source,
     stage: l.stage,
     notes: l.notes,
+    utmSource: l.utmSource,
+    utmMedium: l.utmMedium,
+    utmCampaign: l.utmCampaign,
     createdAt: l.createdAt.toISOString(),
   };
 }
@@ -33,7 +36,13 @@ export class CrmService {
   async create(dto: CreateLeadDto): Promise<LeadDto> {
     const [row] = await this.db
       .insert(leads)
-      .values({ name: dto.name, email: dto.email, phone: dto.phone, source: dto.source ?? 'site' })
+      .values({
+        name: dto.name,
+        email: dto.email,
+        phone: dto.phone,
+        source: dto.source ?? 'site',
+        ...(dto.attribution ?? {}),
+      })
       .returning();
     return toDto(row!);
   }

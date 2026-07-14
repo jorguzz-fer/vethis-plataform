@@ -771,6 +771,47 @@
               "expYear",
               "cvv"
             ]
+          },
+          "attribution": {
+            "type": "object",
+            "properties": {
+              "utmSource": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "utmMedium": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "utmCampaign": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "utmContent": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "utmTerm": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "referrer": {
+                "type": "string",
+                "maxLength": 1000
+              },
+              "landingPath": {
+                "type": "string",
+                "maxLength": 1000
+              },
+              "gclid": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "fbclid": {
+                "type": "string",
+                "maxLength": 200
+              }
+            }
           }
         },
         "required": [
@@ -917,6 +958,47 @@
           "source": {
             "type": "string",
             "maxLength": 40
+          },
+          "attribution": {
+            "type": "object",
+            "properties": {
+              "utmSource": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "utmMedium": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "utmCampaign": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "utmContent": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "utmTerm": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "referrer": {
+                "type": "string",
+                "maxLength": 1000
+              },
+              "landingPath": {
+                "type": "string",
+                "maxLength": 1000
+              },
+              "gclid": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "fbclid": {
+                "type": "string",
+                "maxLength": 200
+              }
+            }
           }
         },
         "required": [
@@ -962,6 +1044,24 @@
               "null"
             ]
           },
+          "utmSource": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "utmMedium": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "utmCampaign": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "createdAt": {
             "type": "string"
           }
@@ -974,6 +1074,9 @@
           "source",
           "stage",
           "notes",
+          "utmSource",
+          "utmMedium",
+          "utmCampaign",
           "createdAt"
         ]
       },

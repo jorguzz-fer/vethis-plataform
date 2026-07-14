@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { LeadFormTrigger } from './lead-form';
 
 export function Footer() {
   return (
@@ -36,7 +37,21 @@ export function Footer() {
             <Link href="/#clinicas">Para clínicas</Link>
             <a href="#">Planos de equipe</a>
             <a href="#">Relatórios</a>
-            <a href="#">Fale com vendas</a>
+            <LeadFormTrigger
+              source="site-footer"
+              className="ft-link-btn"
+              style={{
+                background: 'none',
+                border: 0,
+                padding: 0,
+                font: 'inherit',
+                color: 'inherit',
+                cursor: 'pointer',
+                textAlign: 'left',
+              }}
+            >
+              Fale com vendas
+            </LeadFormTrigger>
           </div>
           <div className="ft-col">
             <h5>Vethis</h5>

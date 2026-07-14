@@ -1,11 +1,26 @@
 import { z } from 'zod';
 
+/** Atribuição first-touch (UTM + referrer + click ids). Todos opcionais. */
+export const attributionInputSchema = z.object({
+  utmSource: z.string().max(200).optional(),
+  utmMedium: z.string().max(200).optional(),
+  utmCampaign: z.string().max(200).optional(),
+  utmContent: z.string().max(200).optional(),
+  utmTerm: z.string().max(200).optional(),
+  referrer: z.string().max(1000).optional(),
+  landingPath: z.string().max(1000).optional(),
+  gclid: z.string().max(200).optional(),
+  fbclid: z.string().max(200).optional(),
+});
+export type AttributionInput = z.infer<typeof attributionInputSchema>;
+
 /** Captura pública de lead (formulário do site). */
 export const createLeadSchema = z.object({
   name: z.string().min(1).max(120),
   email: z.string().email(),
   phone: z.string().max(40).optional(),
   source: z.string().max(40).optional(),
+  attribution: attributionInputSchema.optional(),
 });
 export type CreateLeadDto = z.infer<typeof createLeadSchema>;
 
@@ -19,6 +34,9 @@ export const leadSchema = z.object({
   source: z.string(),
   stage: z.enum(leadStageValues),
   notes: z.string().nullable(),
+  utmSource: z.string().nullable(),
+  utmMedium: z.string().nullable(),
+  utmCampaign: z.string().nullable(),
   createdAt: z.string(),
 });
 export type LeadDto = z.infer<typeof leadSchema>;
