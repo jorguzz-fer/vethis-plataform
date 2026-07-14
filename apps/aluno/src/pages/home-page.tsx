@@ -50,7 +50,7 @@ export function HomePage() {
       {/* Banner de boas-vindas — escondido no mobile. Some sozinho se o arquivo
           ainda não existir em /public (evita imagem quebrada). */}
       <img
-        src="/banner-inicio.png"
+        src="/banner-inicio.webp"
         alt="Um focinho a mais respira, porque você não parou de estudar"
         className="mb-6 hidden w-full rounded-2xl lg:block"
         onError={(e) => {
