@@ -11,7 +11,8 @@ const ROLE_LABEL: Record<Role, string> = {
   staff: 'Equipe',
   admin: 'Admin',
 };
-const ROLES: Role[] = ['aluno', 'staff', 'admin'];
+// Usuários = equipe interna. Alunos têm a própria página (papel `aluno` fica de fora).
+const ROLES: Role[] = ['staff', 'admin'];
 
 export function UsersPage() {
   const { user: me } = useAuth();
@@ -23,7 +24,7 @@ export function UsersPage() {
   function load() {
     api
       .GET('/v1/admin/users')
-      .then(({ data }) => setUsers(data ?? []))
+      .then(({ data }) => setUsers((data ?? []).filter((u) => u.role !== 'aluno')))
       .catch(() => setUsers([]));
   }
   useEffect(load, []);
@@ -158,7 +159,7 @@ export function UsersPage() {
 function CreateUser({ onCreated }: { onCreated: () => void }) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [role, setRole] = useState<Role>('aluno');
+  const [role, setRole] = useState<Role>('staff');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
