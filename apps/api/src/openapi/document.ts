@@ -22,7 +22,14 @@ import {
   updateProfileSchema,
 } from '../me/dto';
 import { createCheckoutSchema, orderSchema, paymentWebhookSchema } from '../checkout/dto';
-import { createLeadSchema, leadSchema, updateLeadSchema } from '../crm/dto';
+import {
+  createLeadSchema,
+  createOpportunitySchema,
+  leadSchema,
+  opportunitySchema,
+  updateLeadSchema,
+  updateOpportunitySchema,
+} from '../crm/dto';
 import {
   adminCourseDetailSchema,
   adminCourseSchema,
@@ -74,6 +81,15 @@ export function buildOpenApiDocument() {
   const PaymentWebhookInput = registry.register('PaymentWebhookInput', paymentWebhookSchema);
   const CreateLeadInput = registry.register('CreateLeadInput', createLeadSchema);
   const Lead = registry.register('Lead', leadSchema);
+  const Opportunity = registry.register('Opportunity', opportunitySchema);
+  const CreateOpportunityInput = registry.register(
+    'CreateOpportunityInput',
+    createOpportunitySchema,
+  );
+  const UpdateOpportunityInput = registry.register(
+    'UpdateOpportunityInput',
+    updateOpportunitySchema,
+  );
   const Kpis = registry.register('Kpis', kpisSchema);
   const AdminCourse = registry.register('AdminCourse', adminCourseSchema);
   const AdminCourseDetail = registry.register('AdminCourseDetail', adminCourseDetailSchema);
@@ -344,6 +360,40 @@ export function buildOpenApiDocument() {
       body: json(registry.register('UpdateLeadInput', updateLeadSchema)),
     },
     responses: { 200: { description: 'OK', ...json(Lead) } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/opportunities',
+    tags: ['backoffice'],
+    summary: 'Lista oportunidades do funil de vendas',
+    responses: { 200: { description: 'OK', ...json(z.array(Opportunity)) } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/admin/opportunities',
+    tags: ['backoffice'],
+    summary: 'Cria uma oportunidade',
+    request: { body: json(CreateOpportunityInput) },
+    responses: { 201: { description: 'Criada', ...json(Opportunity) } },
+  });
+  registry.registerPath({
+    method: 'patch',
+    path: '/v1/admin/opportunities/{id}',
+    tags: ['backoffice'],
+    summary: 'Atualiza uma oportunidade',
+    request: {
+      params: z.object({ id: z.string() }),
+      body: json(UpdateOpportunityInput),
+    },
+    responses: { 200: { description: 'OK', ...json(Opportunity) } },
+  });
+  registry.registerPath({
+    method: 'delete',
+    path: '/v1/admin/opportunities/{id}',
+    tags: ['backoffice'],
+    summary: 'Exclui uma oportunidade',
+    request: { params: z.object({ id: z.string() }) },
+    responses: { 200: { description: 'OK' } },
   });
 
   const idParam = { params: z.object({ id: z.string() }) };

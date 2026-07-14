@@ -18,7 +18,17 @@ import { Roles } from '../common/roles.decorator';
 import { CurrentUser, type AuthUser } from '../common/auth-user';
 import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 import { CrmService } from '../crm/crm.service';
-import { updateLeadSchema, type LeadDto, type UpdateLeadDto, leadStageValues } from '../crm/dto';
+import {
+  createOpportunitySchema,
+  updateLeadSchema,
+  updateOpportunitySchema,
+  leadStageValues,
+  type CreateOpportunityDto,
+  type LeadDto,
+  type OpportunityDto,
+  type UpdateLeadDto,
+  type UpdateOpportunityDto,
+} from '../crm/dto';
 import type { LeadStage } from '../db/schema/enums';
 import { AdminService } from './admin.service';
 import {
@@ -234,5 +244,31 @@ export class AdminController {
     @Body(new ZodValidationPipe(updateLeadSchema)) dto: UpdateLeadDto,
   ): Promise<LeadDto> {
     return this.crm.update(id, dto);
+  }
+
+  @Get('opportunities')
+  opportunities(): Promise<OpportunityDto[]> {
+    return this.crm.listOpportunities();
+  }
+
+  @Post('opportunities')
+  createOpportunity(
+    @Body(new ZodValidationPipe(createOpportunitySchema)) dto: CreateOpportunityDto,
+  ): Promise<OpportunityDto> {
+    return this.crm.createOpportunity(dto);
+  }
+
+  @Patch('opportunities/:id')
+  updateOpportunity(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(updateOpportunitySchema)) dto: UpdateOpportunityDto,
+  ): Promise<OpportunityDto> {
+    return this.crm.updateOpportunity(id, dto);
+  }
+
+  @Delete('opportunities/:id')
+  @HttpCode(200)
+  deleteOpportunity(@Param('id') id: string): Promise<{ ok: true }> {
+    return this.crm.deleteOpportunity(id);
   }
 }

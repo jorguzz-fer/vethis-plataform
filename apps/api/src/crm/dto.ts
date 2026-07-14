@@ -28,3 +28,58 @@ export const updateLeadSchema = z.object({
   notes: z.string().max(4000).optional(),
 });
 export type UpdateLeadDto = z.infer<typeof updateLeadSchema>;
+
+// ---------------------------------------------------------------------------
+// Oportunidades (negócios do funil de vendas)
+// ---------------------------------------------------------------------------
+
+export const opportunityStageValues = [
+  'prospeccao',
+  'qualificacao',
+  'proposta',
+  'negociacao',
+  'ganho',
+  'perdido',
+] as const;
+
+/** Data no formato ISO `YYYY-MM-DD` (input `<input type="date">`). */
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Data deve estar no formato AAAA-MM-DD');
+
+export const opportunitySchema = z.object({
+  id: z.string().uuid(),
+  title: z.string(),
+  stage: z.enum(opportunityStageValues),
+  valueCents: z.number().int(),
+  probability: z.number().int(),
+  expectedCloseDate: isoDate.nullable(),
+  leadId: z.string().uuid().nullable(),
+  leadName: z.string().nullable(),
+  ownerId: z.string().uuid().nullable(),
+  ownerName: z.string().nullable(),
+  createdAt: z.string(),
+});
+export type OpportunityDto = z.infer<typeof opportunitySchema>;
+
+export const createOpportunitySchema = z.object({
+  title: z.string().min(1).max(160),
+  stage: z.enum(opportunityStageValues).default('prospeccao'),
+  valueCents: z.number().int().min(0).default(0),
+  probability: z.number().int().min(0).max(100).default(0),
+  expectedCloseDate: isoDate.nullable().optional(),
+  leadId: z.string().uuid().nullable().optional(),
+  ownerId: z.string().uuid().nullable().optional(),
+});
+export type CreateOpportunityDto = z.infer<typeof createOpportunitySchema>;
+
+export const updateOpportunitySchema = z
+  .object({
+    title: z.string().min(1).max(160).optional(),
+    stage: z.enum(opportunityStageValues).optional(),
+    valueCents: z.number().int().min(0).optional(),
+    probability: z.number().int().min(0).max(100).optional(),
+    expectedCloseDate: isoDate.nullable().optional(),
+    leadId: z.string().uuid().nullable().optional(),
+    ownerId: z.string().uuid().nullable().optional(),
+  })
+  .refine((v) => Object.keys(v).length > 0, { message: 'Nada para atualizar' });
+export type UpdateOpportunityDto = z.infer<typeof updateOpportunitySchema>;
