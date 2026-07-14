@@ -123,7 +123,7 @@ function DarkPasswordField({ label, id, ...props }: Omit<DarkFieldProps, 'type'>
           aria-label={visible ? 'Ocultar senha' : 'Mostrar senha'}
           aria-pressed={visible}
           tabIndex={-1}
-          className="absolute inset-y-0 right-0 flex items-center px-3 text-white/70 transition-colors hover:text-gold-400"
+          className="absolute inset-y-0 right-0 flex items-center px-3 text-white/85 transition-colors hover:text-gold-400"
         >
           {visible ? <EyeOffIcon /> : <EyeIcon />}
         </button>
