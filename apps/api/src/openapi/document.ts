@@ -26,8 +26,10 @@ import { createLeadSchema, leadSchema, updateLeadSchema } from '../crm/dto';
 import {
   adminCourseDetailSchema,
   adminCourseSchema,
+  adminEnrollmentSchema,
   adminUserSchema,
   createCourseSchema,
+  enrollUserSchema,
   createInstructorSchema,
   createLessonSchema,
   createModuleSchema,
@@ -83,6 +85,8 @@ export function buildOpenApiDocument() {
   const Instructor = registry.register('Instructor', instructorSchema);
   const CreateInstructorInput = registry.register('CreateInstructorInput', createInstructorSchema);
   const AdminUser = registry.register('AdminUser', adminUserSchema);
+  const AdminEnrollment = registry.register('AdminEnrollment', adminEnrollmentSchema);
+  const EnrollUserInput = registry.register('EnrollUserInput', enrollUserSchema);
   const CreateUserInput = registry.register('CreateUserInput', createUserSchema);
   const UpdateUserInput = registry.register('UpdateUserInput', updateUserSchema);
   const ResetPasswordInput = registry.register('ResetPasswordInput', resetPasswordSchema);
@@ -471,6 +475,30 @@ export function buildOpenApiDocument() {
     summary: 'Desativa (soft-delete) um usuário',
     request: idParam,
     responses: { 200: { description: 'OK' } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/users/{id}/enrollments',
+    tags: ['backoffice'],
+    summary: 'Matrículas de um usuário',
+    request: idParam,
+    responses: { 200: { description: 'OK', ...json(z.array(AdminEnrollment)) } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/admin/users/{id}/enrollments',
+    tags: ['backoffice'],
+    summary: 'Matricula um usuário em um curso',
+    request: { ...idParam, body: json(EnrollUserInput) },
+    responses: { 200: { description: 'OK', ...json(z.array(AdminEnrollment)) } },
+  });
+  registry.registerPath({
+    method: 'delete',
+    path: '/v1/admin/users/{id}/enrollments/{courseId}',
+    tags: ['backoffice'],
+    summary: 'Remove a matrícula de um usuário em um curso',
+    request: { params: z.object({ id: z.string(), courseId: z.string() }) },
+    responses: { 200: { description: 'OK', ...json(z.array(AdminEnrollment)) } },
   });
 
   const generator = new OpenApiGeneratorV31(registry.definitions);

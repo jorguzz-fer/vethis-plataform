@@ -7,6 +7,7 @@ export type AdminCourseDetail = components['schemas']['AdminCourseDetail'];
 export type Lead = components['schemas']['Lead'];
 export type Student = components['schemas']['Student'];
 export type AdminUser = components['schemas']['AdminUser'];
+export type AdminEnrollment = components['schemas']['AdminEnrollment'];
 export type Instructor = components['schemas']['Instructor'];
 export type Specialty = components['schemas']['Specialty'];
 

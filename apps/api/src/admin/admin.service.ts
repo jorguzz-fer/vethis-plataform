@@ -9,6 +9,7 @@ import { PasswordService } from '../auth/password.service';
 import type {
   AdminCourseDetailDto,
   AdminCourseDto,
+  AdminEnrollmentDto,
   AdminUserDto,
   CreateCourseDto,
   CreateInstructorDto,
@@ -436,6 +437,52 @@ export class AdminService {
       .returning({ id: users.id });
     if (!row) throw new NotFoundException('Usuário não encontrado');
     return { ok: true };
+  }
+
+  /* ---------------- Matrículas manuais (admin) ---------------------------- */
+
+  async listUserEnrollments(userId: string): Promise<AdminEnrollmentDto[]> {
+    const rows = await this.db
+      .select({
+        courseId: courses.id,
+        title: courses.title,
+        slug: courses.slug,
+        status: enrollments.status,
+        createdAt: enrollments.createdAt,
+      })
+      .from(enrollments)
+      .innerJoin(courses, eq(enrollments.courseId, courses.id))
+      .where(eq(enrollments.userId, userId))
+      .orderBy(asc(courses.title));
+    return rows.map((r) => ({ ...r, createdAt: r.createdAt.toISOString() }));
+  }
+
+  async enrollUser(userId: string, courseId: string): Promise<AdminEnrollmentDto[]> {
+    const [u] = await this.db
+      .select({ id: users.id })
+      .from(users)
+      .where(and(eq(users.id, userId), isNull(users.deletedAt)))
+      .limit(1);
+    if (!u) throw new NotFoundException('Usuário não encontrado');
+    const [c] = await this.db
+      .select({ id: courses.id })
+      .from(courses)
+      .where(and(eq(courses.id, courseId), isNull(courses.deletedAt)))
+      .limit(1);
+    if (!c) throw new NotFoundException('Curso não encontrado');
+
+    await this.db
+      .insert(enrollments)
+      .values({ userId, courseId, status: 'active' })
+      .onConflictDoNothing({ target: [enrollments.userId, enrollments.courseId] });
+    return this.listUserEnrollments(userId);
+  }
+
+  async unenrollUser(userId: string, courseId: string): Promise<AdminEnrollmentDto[]> {
+    await this.db
+      .delete(enrollments)
+      .where(and(eq(enrollments.userId, userId), eq(enrollments.courseId, courseId)));
+    return this.listUserEnrollments(userId);
   }
 
   private async getUser(id: string): Promise<AdminUserDto> {

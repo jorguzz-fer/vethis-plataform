@@ -27,6 +27,7 @@ import {
   createLessonSchema,
   createModuleSchema,
   createUserSchema,
+  enrollUserSchema,
   resetPasswordSchema,
   updateCourseSchema,
   updateLessonSchema,
@@ -34,8 +35,10 @@ import {
   updateUserSchema,
   type AdminCourseDetailDto,
   type AdminCourseDto,
+  type AdminEnrollmentDto,
   type AdminUserDto,
   type CreateCourseDto,
+  type EnrollUserDto,
   type CreateInstructorDto,
   type CreateLessonDto,
   type CreateModuleDto,
@@ -167,6 +170,28 @@ export class AdminController {
     @Body(new ZodValidationPipe(createUserSchema)) dto: CreateUserDto,
   ): Promise<AdminUserDto> {
     return this.admin.createUser(dto);
+  }
+
+  @Get('users/:id/enrollments')
+  userEnrollments(@Param('id') id: string): Promise<AdminEnrollmentDto[]> {
+    return this.admin.listUserEnrollments(id);
+  }
+
+  @Post('users/:id/enrollments')
+  enrollUser(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(enrollUserSchema)) dto: EnrollUserDto,
+  ): Promise<AdminEnrollmentDto[]> {
+    return this.admin.enrollUser(id, dto.courseId);
+  }
+
+  @Delete('users/:id/enrollments/:courseId')
+  @HttpCode(200)
+  unenrollUser(
+    @Param('id') id: string,
+    @Param('courseId') courseId: string,
+  ): Promise<AdminEnrollmentDto[]> {
+    return this.admin.unenrollUser(id, courseId);
   }
 
   @Patch('users/:id')
