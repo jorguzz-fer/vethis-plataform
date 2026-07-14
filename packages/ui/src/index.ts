@@ -14,4 +14,5 @@ export {
 export { Badge, type BadgeProps, type BadgeVariant } from './badge';
 export { ProgressBar, type ProgressBarProps } from './progress-bar';
 export { Field, type FieldProps } from './field';
+export { PasswordField, type PasswordFieldProps } from './password-field';
 export { CourseCard, type CourseCardProps } from './course-card';

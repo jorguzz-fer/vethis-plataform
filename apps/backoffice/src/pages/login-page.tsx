@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Button, Field } from '@vethis/ui';
+import { Button, Field, PasswordField } from '@vethis/ui';
 import { useAuth } from '../auth';
 
 export function LoginPage() {
@@ -36,9 +36,9 @@ export function LoginPage() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <Field
+        <PasswordField
           label="Senha"
-          type="password"
+          autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required

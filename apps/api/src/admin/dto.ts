@@ -192,3 +192,16 @@ export type UpdateUserDto = z.infer<typeof updateUserSchema>;
 
 export const resetPasswordSchema = z.object({ newPassword: z.string().min(8).max(200) });
 export type ResetPasswordDto = z.infer<typeof resetPasswordSchema>;
+
+/** Matrícula de um usuário na visão do admin. */
+export const adminEnrollmentSchema = z.object({
+  courseId: z.string().uuid(),
+  title: z.string(),
+  slug: z.string(),
+  status: z.enum(['active', 'completed', 'cancelled']),
+  createdAt: z.string(),
+});
+export type AdminEnrollmentDto = z.infer<typeof adminEnrollmentSchema>;
+
+export const enrollUserSchema = z.object({ courseId: z.string().uuid() });
+export type EnrollUserDto = z.infer<typeof enrollUserSchema>;

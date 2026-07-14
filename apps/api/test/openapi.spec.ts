@@ -34,6 +34,7 @@ describe('buildOpenApiDocument', () => {
     expect(doc.paths?.['/v1/admin/instructors']).toBeDefined();
     expect(doc.paths?.['/v1/admin/users']).toBeDefined();
     expect(doc.paths?.['/v1/admin/users/{id}/password']).toBeDefined();
+    expect(doc.paths?.['/v1/admin/users/{id}/enrollments']).toBeDefined();
   });
 
   it('registra os schemas de resposta', () => {
