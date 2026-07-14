@@ -2,13 +2,19 @@ import { useEffect, useState, type DragEvent, type FormEvent, type ReactNode } f
 import { Button, Field } from '@vethis/ui';
 import { formatBRL } from '@vethis/shared';
 import { api, type AdminUser, type Lead, type Opportunity } from '../api';
+import { Celebrate } from '../components/celebrate';
 
 type Tab = 'leads' | 'opportunities';
 
 export function CrmPage() {
   const [tab, setTab] = useState<Tab>('leads');
+  // Incrementa a cada "ganho" (lead ou oportunidade) para disparar o confete.
+  const [win, setWin] = useState(0);
+  const celebrate = () => setWin((w) => w + 1);
+
   return (
     <div>
+      <Celebrate trigger={win} />
       <div className="mb-6 flex items-center gap-1 border-b border-border">
         <TabButton active={tab === 'leads'} onClick={() => setTab('leads')}>
           Leads
@@ -17,7 +23,11 @@ export function CrmPage() {
           Oportunidades
         </TabButton>
       </div>
-      {tab === 'leads' ? <LeadsBoard /> : <OpportunitiesBoard />}
+      {tab === 'leads' ? (
+        <LeadsBoard onWin={celebrate} />
+      ) : (
+        <OpportunitiesBoard onWin={celebrate} />
+      )}
     </div>
   );
 }
@@ -58,7 +68,7 @@ const LEAD_STAGES: Array<{ value: LeadStage; label: string; color: string }> = [
   { value: 'lost', label: 'Perdido', color: '#d97878' },
 ];
 
-function LeadsBoard() {
+function LeadsBoard({ onWin }: { onWin: () => void }) {
   const [leads, setLeads] = useState<Lead[] | null>(null);
   const [dragOver, setDragOver] = useState<LeadStage | null>(null);
 
@@ -78,6 +88,8 @@ function LeadsBoard() {
     if (error) {
       const { data } = await api.GET('/v1/admin/leads');
       setLeads(data ?? []);
+    } else if (stage === 'won') {
+      onWin();
     }
   }
 
@@ -177,7 +189,7 @@ const OPP_STAGES: Array<{ value: OppStage; label: string; color: string }> = [
   { value: 'perdido', label: 'Perdido', color: '#d97878' },
 ];
 
-function OpportunitiesBoard() {
+function OpportunitiesBoard({ onWin }: { onWin: () => void }) {
   const [opps, setOpps] = useState<Opportunity[] | null>(null);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [owners, setOwners] = useState<AdminUser[]>([]);
@@ -206,6 +218,7 @@ function OpportunitiesBoard() {
       body: { stage },
     });
     if (error) load();
+    else if (stage === 'ganho') onWin();
   }
 
   async function remove(id: string) {
