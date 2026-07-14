@@ -1,3 +1,5 @@
+'use client';
+
 import type { InputHTMLAttributes, ReactNode } from 'react';
 import { useId, useState } from 'react';
 import { cn } from './cn';
