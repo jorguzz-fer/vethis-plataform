@@ -47,6 +47,17 @@ export function HomePage() {
 
   return (
     <div>
+      {/* Banner de boas-vindas — escondido no mobile. Some sozinho se o arquivo
+          ainda não existir em /public (evita imagem quebrada). */}
+      <img
+        src="/banner-inicio.png"
+        alt="Um focinho a mais respira, porque você não parou de estudar"
+        className="mb-6 hidden w-full rounded-2xl lg:block"
+        onError={(e) => {
+          e.currentTarget.style.display = 'none';
+        }}
+      />
+
       <h1 className="font-serif text-2xl font-semibold text-green-800">Olá! 👋</h1>
       <p className="mt-1 text-muted">
         {courses.length > 0

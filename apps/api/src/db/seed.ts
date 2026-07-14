@@ -8,16 +8,20 @@ import { users } from './schema/identity';
 import { leads } from './schema/crm';
 import type { CourseLevel } from './schema/enums';
 
-/** Especialidades da marca (VethisDesignSystem §6). */
+/** Especialidades/áreas do catálogo Vethis. */
 const SPECIALTIES = [
+  { slug: 'medicina-felina', name: 'Medicina Felina' },
+  { slug: 'emergencia-uti', name: 'Emergência & UTI' },
+  { slug: 'farmacologia', name: 'Farmacologia Clínica' },
+  { slug: 'patologia', name: 'Patologia' },
+  { slug: 'nefrologia', name: 'Nefrologia' },
+  { slug: 'hematologia', name: 'Hematologia' },
+  { slug: 'gestao-rt', name: 'Gestão & Responsabilidade Técnica' },
   { slug: 'cardiologia', name: 'Cardiologia' },
   { slug: 'cirurgia', name: 'Cirurgia' },
   { slug: 'diagnostico-por-imagem', name: 'Diagnóstico por Imagem' },
   { slug: 'dermatologia', name: 'Dermatologia' },
   { slug: 'anestesiologia', name: 'Anestesiologia' },
-  { slug: 'odontologia', name: 'Odontologia' },
-  { slug: 'emergencia-uti', name: 'Emergência & UTI' },
-  { slug: 'animais-exoticos', name: 'Animais Exóticos' },
 ];
 
 /** Corpo docente — mesmos nomes/fotos da seção "Instrutores" do site. */
@@ -25,25 +29,25 @@ const INSTRUCTORS = [
   {
     slug: 'dr-ricardo-mendes',
     name: 'Dr. Ricardo Mendes',
-    bio: 'Diretor clínico e pesquisador em cardiologia de pequenos animais.',
+    bio: 'Diretor clínico e pesquisador em clínica médica de pequenos animais.',
     photo: 'ricardo-mendes.webp',
   },
   {
     slug: 'dra-ana-faria',
     name: 'Dra. Ana B. Faria',
-    bio: 'Cirurgiã de tecidos moles com mais de 15 anos de centro cirúrgico.',
+    bio: 'Especialista em clínica de felinos e gestão da rotina veterinária.',
     photo: 'ana-faria.webp',
   },
   {
     slug: 'dr-carlos-nunes',
     name: 'Dr. Carlos Nunes',
-    bio: 'Especialista em dermatoses e alergias, referência em citologia.',
+    bio: 'Farmacologista clínico e referência em terapêutica de pequenos animais.',
     photo: 'carlos-nunes.webp',
   },
   {
     slug: 'dra-lucia-prado',
     name: 'Dra. Lúcia Prado',
-    bio: 'Anestesiologista de pacientes críticos e docente de pós-graduação.',
+    bio: 'Intensivista e docente de emergência e medicina transfusional.',
     photo: 'lucia-prado.webp',
   },
 ];
@@ -69,166 +73,193 @@ interface SeedCourse {
   modules: SeedModule[];
 }
 
-/** 6 cursos veterinários de exemplo, publicados, com módulos e aulas. */
+/** Catálogo Vethis — cursos publicados com módulos e aulas. */
 const COURSES: SeedCourse[] = [
   {
-    slug: 'ecocardiografia-na-pratica',
-    title: 'Ecocardiografia na Prática',
-    subtitle: 'Do básico ao laudo, com casos reais.',
+    slug: 'pos-medicina-felina',
+    title: 'Pós-graduação em Medicina Felina',
+    subtitle: 'O gato como paciente único, do ambulatório à internação.',
     description:
-      'Curso prático de ecocardiografia para o clínico de pequenos animais: janelas, medidas, Doppler e construção do laudo.',
-    priceCents: 149700,
-    level: 'intermediario',
-    specialty: 'cardiologia',
-    instructor: 'dr-ricardo-mendes',
-    modules: [
-      {
-        title: 'Fundamentos',
-        lessons: [
-          { title: 'Introdução e janelas acústicas', min: 12, free: true },
-          { title: 'Modo B e modo M', min: 18 },
-        ],
-      },
-      {
-        title: 'Avaliação funcional',
-        lessons: [
-          { title: 'Doppler e avaliação de fluxos', min: 20 },
-          { title: 'Medidas, índices e o laudo', min: 16 },
-        ],
-      },
-    ],
-  },
-  {
-    slug: 'cirurgia-tecidos-moles',
-    title: 'Cirurgia de Tecidos Moles',
-    subtitle: 'Técnica passo a passo em procedimentos do dia a dia.',
-    description:
-      'Do preparo do centro cirúrgico aos principais procedimentos de tecidos moles, com foco em técnica e segurança.',
-    priceCents: 169700,
+      'Formação completa em medicina felina: comportamento, particularidades fisiológicas, principais afecções e manejo hospitalar do paciente gato.',
+    priceCents: 249700,
     level: 'avancado',
-    specialty: 'cirurgia',
+    specialty: 'medicina-felina',
     instructor: 'dra-ana-faria',
     modules: [
       {
-        title: 'Princípios',
+        title: 'O paciente felino',
         lessons: [
-          { title: 'Instrumental e paramentação', min: 10, free: true },
-          { title: 'Padrões de sutura e síntese', min: 15 },
+          { title: 'Comportamento e manejo de baixo estresse', min: 16, free: true },
+          { title: 'Particularidades fisiológicas do gato', min: 20 },
         ],
       },
       {
-        title: 'Procedimentos',
+        title: 'Afecções prevalentes',
         lessons: [
-          { title: 'Enterectomia e enteroanastomose', min: 24 },
-          { title: 'Esplenectomia passo a passo', min: 19 },
+          { title: 'Doença renal crônica felina', min: 24 },
+          { title: 'Trato urinário inferior (FLUTD)', min: 18 },
         ],
       },
     ],
   },
   {
-    slug: 'radiologia-toracica',
-    title: 'Radiologia Torácica de Pequenos Animais',
-    subtitle: 'Interpretação sistemática do tórax.',
+    slug: 'pos-emergencia-pequenos-animais',
+    title: 'Pós-graduação em Emergência Médica de Pequenos Animais',
+    subtitle: 'Do atendimento inicial à terapia intensiva.',
     description:
-      'Método de leitura do tórax: padrões pulmonares, silhueta cardíaca, mediastino e pleura, com muitos casos.',
-    priceCents: 119700,
-    level: 'intermediario',
-    specialty: 'diagnostico-por-imagem',
-    instructor: 'dr-ricardo-mendes',
-    modules: [
-      {
-        title: 'Bases',
-        lessons: [
-          { title: 'Técnica radiográfica e posicionamento', min: 11, free: true },
-          { title: 'Leitura sistemática do tórax', min: 17 },
-        ],
-      },
-      {
-        title: 'Padrões',
-        lessons: [
-          { title: 'Padrões pulmonares', min: 21 },
-          { title: 'Silhueta cardíaca e vasos', min: 16 },
-        ],
-      },
-    ],
-  },
-  {
-    slug: 'dermatologia-clinica',
-    title: 'Dermatologia Clínica: Alergias e Dermatoses',
-    subtitle: 'Do prurido ao diagnóstico, sem mistério.',
-    description:
-      'Abordagem clínica das dermatoses mais comuns: dermatite alérgica, piodermites e o raciocínio diagnóstico.',
-    priceCents: 99700,
-    level: 'iniciante',
-    specialty: 'dermatologia',
-    instructor: 'dr-carlos-nunes',
-    modules: [
-      {
-        title: 'Abordagem do prurido',
-        lessons: [
-          { title: 'Anamnese e exame dermatológico', min: 13, free: true },
-          { title: 'Citologia cutânea na prática', min: 15 },
-        ],
-      },
-      {
-        title: 'Principais dermatoses',
-        lessons: [
-          { title: 'Dermatite alérgica e atopia', min: 20 },
-          { title: 'Piodermites: diagnóstico e manejo', min: 18 },
-        ],
-      },
-    ],
-  },
-  {
-    slug: 'anestesia-pacientes-criticos',
-    title: 'Anestesia em Pacientes Críticos',
-    subtitle: 'Protocolos seguros para o paciente instável.',
-    description:
-      'Planejamento anestésico, monitoração e condutas para pacientes críticos e de alto risco.',
-    priceCents: 139700,
+      'Programa de emergência e cuidados intensivos: triagem, ressuscitação, monitoração e condutas no paciente crítico.',
+    priceCents: 259700,
     level: 'avancado',
-    specialty: 'anestesiologia',
-    instructor: 'dra-lucia-prado',
-    modules: [
-      {
-        title: 'Planejamento',
-        lessons: [
-          { title: 'Avaliação de risco e ASA', min: 12, free: true },
-          { title: 'Protocolos e fármacos', min: 19 },
-        ],
-      },
-      {
-        title: 'Monitoração',
-        lessons: [
-          { title: 'Monitoração multiparamétrica', min: 22 },
-          { title: 'Manejo de intercorrências', min: 17 },
-        ],
-      },
-    ],
-  },
-  {
-    slug: 'emergencias-uti',
-    title: 'Emergências e Terapia Intensiva',
-    subtitle: 'Estabilização e cuidados na UTI veterinária.',
-    description:
-      'Triagem, ressuscitação e terapia intensiva: do atendimento inicial ao paciente na UTI.',
-    priceCents: 159700,
-    level: 'intermediario',
     specialty: 'emergencia-uti',
-    instructor: 'dra-ana-faria',
+    instructor: 'dra-lucia-prado',
     modules: [
       {
         title: 'Atendimento inicial',
         lessons: [
-          { title: 'Triagem e ABCs da emergência', min: 14, free: true },
-          { title: 'Ressuscitação e fluidoterapia', min: 20 },
+          { title: 'Triagem e ABCs da emergência', min: 15, free: true },
+          { title: 'Ressuscitação e fluidoterapia', min: 22 },
         ],
       },
       {
         title: 'Terapia intensiva',
         lessons: [
+          { title: 'Choque: reconhecimento e manejo', min: 20 },
           { title: 'Monitoração do paciente crítico', min: 21 },
-          { title: 'Choque: reconhecimento e manejo', min: 18 },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'farmacologia-clinica',
+    title: 'Curso de Farmacologia Clínica de Pequenos Animais',
+    subtitle: 'Prescrição segura e racional na rotina.',
+    description:
+      'Bases da farmacologia aplicada à clínica: farmacocinética, principais classes, interações e prescrição racional.',
+    priceCents: 119700,
+    level: 'intermediario',
+    specialty: 'farmacologia',
+    instructor: 'dr-carlos-nunes',
+    modules: [
+      {
+        title: 'Fundamentos',
+        lessons: [
+          { title: 'Farmacocinética e farmacodinâmica', min: 14, free: true },
+          { title: 'Cálculo de doses e vias de administração', min: 16 },
+        ],
+      },
+      {
+        title: 'Terapêutica aplicada',
+        lessons: [
+          { title: 'Antimicrobianos: uso racional', min: 20 },
+          { title: 'Analgesia e anti-inflamatórios', min: 18 },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'patologia-geral-forense',
+    title: 'Curso de Patologia Geral e Forense',
+    subtitle: 'Do processo patológico à perícia veterinária.',
+    description:
+      'Mecanismos gerais de lesão e adaptação celular e introdução à patologia forense e à necropsia pericial.',
+    priceCents: 109700,
+    level: 'intermediario',
+    specialty: 'patologia',
+    instructor: 'dr-ricardo-mendes',
+    modules: [
+      {
+        title: 'Patologia geral',
+        lessons: [
+          { title: 'Lesão e morte celular', min: 15, free: true },
+          { title: 'Inflamação e reparo', min: 18 },
+        ],
+      },
+      {
+        title: 'Patologia forense',
+        lessons: [
+          { title: 'Necropsia pericial e coleta de amostras', min: 22 },
+          { title: 'Estimativa de causa e cronotanatognose', min: 19 },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'pos-nefrologia',
+    title: 'Pós-graduação em Nefrologia de Pequenos Animais',
+    subtitle: 'Do diagnóstico precoce à terapia renal substitutiva.',
+    description:
+      'Formação em nefrologia e urologia: injúria renal aguda e crônica, proteinúria, distúrbios hidroeletrolíticos e diálise.',
+    priceCents: 239700,
+    level: 'avancado',
+    specialty: 'nefrologia',
+    instructor: 'dr-ricardo-mendes',
+    modules: [
+      {
+        title: 'Avaliação renal',
+        lessons: [
+          { title: 'Marcadores e estadiamento IRIS', min: 16, free: true },
+          { title: 'Proteinúria e hipertensão', min: 20 },
+        ],
+      },
+      {
+        title: 'Manejo',
+        lessons: [
+          { title: 'Injúria renal aguda', min: 22 },
+          { title: 'Terapia renal substitutiva', min: 24 },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'hematologia-transfusional',
+    title: 'Curso de Hematologia e Medicina Transfusional',
+    subtitle: 'Do hemograma à bolsa de sangue.',
+    description:
+      'Interpretação do hemograma, principais anemias e coagulopatias, e prática segura de medicina transfusional.',
+    priceCents: 99700,
+    level: 'intermediario',
+    specialty: 'hematologia',
+    instructor: 'dra-lucia-prado',
+    modules: [
+      {
+        title: 'Hematologia clínica',
+        lessons: [
+          { title: 'Interpretação do hemograma', min: 15, free: true },
+          { title: 'Anemias: abordagem diagnóstica', min: 19 },
+        ],
+      },
+      {
+        title: 'Medicina transfusional',
+        lessons: [
+          { title: 'Tipagem, provas de compatibilidade e doadores', min: 21 },
+          { title: 'Transfusão: indicações e reações', min: 18 },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'responsabilidade-tecnica',
+    title: 'Curso de Responsabilidade Técnica Veterinária',
+    subtitle: 'A RT na prática, sem insegurança.',
+    description:
+      'O papel do responsável técnico: legislação, documentação, boas práticas e gestão da conformidade em estabelecimentos veterinários.',
+    priceCents: 79700,
+    level: 'iniciante',
+    specialty: 'gestao-rt',
+    instructor: 'dra-ana-faria',
+    modules: [
+      {
+        title: 'Fundamentos da RT',
+        lessons: [
+          { title: 'Legislação e atribuições do RT', min: 13, free: true },
+          { title: 'Documentação e escrituração', min: 15 },
+        ],
+      },
+      {
+        title: 'Conformidade na prática',
+        lessons: [
+          { title: 'Boas práticas e biossegurança', min: 17 },
+          { title: 'Fiscalização e gestão de não conformidades', min: 16 },
         ],
       },
     ],
