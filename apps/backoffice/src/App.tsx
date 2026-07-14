@@ -9,6 +9,7 @@ import { CourseEditorPage } from './pages/course-editor-page';
 import { UsersPage } from './pages/users-page';
 import { StudentsPage } from './pages/students-page';
 import { CrmPage } from './pages/crm-page';
+import { FunnelMapPage } from './pages/funnel-map-page';
 
 export function App() {
   const { user, loading, logout } = useAuth();
@@ -48,6 +49,7 @@ export function App() {
         <Route path="/usuarios" element={<UsersPage />} />
         <Route path="/alunos" element={<StudentsPage />} />
         <Route path="/crm" element={<CrmPage />} />
+        <Route path="/fluxo" element={<FunnelMapPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </SidebarLayout>

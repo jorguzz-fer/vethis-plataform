@@ -8,6 +8,7 @@ const nav = [
   { to: '/usuarios', label: 'Usuários' },
   { to: '/alunos', label: 'Alunos' },
   { to: '/crm', label: 'CRM' },
+  { to: '/fluxo', label: 'Fluxo' },
 ];
 
 /** Layout do backoffice: sidebar verde + conteúdo (VethisDesignSystem §8). */
