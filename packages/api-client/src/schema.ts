@@ -1159,6 +1159,128 @@ export interface paths {
         };
         trace?: never;
     };
+    "/v1/admin/opportunities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista oportunidades do funil de vendas */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Opportunity"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Cria uma oportunidade */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateOpportunityInput"];
+                };
+            };
+            responses: {
+                /** @description Criada */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Opportunity"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/opportunities/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Exclui uma oportunidade */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Atualiza uma oportunidade */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateOpportunityInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Opportunity"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
     "/v1/admin/courses/{id}/modules": {
         parameters: {
             query?: never;
@@ -1935,6 +2057,52 @@ export interface components {
             stage: "new" | "contacted" | "qualified" | "won" | "lost";
             notes: string | null;
             createdAt: string;
+        };
+        Opportunity: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            /** @enum {string} */
+            stage: "prospeccao" | "qualificacao" | "proposta" | "negociacao" | "ganho" | "perdido";
+            valueCents: number;
+            probability: number;
+            expectedCloseDate: string | null;
+            /** Format: uuid */
+            leadId: string | null;
+            leadName: string | null;
+            /** Format: uuid */
+            ownerId: string | null;
+            ownerName: string | null;
+            createdAt: string;
+        };
+        CreateOpportunityInput: {
+            title: string;
+            /**
+             * @default prospeccao
+             * @enum {string}
+             */
+            stage: "prospeccao" | "qualificacao" | "proposta" | "negociacao" | "ganho" | "perdido";
+            /** @default 0 */
+            valueCents: number;
+            /** @default 0 */
+            probability: number;
+            expectedCloseDate?: string | null;
+            /** Format: uuid */
+            leadId?: string | null;
+            /** Format: uuid */
+            ownerId?: string | null;
+        };
+        UpdateOpportunityInput: {
+            title?: string;
+            /** @enum {string} */
+            stage?: "prospeccao" | "qualificacao" | "proposta" | "negociacao" | "ganho" | "perdido";
+            valueCents?: number;
+            probability?: number;
+            expectedCloseDate?: string | null;
+            /** Format: uuid */
+            leadId?: string | null;
+            /** Format: uuid */
+            ownerId?: string | null;
         };
         Kpis: {
             students: number;

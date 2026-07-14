@@ -977,6 +977,192 @@
           "createdAt"
         ]
       },
+      "Opportunity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "prospeccao",
+              "qualificacao",
+              "proposta",
+              "negociacao",
+              "ganho",
+              "perdido"
+            ]
+          },
+          "valueCents": {
+            "type": "integer"
+          },
+          "probability": {
+            "type": "integer"
+          },
+          "expectedCloseDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "leadId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "leadName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ownerId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "ownerName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "stage",
+          "valueCents",
+          "probability",
+          "expectedCloseDate",
+          "leadId",
+          "leadName",
+          "ownerId",
+          "ownerName",
+          "createdAt"
+        ]
+      },
+      "CreateOpportunityInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "prospeccao",
+              "qualificacao",
+              "proposta",
+              "negociacao",
+              "ganho",
+              "perdido"
+            ],
+            "default": "prospeccao"
+          },
+          "valueCents": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+          },
+          "probability": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "default": 0
+          },
+          "expectedCloseDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "leadId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "ownerId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "UpdateOpportunityInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "prospeccao",
+              "qualificacao",
+              "proposta",
+              "negociacao",
+              "ganho",
+              "perdido"
+            ]
+          },
+          "valueCents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "probability": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "expectedCloseDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "leadId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "ownerId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          }
+        }
+      },
       "Kpis": {
         "type": "object",
         "properties": {
@@ -2552,6 +2738,116 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/v1/admin/opportunities": {
+      "get": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Lista oportunidades do funil de vendas",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Opportunity"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Cria uma oportunidade",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOpportunityInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Opportunity"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/opportunities/{id}": {
+      "patch": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Atualiza uma oportunidade",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOpportunityInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Opportunity"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Exclui uma oportunidade",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
