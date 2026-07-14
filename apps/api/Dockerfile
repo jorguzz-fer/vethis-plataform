@@ -9,10 +9,15 @@ ENV PATH=$PNPM_HOME:$PATH
 RUN corepack enable
 WORKDIR /repo
 
+# Baixa as dependências a partir do lockfile (camada cacheada por hash do
+# lockfile — só refaz o download quando as deps mudam, não a cada mudança de
+# código). Reduz tempo/memória do build e evita re-baixar pacotes por deploy.
+COPY pnpm-lock.yaml ./
+RUN pnpm fetch
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.base.json ./
 COPY packages ./packages
 COPY apps/api ./apps/api
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --prefer-offline
 
 RUN pnpm --filter @vethis/api build
 
