@@ -1861,6 +1861,312 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/channels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista canais de aquisição (com regras) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Channel"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Cria um canal */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateChannelInput"];
+                };
+            };
+            responses: {
+                /** @description Criado */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Channel"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/channels/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Exclui um canal */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Atualiza um canal */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateChannelInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Channel"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/admin/channels/{id}/rules": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Adiciona uma regra ao canal */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateChannelRuleInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Channel"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/channels/rules/{ruleId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove uma regra */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    ruleId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Channel"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Atualiza uma regra */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    ruleId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateChannelRuleInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Channel"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/admin/channels/leads-flow": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Fluxo de leads por canal × estágio (janela opcional from/to) */
+        get: {
+            parameters: {
+                query?: {
+                    from?: string;
+                    to?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["LeadsFlow"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/channels/unmapped-origins": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Origens (utm) sem regra de canal */
+        get: {
+            parameters: {
+                query?: {
+                    from?: string;
+                    to?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["UnmappedOrigin"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2185,6 +2491,99 @@ export interface components {
             enrollments: number;
             revenueCents: number;
             wonCents: number;
+        };
+        Channel: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            /** @enum {string} */
+            group: "pago" | "organico" | "base_propria";
+            color: string;
+            active: boolean;
+            sortOrder: number;
+            rules: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                channelId: string;
+                utmSource: string;
+                utmMedium: string | null;
+                priority: number;
+            }[];
+        };
+        CreateChannelInput: {
+            name: string;
+            /**
+             * @default organico
+             * @enum {string}
+             */
+            group: "pago" | "organico" | "base_propria";
+            /** @default #3E7D5F */
+            color: string;
+            active?: boolean;
+            sortOrder?: number;
+            rules?: {
+                utmSource: string;
+                utmMedium?: string | null;
+                priority?: number;
+            }[];
+        };
+        UpdateChannelInput: {
+            name?: string;
+            /** @enum {string} */
+            group?: "pago" | "organico" | "base_propria";
+            color?: string;
+            active?: boolean;
+            sortOrder?: number;
+        };
+        CreateChannelRuleInput: {
+            utmSource: string;
+            utmMedium?: string | null;
+            priority?: number;
+        };
+        UpdateChannelRuleInput: {
+            utmSource?: string;
+            utmMedium?: string | null;
+            priority?: number;
+        };
+        LeadsFlow: {
+            channels: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                /** @enum {string} */
+                group: "pago" | "organico" | "base_propria";
+                color: string;
+                byStage: {
+                    new: number;
+                    contacted: number;
+                    qualified: number;
+                    won: number;
+                    lost: number;
+                    total: number;
+                };
+            }[];
+            unmapped: {
+                new: number;
+                contacted: number;
+                qualified: number;
+                won: number;
+                lost: number;
+                total: number;
+            };
+            totals: {
+                new: number;
+                contacted: number;
+                qualified: number;
+                won: number;
+                lost: number;
+                total: number;
+            };
+        };
+        UnmappedOrigin: {
+            utmSource: string | null;
+            utmMedium: string | null;
+            count: number;
         };
         AdminCourse: {
             /** Format: uuid */

@@ -8,6 +8,7 @@ const nav = [
   { to: '/usuarios', label: 'Usuários' },
   { to: '/alunos', label: 'Alunos' },
   { to: '/crm', label: 'CRM' },
+  { to: '/canais', label: 'Canais' },
   { to: '/fluxo', label: 'Fluxo' },
 ];
 
