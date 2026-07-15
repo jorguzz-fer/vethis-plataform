@@ -39,6 +39,7 @@ import {
   updateChannelSchema,
   updateChannelRuleSchema,
 } from '../channels/dto';
+import { aiCourseDraftInputSchema, aiCourseDraftSchema, aiStatusSchema } from '../ai/dto';
 import {
   adminCourseDetailSchema,
   adminCourseSchema,
@@ -133,6 +134,9 @@ export function buildOpenApiDocument() {
   const UpdateUserInput = registry.register('UpdateUserInput', updateUserSchema);
   const ResetPasswordInput = registry.register('ResetPasswordInput', resetPasswordSchema);
   const Student = registry.register('Student', studentSchema);
+  const AiStatus = registry.register('AiStatus', aiStatusSchema);
+  const AiCourseDraftInput = registry.register('AiCourseDraftInput', aiCourseDraftInputSchema);
+  const AiCourseDraft = registry.register('AiCourseDraft', aiCourseDraftSchema);
 
   const json = (schema: z.ZodTypeAny) => ({ content: { 'application/json': { schema } } });
 
@@ -665,6 +669,26 @@ export function buildOpenApiDocument() {
     summary: 'Origens (utm) sem regra de canal',
     request: { query: z.object({ from: z.string().optional(), to: z.string().optional() }) },
     responses: { 200: { description: 'OK', ...json(z.array(UnmappedOrigin)) } },
+  });
+
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/ai/status',
+    tags: ['backoffice'],
+    summary: 'Estado do recurso de IA (habilitado quando há chave configurada)',
+    responses: { 200: { description: 'OK', ...json(AiStatus) } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/admin/ai/course-draft',
+    tags: ['backoffice'],
+    summary: 'Gera um rascunho de curso a partir de material bruto (não persiste)',
+    request: { body: json(AiCourseDraftInput) },
+    responses: {
+      200: { description: 'OK', ...json(AiCourseDraft) },
+      422: { description: 'Rascunho inválido' },
+      503: { description: 'IA indisponível' },
+    },
   });
 
   const generator = new OpenApiGeneratorV31(registry.definitions);

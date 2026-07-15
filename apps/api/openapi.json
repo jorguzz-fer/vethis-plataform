@@ -2474,6 +2474,113 @@
           "createdAt"
         ]
       },
+      "AiStatus": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "enabled"
+        ]
+      },
+      "AiCourseDraftInput": {
+        "type": "object",
+        "properties": {
+          "material": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 20000
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "material"
+        ]
+      },
+      "AiCourseDraft": {
+        "type": "object",
+        "properties": {
+          "subtitle": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "workloadHours": {
+            "type": "integer"
+          },
+          "learningObjectives": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "faq": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "question": {
+                  "type": "string"
+                },
+                "answer": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "question",
+                "answer"
+              ]
+            }
+          },
+          "modules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "lessons": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string"
+                      },
+                      "durationMinutes": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "title",
+                      "durationMinutes"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "title",
+                "lessons"
+              ]
+            }
+          }
+        },
+        "required": [
+          "subtitle",
+          "description",
+          "workloadHours",
+          "learningObjectives",
+          "faq",
+          "modules"
+        ]
+      },
       "UpdateCourseInput": {
         "type": "object",
         "properties": {
@@ -4433,6 +4540,61 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/v1/admin/ai/status": {
+      "get": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Estado do recurso de IA (habilitado quando há chave configurada)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AiStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/ai/course-draft": {
+      "post": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Gera um rascunho de curso a partir de material bruto (não persiste)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AiCourseDraftInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AiCourseDraft"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Rascunho inválido"
+          },
+          "503": {
+            "description": "IA indisponível"
           }
         }
       }

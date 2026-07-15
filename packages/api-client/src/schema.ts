@@ -2209,6 +2209,96 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/ai/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Estado do recurso de IA (habilitado quando há chave configurada) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AiStatus"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/ai/course-draft": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Gera um rascunho de curso a partir de material bruto (não persiste) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["AiCourseDraftInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AiCourseDraft"];
+                    };
+                };
+                /** @description Rascunho inválido */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description IA indisponível */
+                503: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2807,6 +2897,30 @@ export interface components {
             email: string;
             enrollments: number;
             createdAt: string;
+        };
+        AiStatus: {
+            enabled: boolean;
+        };
+        AiCourseDraftInput: {
+            material: string;
+            title?: string;
+        };
+        AiCourseDraft: {
+            subtitle: string;
+            description: string;
+            workloadHours: number;
+            learningObjectives: string[];
+            faq: {
+                question: string;
+                answer: string;
+            }[];
+            modules: {
+                title: string;
+                lessons: {
+                    title: string;
+                    durationMinutes: number;
+                }[];
+            }[];
         };
         UpdateCourseInput: {
             slug?: string;

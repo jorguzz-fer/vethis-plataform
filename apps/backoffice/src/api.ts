@@ -16,6 +16,7 @@ export type AdminUser = components['schemas']['AdminUser'];
 export type AdminEnrollment = components['schemas']['AdminEnrollment'];
 export type Instructor = components['schemas']['Instructor'];
 export type Specialty = components['schemas']['Specialty'];
+export type AiCourseDraft = components['schemas']['AiCourseDraft'];
 
 const baseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3333';
 
