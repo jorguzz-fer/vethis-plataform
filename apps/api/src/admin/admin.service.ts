@@ -23,6 +23,7 @@ import type {
   ResetPasswordDto,
   StudentDto,
   UpdateCourseDto,
+  UpdateInstructorDto,
   UpdateLessonDto,
   UpdateModuleDto,
   UpdateUserDto,
@@ -260,6 +261,9 @@ export class AdminService {
       coverUrl: c.coverUrl,
       specialtyId: c.specialtyId,
       instructorId: c.instructorId,
+      workloadHours: c.workloadHours,
+      learningObjectives: c.learningObjectives ?? [],
+      faq: c.faq ?? [],
       modules,
     };
   }
@@ -279,6 +283,9 @@ export class AdminService {
         coverUrl: dto.coverUrl ?? null,
         specialtyId: dto.specialtyId ?? null,
         instructorId: dto.instructorId ?? null,
+        workloadHours: dto.workloadHours ?? null,
+        learningObjectives: dto.learningObjectives ?? [],
+        faq: dto.faq ?? [],
         publishedAt: dto.status === 'published' ? new Date() : null,
       })
       .returning({ id: courses.id });
@@ -418,6 +425,26 @@ export class AdminService {
         avatarUrl: instructors.avatarUrl,
       });
     return row!;
+  }
+
+  async updateInstructor(id: string, dto: UpdateInstructorDto): Promise<InstructorDto> {
+    const patch: Record<string, unknown> = {};
+    if (dto.name !== undefined) patch.name = dto.name;
+    if (dto.bio !== undefined) patch.bio = dto.bio;
+    if (dto.avatarUrl !== undefined) patch.avatarUrl = dto.avatarUrl;
+    const [row] = await this.db
+      .update(instructors)
+      .set(patch)
+      .where(eq(instructors.id, id))
+      .returning({
+        id: instructors.id,
+        slug: instructors.slug,
+        name: instructors.name,
+        bio: instructors.bio,
+        avatarUrl: instructors.avatarUrl,
+      });
+    if (!row) throw new NotFoundException('Instrutor não encontrado');
+    return row;
   }
 
   /* ---------------- Usuários (CRUD + reset de senha) ---------------------- */

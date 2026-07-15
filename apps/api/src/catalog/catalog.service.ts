@@ -42,6 +42,8 @@ export class CatalogService {
         specialtyName: specialties.name,
         instructorSlug: instructors.slug,
         instructorName: instructors.name,
+        instructorBio: instructors.bio,
+        instructorAvatarUrl: instructors.avatarUrl,
       })
       .from(courses)
       .leftJoin(specialties, eq(courses.specialtyId, specialties.id))
@@ -63,10 +65,15 @@ export class CatalogService {
         priceCents: courses.priceCents,
         level: courses.level,
         coverUrl: courses.coverUrl,
+        workloadHours: courses.workloadHours,
+        learningObjectives: courses.learningObjectives,
+        faq: courses.faq,
         specialtySlug: specialties.slug,
         specialtyName: specialties.name,
         instructorSlug: instructors.slug,
         instructorName: instructors.name,
+        instructorBio: instructors.bio,
+        instructorAvatarUrl: instructors.avatarUrl,
       })
       .from(courses)
       .leftJoin(specialties, eq(courses.specialtyId, specialties.id))
@@ -107,7 +114,14 @@ export class CatalogService {
       }),
     );
 
-    return { ...toSummary(course), description: course.description, modules };
+    return {
+      ...toSummary(course),
+      description: course.description,
+      workloadHours: course.workloadHours,
+      learningObjectives: course.learningObjectives ?? [],
+      faq: course.faq ?? [],
+      modules,
+    };
   }
 }
 
@@ -123,6 +137,8 @@ interface JoinedCourse {
   specialtyName: string | null;
   instructorSlug: string | null;
   instructorName: string | null;
+  instructorBio: string | null;
+  instructorAvatarUrl: string | null;
 }
 
 function toSummary(c: JoinedCourse): CourseSummary {
@@ -138,7 +154,12 @@ function toSummary(c: JoinedCourse): CourseSummary {
       c.specialtySlug && c.specialtyName ? { slug: c.specialtySlug, name: c.specialtyName } : null,
     instructor:
       c.instructorSlug && c.instructorName
-        ? { slug: c.instructorSlug, name: c.instructorName }
+        ? {
+            slug: c.instructorSlug,
+            name: c.instructorName,
+            bio: c.instructorBio,
+            avatarUrl: c.instructorAvatarUrl,
+          }
         : null,
   };
 }

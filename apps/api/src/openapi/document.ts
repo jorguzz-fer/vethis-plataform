@@ -56,6 +56,7 @@ import {
   resetPasswordSchema,
   studentSchema,
   updateCourseSchema,
+  updateInstructorSchema,
   updateLessonSchema,
   updateModuleSchema,
   updateUserSchema,
@@ -124,6 +125,7 @@ export function buildOpenApiDocument() {
   const UpdateLessonInput = registry.register('UpdateLessonInput', updateLessonSchema);
   const Instructor = registry.register('Instructor', instructorSchema);
   const CreateInstructorInput = registry.register('CreateInstructorInput', createInstructorSchema);
+  const UpdateInstructorInput = registry.register('UpdateInstructorInput', updateInstructorSchema);
   const AdminUser = registry.register('AdminUser', adminUserSchema);
   const AdminEnrollment = registry.register('AdminEnrollment', adminEnrollmentSchema);
   const EnrollUserInput = registry.register('EnrollUserInput', enrollUserSchema);
@@ -514,6 +516,14 @@ export function buildOpenApiDocument() {
     summary: 'Cria um instrutor',
     request: { body: json(CreateInstructorInput) },
     responses: { 201: { description: 'Criado', ...json(Instructor) } },
+  });
+  registry.registerPath({
+    method: 'patch',
+    path: '/v1/admin/instructors/{id}',
+    tags: ['backoffice'],
+    summary: 'Atualiza um instrutor (nome/bio/avatar)',
+    request: { ...idParam, body: json(UpdateInstructorInput) },
+    responses: { 200: { description: 'OK', ...json(Instructor) } },
   });
   registry.registerPath({
     method: 'get',
