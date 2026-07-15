@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { courseFaqItemSchema } from '../catalog/dto';
 
 const levelValues = ['iniciante', 'intermediario', 'avancado'] as const;
 const statusValues = ['draft', 'published'] as const;
@@ -59,6 +60,9 @@ const courseFieldsSchema = z.object({
   coverUrl: z.string().url().max(1000).nullable().optional(),
   specialtyId: z.string().uuid().nullable().optional(),
   instructorId: z.string().uuid().nullable().optional(),
+  workloadHours: z.number().int().nonnegative().max(100000).nullable().optional(),
+  learningObjectives: z.array(z.string().min(1).max(300)).max(30).optional(),
+  faq: z.array(courseFaqItemSchema).max(30).optional(),
 });
 export const createCourseSchema = courseFieldsSchema;
 export type CreateCourseDto = z.infer<typeof createCourseSchema>;
@@ -81,6 +85,9 @@ export const updateCourseSchema = z
     coverUrl: z.string().url().max(1000).nullable().optional(),
     specialtyId: z.string().uuid().nullable().optional(),
     instructorId: z.string().uuid().nullable().optional(),
+    workloadHours: z.number().int().nonnegative().max(100000).nullable().optional(),
+    learningObjectives: z.array(z.string().min(1).max(300)).max(30).optional(),
+    faq: z.array(courseFaqItemSchema).max(30).optional(),
   })
   .refine((v) => Object.keys(v).length > 0, { message: 'Nada para atualizar' });
 export type UpdateCourseDto = z.infer<typeof updateCourseSchema>;
@@ -117,6 +124,9 @@ export const adminCourseDetailSchema = z.object({
   coverUrl: z.string().nullable(),
   specialtyId: z.string().uuid().nullable(),
   instructorId: z.string().uuid().nullable(),
+  workloadHours: z.number().int().nullable(),
+  learningObjectives: z.array(z.string()),
+  faq: z.array(courseFaqItemSchema),
   modules: z.array(adminModuleSchema),
 });
 export type AdminCourseDetailDto = z.infer<typeof adminCourseDetailSchema>;
@@ -163,6 +173,15 @@ export const createInstructorSchema = z.object({
   avatarUrl: z.string().url().max(1000).nullable().optional(),
 });
 export type CreateInstructorDto = z.infer<typeof createInstructorSchema>;
+
+export const updateInstructorSchema = z
+  .object({
+    name: z.string().min(2).max(160).optional(),
+    bio: z.string().max(2000).nullable().optional(),
+    avatarUrl: z.string().url().max(1000).nullable().optional(),
+  })
+  .refine((v) => Object.keys(v).length > 0, { message: 'Nada para atualizar' });
+export type UpdateInstructorDto = z.infer<typeof updateInstructorSchema>;
 
 export const studentSchema = z.object({
   id: z.string().uuid(),

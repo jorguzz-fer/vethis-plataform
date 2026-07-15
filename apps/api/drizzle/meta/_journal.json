@@ -57,6 +57,13 @@
       "when": 1784059377389,
       "tag": "0007_overrated_randall",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1784126901783,
+      "tag": "0008_harsh_cable",
+      "breakpoints": true
     }
   ]
 }

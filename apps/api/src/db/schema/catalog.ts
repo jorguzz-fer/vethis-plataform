@@ -1,5 +1,20 @@
-import { boolean, integer, pgTable, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  integer,
+  jsonb,
+  pgTable,
+  text,
+  timestamp,
+  unique,
+  uuid,
+} from 'drizzle-orm/pg-core';
 import { courseLevelEnum, courseStatusEnum } from './enums';
+
+/** Item de FAQ do curso (pergunta/resposta), guardado como JSON na própria linha. */
+export interface CourseFaqItem {
+  question: string;
+  answer: string;
+}
 
 const timestamps = {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
@@ -37,6 +52,10 @@ export const courses = pgTable('courses', {
   level: courseLevelEnum('level').notNull().default('iniciante'),
   status: courseStatusEnum('status').notNull().default('draft'),
   coverUrl: text('cover_url'),
+  // Conteúdo rico da página de venda (dirige seções antes fixas no site).
+  workloadHours: integer('workload_hours'),
+  learningObjectives: jsonb('learning_objectives').$type<string[]>().notNull().default([]),
+  faq: jsonb('faq').$type<CourseFaqItem[]>().notNull().default([]),
   specialtyId: uuid('specialty_id').references(() => specialties.id, { onDelete: 'set null' }),
   instructorId: uuid('instructor_id').references(() => instructors.id, { onDelete: 'set null' }),
   publishedAt: timestamp('published_at', { withTimezone: true }),

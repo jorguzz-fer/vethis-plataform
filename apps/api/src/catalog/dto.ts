@@ -16,7 +16,21 @@ export const specialtySchema = z.object({
 });
 
 const specialtyRefSchema = z.object({ slug: z.string(), name: z.string() }).nullable();
-const instructorRefSchema = z.object({ slug: z.string(), name: z.string() }).nullable();
+const instructorRefSchema = z
+  .object({
+    slug: z.string(),
+    name: z.string(),
+    bio: z.string().nullable(),
+    avatarUrl: z.string().nullable(),
+  })
+  .nullable();
+
+/** Item de FAQ do curso (compartilhado por validação + contrato). */
+export const courseFaqItemSchema = z.object({
+  question: z.string().min(1).max(300),
+  answer: z.string().min(1).max(2000),
+});
+export type CourseFaqItem = z.infer<typeof courseFaqItemSchema>;
 
 export const courseSummarySchema = z.object({
   id: z.string().uuid(),
@@ -48,6 +62,9 @@ export const moduleSchema = z.object({
 
 export const courseDetailSchema = courseSummarySchema.extend({
   description: z.string().nullable(),
+  workloadHours: z.number().int().nullable(),
+  learningObjectives: z.array(z.string()),
+  faq: z.array(courseFaqItemSchema),
   modules: z.array(moduleSchema),
 });
 export type CourseDetail = z.infer<typeof courseDetailSchema>;

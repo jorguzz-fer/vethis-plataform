@@ -1589,6 +1589,48 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/instructors/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Atualiza um instrutor (nome/bio/avatar) */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateInstructorInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Instructor"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
     "/v1/admin/users": {
         parameters: {
             query?: never;
@@ -2224,6 +2266,8 @@ export interface components {
             instructor: {
                 slug: string;
                 name: string;
+                bio: string | null;
+                avatarUrl: string | null;
             } | null;
         };
         CourseDetail: {
@@ -2243,8 +2287,16 @@ export interface components {
             instructor: {
                 slug: string;
                 name: string;
+                bio: string | null;
+                avatarUrl: string | null;
             } | null;
             description: string | null;
+            workloadHours: number | null;
+            learningObjectives: string[];
+            faq: {
+                question: string;
+                answer: string;
+            }[];
             modules: {
                 /** Format: uuid */
                 id: string;
@@ -2614,6 +2666,12 @@ export interface components {
             specialtyId: string | null;
             /** Format: uuid */
             instructorId: string | null;
+            workloadHours: number | null;
+            learningObjectives: string[];
+            faq: {
+                question: string;
+                answer: string;
+            }[];
             modules: {
                 /** Format: uuid */
                 id: string;
@@ -2653,6 +2711,12 @@ export interface components {
             specialtyId?: string | null;
             /** Format: uuid */
             instructorId?: string | null;
+            workloadHours?: number | null;
+            learningObjectives?: string[];
+            faq?: {
+                question: string;
+                answer: string;
+            }[];
         };
         CreateModuleInput: {
             title: string;
@@ -2684,6 +2748,12 @@ export interface components {
         };
         CreateInstructorInput: {
             name: string;
+            bio?: string | null;
+            /** Format: uri */
+            avatarUrl?: string | null;
+        };
+        UpdateInstructorInput: {
+            name?: string;
             bio?: string | null;
             /** Format: uri */
             avatarUrl?: string | null;
@@ -2754,6 +2824,12 @@ export interface components {
             specialtyId?: string | null;
             /** Format: uuid */
             instructorId?: string | null;
+            workloadHours?: number | null;
+            learningObjectives?: string[];
+            faq?: {
+                question: string;
+                answer: string;
+            }[];
         };
         UpdateLeadInput: {
             /** @enum {string} */

@@ -40,6 +40,7 @@ import {
   enrollUserSchema,
   resetPasswordSchema,
   updateCourseSchema,
+  updateInstructorSchema,
   updateLessonSchema,
   updateModuleSchema,
   updateUserSchema,
@@ -59,6 +60,7 @@ import {
   type ResetPasswordDto,
   type StudentDto,
   type UpdateCourseDto,
+  type UpdateInstructorDto,
   type UpdateLessonDto,
   type UpdateModuleDto,
   type UpdateUserDto,
@@ -169,6 +171,14 @@ export class AdminController {
     @Body(new ZodValidationPipe(createInstructorSchema)) dto: CreateInstructorDto,
   ): Promise<InstructorDto> {
     return this.admin.createInstructor(dto);
+  }
+
+  @Patch('instructors/:id')
+  updateInstructor(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(updateInstructorSchema)) dto: UpdateInstructorDto,
+  ): Promise<InstructorDto> {
+    return this.admin.updateInstructor(id, dto);
   }
 
   @Get('students')

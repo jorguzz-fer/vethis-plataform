@@ -5,6 +5,7 @@ import { api, type AdminCourseDetail, type Instructor, type Specialty } from '..
 
 type Level = AdminCourseDetail['level'];
 type Status = AdminCourseDetail['status'];
+type FaqItem = AdminCourseDetail['faq'][number];
 
 const LEVELS: { value: Level; label: string }[] = [
   { value: 'iniciante', label: 'Iniciante' },
@@ -41,6 +42,9 @@ export function CourseEditorPage() {
     coverUrl: '',
     specialtyId: '',
     instructorId: '',
+    workloadHours: '',
+    learningObjectives: [] as string[],
+    faq: [] as FaqItem[],
   });
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -67,6 +71,9 @@ export function CourseEditorPage() {
           coverUrl: data.coverUrl ?? '',
           specialtyId: data.specialtyId ?? '',
           instructorId: data.instructorId ?? '',
+          workloadHours: data.workloadHours != null ? String(data.workloadHours) : '',
+          learningObjectives: data.learningObjectives ?? [],
+          faq: data.faq ?? [],
         });
       })
       .catch(() => setCourse(null));
@@ -80,6 +87,7 @@ export function CourseEditorPage() {
     e.preventDefault();
     setSaving(true);
     setMsg(null);
+    const workload = form.workloadHours.trim();
     const body = {
       title: form.title,
       subtitle: form.subtitle || null,
@@ -90,6 +98,11 @@ export function CourseEditorPage() {
       coverUrl: form.coverUrl || null,
       specialtyId: form.specialtyId || null,
       instructorId: form.instructorId || null,
+      workloadHours: workload ? Math.max(0, Math.round(Number(workload) || 0)) : null,
+      learningObjectives: form.learningObjectives.map((s) => s.trim()).filter(Boolean),
+      faq: form.faq
+        .map((f) => ({ question: f.question.trim(), answer: f.answer.trim() }))
+        .filter((f) => f.question && f.answer),
     };
     try {
       if (isNew) {
@@ -157,12 +170,19 @@ export function CourseEditorPage() {
           />
         </label>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <Field
             label="Preço (R$)"
             inputMode="decimal"
             value={form.price}
             onChange={(e) => set('price', e.target.value)}
+          />
+          <Field
+            label="Carga horária (h)"
+            inputMode="numeric"
+            value={form.workloadHours}
+            onChange={(e) => set('workloadHours', e.target.value)}
+            placeholder="ex.: 40"
           />
           <label className="flex flex-col gap-1.5 text-sm font-semibold text-ink">
             Nível
@@ -218,12 +238,28 @@ export function CourseEditorPage() {
           </label>
         </div>
 
+        {form.instructorId ? (
+          <InstructorBioEditor
+            instructor={instructors.find((i) => i.id === form.instructorId)}
+            onSaved={(updated) =>
+              setInstructors((prev) => prev.map((i) => (i.id === updated.id ? updated : i)))
+            }
+          />
+        ) : null}
+
         <Field
           label="Capa (URL da imagem)"
           value={form.coverUrl}
           onChange={(e) => set('coverUrl', e.target.value)}
           placeholder="https://…"
         />
+
+        <ObjectivesEditor
+          items={form.learningObjectives}
+          onChange={(v) => set('learningObjectives', v)}
+        />
+
+        <FaqEditor items={form.faq} onChange={(v) => set('faq', v)} />
 
         <label className="flex items-center gap-2 text-sm font-semibold text-ink">
           <input
@@ -246,6 +282,165 @@ export function CourseEditorPage() {
       </form>
 
       {!isNew && course ? <ModulesEditor course={course} onChange={setCourse} /> : null}
+    </div>
+  );
+}
+
+/* --------------------- Objetivos de aprendizagem ------------------------- */
+
+function ObjectivesEditor({
+  items,
+  onChange,
+}: {
+  items: string[];
+  onChange: (v: string[]) => void;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-sm font-semibold text-ink">O que o aluno vai aprender</span>
+      <p className="-mt-1 text-xs text-muted">
+        Vira a seção “O que você vai aprender” na página do curso. Deixe vazio para ocultar.
+      </p>
+      {items.map((obj, idx) => (
+        <div key={idx} className="flex items-center gap-2">
+          <input
+            value={obj}
+            onChange={(e) => onChange(items.map((o, i) => (i === idx ? e.target.value : o)))}
+            placeholder={`Objetivo ${idx + 1}`}
+            className="min-w-0 flex-1 rounded-[8px] border-[1.5px] border-border px-3 py-2 text-sm"
+          />
+          <Button
+            type="button"
+            size="sm"
+            variant="text"
+            onClick={() => onChange(items.filter((_, i) => i !== idx))}
+          >
+            Remover
+          </Button>
+        </div>
+      ))}
+      <div>
+        <Button type="button" size="sm" variant="soft" onClick={() => onChange([...items, ''])}>
+          + Objetivo
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+/* --------------------------------- FAQ ----------------------------------- */
+
+function FaqEditor({ items, onChange }: { items: FaqItem[]; onChange: (v: FaqItem[]) => void }) {
+  return (
+    <div className="flex flex-col gap-3">
+      <span className="text-sm font-semibold text-ink">Perguntas frequentes</span>
+      <p className="-mt-2 text-xs text-muted">
+        Se vazio, a página usa a lista padrão da Vethis. Preencha para personalizar por curso.
+      </p>
+      {items.map((f, idx) => (
+        <div key={idx} className="flex flex-col gap-2 rounded-lg border border-border bg-paper p-3">
+          <div className="flex items-center gap-2">
+            <input
+              value={f.question}
+              onChange={(e) =>
+                onChange(
+                  items.map((it, i) => (i === idx ? { ...it, question: e.target.value } : it)),
+                )
+              }
+              placeholder="Pergunta"
+              className="min-w-0 flex-1 rounded-[8px] border-[1.5px] border-border px-3 py-2 text-sm font-medium"
+            />
+            <Button
+              type="button"
+              size="sm"
+              variant="text"
+              onClick={() => onChange(items.filter((_, i) => i !== idx))}
+            >
+              Remover
+            </Button>
+          </div>
+          <textarea
+            value={f.answer}
+            onChange={(e) =>
+              onChange(items.map((it, i) => (i === idx ? { ...it, answer: e.target.value } : it)))
+            }
+            placeholder="Resposta"
+            rows={2}
+            className="rounded-[8px] border-[1.5px] border-border px-3 py-2 text-sm"
+          />
+        </div>
+      ))}
+      <div>
+        <Button
+          type="button"
+          size="sm"
+          variant="soft"
+          onClick={() => onChange([...items, { question: '', answer: '' }])}
+        >
+          + Pergunta
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------- Bio da coordenação (instrutor) ------------------ */
+
+function InstructorBioEditor({
+  instructor,
+  onSaved,
+}: {
+  instructor: Instructor | undefined;
+  onSaved: (updated: Instructor) => void;
+}) {
+  const [bio, setBio] = useState(instructor?.bio ?? '');
+  const [saving, setSaving] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    setBio(instructor?.bio ?? '');
+    setMsg(null);
+  }, [instructor?.id, instructor?.bio]);
+
+  if (!instructor) return null;
+
+  async function save() {
+    if (!instructor) return;
+    setSaving(true);
+    setMsg(null);
+    const { data, error } = await api.PATCH('/v1/admin/instructors/{id}', {
+      params: { path: { id: instructor.id } },
+      body: { bio: bio.trim() || null },
+    });
+    setSaving(false);
+    if (error || !data) {
+      setMsg('Não foi possível salvar a bio.');
+      return;
+    }
+    onSaved(data);
+    setMsg('Bio salva.');
+  }
+
+  return (
+    <div className="flex flex-col gap-1.5 rounded-lg border border-border bg-paper p-3">
+      <span className="text-sm font-semibold text-ink">Bio de {instructor.name}</span>
+      <p className="-mt-1 text-xs text-muted">
+        Aparece na seção “Conheça a coordenação”. Salva no instrutor (vale para todos os cursos
+        dele).
+      </p>
+      <textarea
+        value={bio}
+        onChange={(e) => setBio(e.target.value)}
+        rows={3}
+        placeholder="Formação, atuação clínica e docente…"
+        className="rounded-[8px] border-[1.5px] border-border px-3 py-2 text-sm"
+      />
+      <div className="flex items-center gap-3">
+        <Button type="button" size="sm" onClick={() => void save()} disabled={saving}>
+          {saving ? 'Salvando…' : 'Salvar bio'}
+        </Button>
+        {msg ? <span className="text-xs text-muted">{msg}</span> : null}
+      </div>
     </div>
   );
 }

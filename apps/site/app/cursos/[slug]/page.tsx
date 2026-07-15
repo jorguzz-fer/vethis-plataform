@@ -34,18 +34,20 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
 
   const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
   const perMonth = Math.ceil(course.priceCents / INSTALLMENTS);
+  const objectives = course.learningObjectives ?? [];
 
   return (
     <article className="bg-paper">
       <Hero course={course} perMonth={perMonth} />
-      <Conditions />
+      <Conditions workloadHours={course.workloadHours} />
+      {objectives.length > 0 ? <Objectives items={objectives} /> : null}
       <Curriculum course={course} totalLessons={totalLessons} perMonth={perMonth} />
       <GuideBanner />
-      {course.instructor ? <Faculty name={course.instructor.name} /> : null}
+      {course.instructor ? <Faculty instructor={course.instructor} /> : null}
       <Benefits />
       <InvestmentBand course={course} perMonth={perMonth} />
       {related.length > 0 ? <Related courses={related} /> : null}
-      <Faq />
+      <Faq items={course.faq ?? []} />
     </article>
   );
 }
@@ -68,7 +70,8 @@ function Hero({ course, perMonth }: { course: CourseDetail; perMonth: number }) 
           <div className="mb-4 flex flex-wrap gap-2">
             {course.specialty ? <Pill>{course.specialty.name}</Pill> : null}
             <Pill>{LEVEL_LABEL[course.level]}</Pill>
-            <Pill gold>Pós-graduação online</Pill>
+            {course.workloadHours ? <Pill>{course.workloadHours}h de conteúdo</Pill> : null}
+            <Pill gold>Curso online</Pill>
           </div>
           <h1 className="max-w-2xl font-serif text-4xl font-semibold leading-tight md:text-5xl">
             {course.title}
@@ -134,7 +137,7 @@ function Pill({ children, gold }: { children: ReactNode; gold?: boolean }) {
 
 // ---------------------------------------------------------------------------
 
-function Conditions() {
+function Conditions({ workloadHours }: { workloadHours: number | null }) {
   const items = [
     {
       title: 'Pagamento facilitado',
@@ -145,8 +148,10 @@ function Conditions() {
       desc: 'Estude no seu ritmo, de qualquer lugar, com conteúdo sempre disponível.',
     },
     {
-      title: 'Certificado reconhecido',
-      desc: 'Emita seu certificado ao concluir o curso, direto na área do aluno.',
+      title: 'Certificado ao concluir',
+      desc: workloadHours
+        ? `Certificado de ${workloadHours}h emitido na área do aluno ao finalizar.`
+        : 'Emita seu certificado ao concluir o curso, direto na área do aluno.',
     },
   ];
   return (
@@ -159,6 +164,26 @@ function Conditions() {
               <p className="font-semibold text-ink">{it.title}</p>
               <p className="mt-0.5 text-sm text-muted">{it.desc}</p>
             </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+
+function Objectives({ items }: { items: string[] }) {
+  return (
+    <section className="mx-auto max-w-[1140px] px-6 py-8">
+      <h2 className="mb-6 font-serif text-3xl font-semibold text-green-800">
+        O que você vai aprender
+      </h2>
+      <div className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
+        {items.map((it) => (
+          <div key={it} className="flex items-start gap-3">
+            <CheckIcon />
+            <p className="text-[15px] leading-relaxed text-ink/90">{it}</p>
           </div>
         ))}
       </div>
@@ -303,7 +328,8 @@ function GuideBanner() {
 
 // ---------------------------------------------------------------------------
 
-function Faculty({ name }: { name: string }) {
+function Faculty({ instructor }: { instructor: NonNullable<CourseDetail['instructor']> }) {
+  const { name, bio, avatarUrl } = instructor;
   const initials = name
     .split(' ')
     .filter(Boolean)
@@ -316,14 +342,22 @@ function Faculty({ name }: { name: string }) {
       <h2 className="mb-5 font-serif text-3xl font-semibold text-green-800">
         Conheça a coordenação
       </h2>
-      <div className="flex items-center gap-4 rounded-2xl border border-border bg-white p-5">
-        <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-green-900 font-serif text-xl font-semibold text-gold-400">
-          {initials}
-        </span>
+      <div className="flex items-start gap-4 rounded-2xl border border-border bg-white p-5">
+        {avatarUrl ? (
+          <img
+            src={avatarUrl}
+            alt={name}
+            className="h-16 w-16 shrink-0 rounded-full object-cover"
+          />
+        ) : (
+          <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-green-900 font-serif text-xl font-semibold text-gold-400">
+            {initials}
+          </span>
+        )}
         <div>
           <p className="font-semibold text-ink">{name}</p>
-          <p className="text-sm text-muted">
-            Coordenação acadêmica — especialista com atuação clínica e docente.
+          <p className="mt-0.5 text-sm leading-relaxed text-muted">
+            {bio ?? 'Coordenação acadêmica — especialista com atuação clínica e docente.'}
           </p>
         </div>
       </div>
@@ -429,40 +463,42 @@ function Related({ courses }: { courses: CourseSummary[] }) {
 
 // ---------------------------------------------------------------------------
 
-function Faq() {
-  const items = [
-    {
-      q: 'Requisitos e documentação para matrícula',
-      a: 'A matrícula é feita online. Após a compra, você cria seu acesso e conclui o cadastro na área do aluno. Não exigimos documentação prévia para começar a estudar.',
-    },
-    {
-      q: 'Disponibilização do acesso',
-      a: 'O acesso é liberado imediatamente após a confirmação do pagamento. Com Pix e cartão a liberação é na hora; com boleto, após a compensação.',
-    },
-    {
-      q: 'Metodologia e funcionamento das aulas',
-      a: 'As aulas são gravadas e ficam disponíveis 100% online. Você estuda no seu ritmo, acompanha o progresso por aula e retoma de onde parou em qualquer dispositivo.',
-    },
-    {
-      q: 'Avaliações',
-      a: 'O acompanhamento é por conclusão das aulas do curso. Ao finalizar todo o conteúdo, o certificado fica disponível.',
-    },
-    {
-      q: 'Certificado',
-      a: 'Ao concluir 100% do curso, o certificado é emitido automaticamente e fica disponível para download na área do aluno.',
-    },
-    {
-      q: 'Política de cancelamento',
-      a: 'Você pode solicitar o cancelamento com reembolso em até 7 dias após a compra, conforme o Código de Defesa do Consumidor.',
-    },
-  ];
+const DEFAULT_FAQ = [
+  {
+    q: 'Requisitos e documentação para matrícula',
+    a: 'A matrícula é feita online. Após a compra, você cria seu acesso e conclui o cadastro na área do aluno. Não exigimos documentação prévia para começar a estudar.',
+  },
+  {
+    q: 'Disponibilização do acesso',
+    a: 'O acesso é liberado imediatamente após a confirmação do pagamento. Com Pix e cartão a liberação é na hora; com boleto, após a compensação.',
+  },
+  {
+    q: 'Metodologia e funcionamento das aulas',
+    a: 'As aulas são gravadas e ficam disponíveis 100% online. Você estuda no seu ritmo, acompanha o progresso por aula e retoma de onde parou em qualquer dispositivo.',
+  },
+  {
+    q: 'Avaliações',
+    a: 'O acompanhamento é por conclusão das aulas do curso. Ao finalizar todo o conteúdo, o certificado fica disponível.',
+  },
+  {
+    q: 'Certificado',
+    a: 'Ao concluir 100% do curso, o certificado é emitido automaticamente e fica disponível para download na área do aluno.',
+  },
+  {
+    q: 'Política de cancelamento',
+    a: 'Você pode solicitar o cancelamento com reembolso em até 7 dias após a compra, conforme o Código de Defesa do Consumidor.',
+  },
+];
+
+function Faq({ items }: { items: CourseDetail['faq'] }) {
+  const list = items.length > 0 ? items.map((f) => ({ q: f.question, a: f.answer })) : DEFAULT_FAQ;
   return (
     <section className="mx-auto max-w-[1140px] px-6 py-12">
       <h2 className="mb-6 font-serif text-3xl font-semibold text-green-800">
         Perguntas frequentes
       </h2>
       <div className="flex flex-col gap-3">
-        {items.map((it) => (
+        {list.map((it) => (
           <details key={it.q} className="group rounded-xl border border-border bg-white">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 font-semibold text-ink">
               {it.q}
