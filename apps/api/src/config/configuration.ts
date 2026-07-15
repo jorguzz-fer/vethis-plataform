@@ -19,6 +19,11 @@ const EnvSchema = z.object({
   // Origens permitidas no CORS (separadas por vírgula). Em produção, liste os
   // domínios do site, área do aluno e backoffice. Default: APP_URL.
   CORS_ORIGINS: z.string().optional(),
+
+  // IA (opcional). Sem a chave, os recursos de IA ficam desativados (o backoffice
+  // esconde o botão "Gerar com IA"). A chave vem só do ambiente/cofre.
+  ANTHROPIC_API_KEY: z.string().min(1).optional(),
+  AI_MODEL: z.string().min(1).default('claude-opus-4-8'),
 });
 
 export type AppConfig = Readonly<z.infer<typeof EnvSchema>>;

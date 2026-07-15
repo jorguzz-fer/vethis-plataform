@@ -1,7 +1,13 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, Field } from '@vethis/ui';
-import { api, type AdminCourseDetail, type Instructor, type Specialty } from '../api';
+import {
+  api,
+  type AdminCourseDetail,
+  type AiCourseDraft,
+  type Instructor,
+  type Specialty,
+} from '../api';
 
 type Level = AdminCourseDetail['level'];
 type Status = AdminCourseDetail['status'];
@@ -48,10 +54,13 @@ export function CourseEditorPage() {
   });
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [aiEnabled, setAiEnabled] = useState(false);
+  const [aiOpen, setAiOpen] = useState(false);
 
   useEffect(() => {
     api.GET('/v1/catalog/specialties').then(({ data }) => setSpecialties(data ?? []));
     api.GET('/v1/admin/instructors').then(({ data }) => setInstructors(data ?? []));
+    api.GET('/v1/admin/ai/status').then(({ data }) => setAiEnabled(Boolean(data?.enabled)));
   }, []);
 
   useEffect(() => {
@@ -136,14 +145,72 @@ export function CourseEditorPage() {
     }
   }
 
+  /** Aplica o rascunho da IA aos campos de metadados (o admin revisa e salva). */
+  function applyDraftMeta(draft: AiCourseDraft) {
+    setForm((f) => ({
+      ...f,
+      subtitle: draft.subtitle || f.subtitle,
+      description: draft.description || f.description,
+      workloadHours: draft.workloadHours ? String(draft.workloadHours) : f.workloadHours,
+      learningObjectives: draft.learningObjectives ?? [],
+      faq: draft.faq ?? [],
+    }));
+    setMsg('Rascunho aplicado — revise e salve.');
+  }
+
+  /** Cria os módulos/aulas sugeridos (só em curso já existente). */
+  async function applyDraftModules(modules: AiCourseDraft['modules']) {
+    if (isNew) return;
+    let detail: AdminCourseDetail | null = course;
+    for (const m of modules) {
+      const created = await api.POST('/v1/admin/courses/{id}/modules', {
+        params: { path: { id: id! } },
+        body: { title: m.title },
+      });
+      if (!created.data) continue;
+      detail = created.data;
+      const newest = [...detail.modules].sort((a, b) => b.position - a.position)[0];
+      if (!newest) continue;
+      for (const l of m.lessons) {
+        const withLesson = await api.POST('/v1/admin/modules/{id}/lessons', {
+          params: { path: { id: newest.id } },
+          body: {
+            title: l.title,
+            durationSeconds: Math.max(0, Math.round(l.durationMinutes || 0)) * 60,
+            isFree: false,
+          },
+        });
+        if (withLesson.data) detail = withLesson.data;
+      }
+    }
+    if (detail) setCourse(detail);
+  }
+
   return (
     <div className="max-w-3xl">
       <Link to="/cursos" className="text-sm font-semibold text-green-700 hover:underline">
         ← Voltar aos cursos
       </Link>
-      <h1 className="mb-6 mt-2 font-serif text-3xl font-semibold text-green-800">
-        {isNew ? 'Novo curso' : 'Editar curso'}
-      </h1>
+      <div className="mb-6 mt-2 flex items-center justify-between gap-3">
+        <h1 className="font-serif text-3xl font-semibold text-green-800">
+          {isNew ? 'Novo curso' : 'Editar curso'}
+        </h1>
+        {aiEnabled ? (
+          <Button type="button" variant="soft" onClick={() => setAiOpen(true)}>
+            ✨ Gerar com IA
+          </Button>
+        ) : null}
+      </div>
+
+      {aiOpen ? (
+        <AiDraftModal
+          title={form.title}
+          canApplyModules={!isNew}
+          onApplyMeta={applyDraftMeta}
+          onApplyModules={applyDraftModules}
+          onClose={() => setAiOpen(false)}
+        />
+      ) : null}
 
       <form
         onSubmit={saveMeta}
@@ -282,6 +349,147 @@ export function CourseEditorPage() {
       </form>
 
       {!isNew && course ? <ModulesEditor course={course} onChange={setCourse} /> : null}
+    </div>
+  );
+}
+
+/* ------------------------------ Gerar com IA ----------------------------- */
+
+function AiDraftModal({
+  title,
+  canApplyModules,
+  onApplyMeta,
+  onApplyModules,
+  onClose,
+}: {
+  title: string;
+  canApplyModules: boolean;
+  onApplyMeta: (draft: AiCourseDraft) => void;
+  onApplyModules: (modules: AiCourseDraft['modules']) => Promise<void>;
+  onClose: () => void;
+}) {
+  const [material, setMaterial] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [applying, setApplying] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [draft, setDraft] = useState<AiCourseDraft | null>(null);
+
+  async function generate() {
+    if (material.trim().length < 20) {
+      setError('Cole ao menos algumas linhas do material do curso.');
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    const { data, error: err } = await api.POST('/v1/admin/ai/course-draft', {
+      body: { material: material.trim(), title: title.trim() || undefined },
+    });
+    setLoading(false);
+    if (err || !data) {
+      setError('Não foi possível gerar o rascunho. Tente novamente.');
+      return;
+    }
+    setDraft(data);
+  }
+
+  async function apply(withModules: boolean) {
+    if (!draft) return;
+    onApplyMeta(draft);
+    if (withModules) {
+      setApplying(true);
+      await onApplyModules(draft.modules);
+      setApplying(false);
+    }
+    onClose();
+  }
+
+  const totalLessons = draft?.modules.reduce((acc, m) => acc + m.lessons.length, 0) ?? 0;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/40 p-4">
+      <div className="mt-10 w-full max-w-2xl rounded-xl border border-border bg-white p-6 shadow-xl">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="font-serif text-xl font-semibold text-green-800">Gerar com IA</h2>
+          <Button type="button" size="sm" variant="text" onClick={onClose}>
+            Fechar
+          </Button>
+        </div>
+
+        {!draft ? (
+          <>
+            <p className="mb-3 text-sm text-muted">
+              Cole o material bruto do curso (ementa, tópicos, transcrição). A IA propõe subtítulo,
+              descrição, carga horária, objetivos, FAQ e estrutura de módulos. Nada é salvo — você
+              revisa antes.
+            </p>
+            <textarea
+              value={material}
+              onChange={(e) => setMaterial(e.target.value)}
+              rows={10}
+              placeholder="Ex.: Curso de responsabilidade técnica veterinária. Módulo 1: legislação…"
+              className="w-full rounded-[10px] border-[1.5px] border-border px-3.5 py-3 text-sm"
+            />
+            {error ? <p className="mt-2 text-sm text-error">{error}</p> : null}
+            <div className="mt-4 flex items-center gap-3">
+              <Button type="button" onClick={() => void generate()} disabled={loading}>
+                {loading ? 'Gerando…' : 'Gerar rascunho'}
+              </Button>
+              <span className="text-xs text-muted">Pode levar alguns segundos.</span>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex flex-col gap-3 rounded-lg border border-border bg-paper p-4 text-sm">
+              <div>
+                <span className="font-semibold text-ink">Subtítulo:</span> {draft.subtitle}
+              </div>
+              <div>
+                <span className="font-semibold text-ink">Carga horária:</span> {draft.workloadHours}
+                h
+              </div>
+              <div>
+                <span className="font-semibold text-ink">Objetivos:</span>{' '}
+                {draft.learningObjectives.length} ·{' '}
+                <span className="font-semibold text-ink">FAQ:</span> {draft.faq.length}
+              </div>
+              <div>
+                <span className="font-semibold text-ink">Estrutura:</span> {draft.modules.length}{' '}
+                módulo(s) · {totalLessons} aula(s)
+                <ul className="mt-1 list-disc pl-5 text-muted">
+                  {draft.modules.map((m, i) => (
+                    <li key={i}>
+                      {m.title} <span className="text-xs">({m.lessons.length} aulas)</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <Button type="button" onClick={() => void apply(false)} disabled={applying}>
+                Aplicar metadados
+              </Button>
+              {canApplyModules && draft.modules.length > 0 ? (
+                <Button
+                  type="button"
+                  variant="soft"
+                  onClick={() => void apply(true)}
+                  disabled={applying}
+                >
+                  {applying ? 'Aplicando…' : 'Aplicar + criar módulos e aulas'}
+                </Button>
+              ) : draft.modules.length > 0 ? (
+                <span className="text-xs text-muted">
+                  Salve o curso para criar os módulos sugeridos.
+                </span>
+              ) : null}
+              <Button type="button" variant="text" onClick={() => setDraft(null)}>
+                Recomeçar
+              </Button>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
