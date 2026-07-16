@@ -445,11 +445,19 @@ function PaymentPendingPanel({
       {order.method === 'pix' && order.pixCopyPaste ? (
         <div className="mt-5">
           <div className="grid place-items-center rounded-xl border border-border bg-paper p-6">
-            <div className="grid h-40 w-40 place-items-center rounded-lg bg-white text-center text-xs text-muted shadow-inner">
-              QR Pix
-              <br />
-              (copie o código abaixo)
-            </div>
+            {order.pixQrCode ? (
+              <img
+                src={`data:image/png;base64,${order.pixQrCode}`}
+                alt="QR Code Pix"
+                className="h-48 w-48 rounded-lg bg-white p-2 shadow-inner"
+              />
+            ) : (
+              <div className="grid h-40 w-40 place-items-center rounded-lg bg-white text-center text-xs text-muted shadow-inner">
+                Escaneie o QR no app
+                <br />
+                ou copie o código abaixo
+              </div>
+            )}
           </div>
           <label className="mt-4 block text-sm font-semibold text-ink">Pix copia-e-cola</label>
           <div className="mt-1.5 flex gap-2">
