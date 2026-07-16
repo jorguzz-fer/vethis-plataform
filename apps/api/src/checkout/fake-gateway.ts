@@ -28,10 +28,11 @@ export class FakePaymentGateway implements PaymentGateway {
 
     if (input.method === 'pix') {
       const payload = buildFakePixPayload(input.amountCents, providerChargeId);
+      // Sem imagem de QR no fake (o campo `pixQrCode` guarda o base64 do PNG,
+      // que só o gateway real produz); a UI cai no fallback + copia-e-cola.
       return {
         providerChargeId,
         status: 'pending',
-        pixQrCode: payload,
         pixCopyPaste: payload,
       };
     }
