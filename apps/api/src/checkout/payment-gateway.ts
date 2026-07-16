@@ -4,6 +4,14 @@ import type { PaymentMethodDto } from './dto';
 export interface ChargeCustomer {
   name: string | null;
   email: string;
+  /** CPF ou CNPJ (só dígitos) — exigido pelo Asaas em Pix/boleto/cartão. */
+  cpfCnpj?: string;
+  /** Campos extras exigidos pelo antifraude no cartão. */
+  phone?: string;
+  postalCode?: string;
+  addressNumber?: string;
+  /** IP do comprador (antifraude do cartão). */
+  remoteIp?: string;
 }
 
 /** Dados de cartão repassados ao gateway (nunca persistidos). */

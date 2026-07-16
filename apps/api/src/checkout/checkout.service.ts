@@ -6,6 +6,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { and, eq, isNull } from 'drizzle-orm';
 import { DB, type Database } from '../db/client';
@@ -16,8 +17,9 @@ import { crmInteractions, leads } from '../db/schema/crm';
 import { users } from '../db/schema/identity';
 import { APP_CONFIG, type AppConfig } from '../config/configuration';
 import type { AuthUser } from '../common/auth-user';
-import type { CreateCheckoutDto, OrderDto, PaymentWebhookDto } from './dto';
+import type { AsaasWebhookDto, CreateCheckoutDto, OrderDto, PaymentWebhookDto } from './dto';
 import { PAYMENT_GATEWAY, type PaymentGateway } from './payment-gateway';
+import { asaasEventToStatus } from './asaas-gateway';
 
 @Injectable()
 export class CheckoutService {
@@ -30,7 +32,11 @@ export class CheckoutService {
   ) {}
 
   /** Inicia o checkout: cria o pedido, cobra no gateway e (se já aprovado) matricula. */
-  async createCheckout(user: AuthUser, dto: CreateCheckoutDto): Promise<OrderDto> {
+  async createCheckout(
+    user: AuthUser,
+    dto: CreateCheckoutDto,
+    remoteIp?: string,
+  ): Promise<OrderDto> {
     const [course] = await this.db
       .select({
         id: courses.id,
@@ -70,22 +76,40 @@ export class CheckoutService {
       .returning();
     if (!order) throw new BadRequestException('Falha ao criar pedido');
 
-    const charge = await this.gateway.createCharge({
-      orderId: order.id,
-      amountCents: order.amountCents,
-      method: dto.method,
-      customer: { name: null, email: user.email },
-      card: dto.card
-        ? {
-            number: dto.card.number,
-            holderName: dto.card.holderName,
-            expMonth: dto.card.expMonth,
-            expYear: dto.card.expYear,
-            cvv: dto.card.cvv,
-            installments,
-          }
-        : undefined,
-    });
+    let charge;
+    try {
+      charge = await this.gateway.createCharge({
+        orderId: order.id,
+        amountCents: order.amountCents,
+        method: dto.method,
+        customer: {
+          name: dto.customer.name,
+          email: user.email,
+          cpfCnpj: dto.customer.cpfCnpj,
+          phone: dto.customer.phone,
+          postalCode: dto.customer.postalCode,
+          addressNumber: dto.customer.addressNumber,
+          remoteIp,
+        },
+        card: dto.card
+          ? {
+              number: dto.card.number,
+              holderName: dto.card.holderName,
+              expMonth: dto.card.expMonth,
+              expYear: dto.card.expYear,
+              cvv: dto.card.cvv,
+              installments,
+            }
+          : undefined,
+      });
+    } catch (err) {
+      // Cobrança falhou → não deixa o pedido órfão em `pending`.
+      await this.db
+        .update(orders)
+        .set({ status: 'cancelled', updatedAt: new Date() })
+        .where(eq(orders.id, order.id));
+      throw err;
+    }
 
     const [payment] = await this.db
       .insert(payments)
@@ -150,6 +174,49 @@ export class CheckoutService {
     if (dto.status === 'paid') {
       await this.confirmOrderPaid(payment.orderId);
     }
+    return { ok: true };
+  }
+
+  /**
+   * Webhook do Asaas. Autenticidade pelo token que o provedor envia no header
+   * `asaas-access-token` (configurado no painel + `ASAAS_WEBHOOK_TOKEN`). Casa a
+   * cobrança por `payment.id` (providerChargeId) ou `externalReference` (order id).
+   */
+  async handleAsaasWebhook(token: string | undefined, dto: AsaasWebhookDto): Promise<{ ok: true }> {
+    const expected = this.config.ASAAS_WEBHOOK_TOKEN;
+    if (!expected) {
+      this.logger.warn('Webhook Asaas recebido sem ASAAS_WEBHOOK_TOKEN configurado — ignorado.');
+      throw new UnauthorizedException();
+    }
+    if (token !== expected) {
+      this.logger.warn('Webhook Asaas com token inválido.');
+      throw new UnauthorizedException();
+    }
+
+    if (!dto.payment) return { ok: true };
+    if (asaasEventToStatus(dto.event) !== 'paid') return { ok: true };
+
+    const [payment] = await this.db
+      .select({ orderId: payments.orderId })
+      .from(payments)
+      .where(eq(payments.providerChargeId, dto.payment.id))
+      .limit(1);
+
+    let orderId = payment?.orderId;
+    if (!orderId && dto.payment.externalReference) {
+      const [order] = await this.db
+        .select({ id: orders.id })
+        .from(orders)
+        .where(eq(orders.id, dto.payment.externalReference))
+        .limit(1);
+      orderId = order?.id;
+    }
+
+    if (!orderId) {
+      this.logger.warn(`Webhook Asaas para cobrança desconhecida: ${dto.payment.id}`);
+      return { ok: true };
+    }
+    await this.confirmOrderPaid(orderId);
     return { ok: true };
   }
 

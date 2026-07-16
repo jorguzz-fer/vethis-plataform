@@ -62,7 +62,7 @@ export function CheckoutClient({ course }: { course: CourseDetail }) {
         ) : me === undefined ? (
           <p className="text-muted">Carregando…</p>
         ) : me ? (
-          <PaymentPanel course={course} onOrder={setOrder} />
+          <PaymentPanel course={course} defaultName="" onOrder={setOrder} />
         ) : (
           <AuthPanel onAuthed={setMe} />
         )}
@@ -184,14 +184,23 @@ const METHODS: { key: PaymentMethod; label: string; hint: string }[] = [
 
 function PaymentPanel({
   course,
+  defaultName,
   onOrder,
 }: {
   course: CourseDetail;
+  defaultName: string;
   onOrder: (o: OrderDto) => void;
 }) {
   const [method, setMethod] = useState<PaymentMethod>('pix');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Dados do comprador (nome + CPF sempre; endereço/telefone só no cartão).
+  const [fullName, setFullName] = useState(defaultName);
+  const [cpfCnpj, setCpfCnpj] = useState('');
+  const [phone, setPhone] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [addressNumber, setAddressNumber] = useState('');
 
   // Campos de cartão (só usados quando method === 'card').
   const [number, setNumber] = useState('');
@@ -216,10 +225,20 @@ function PaymentPanel({
               installments,
             }
           : undefined;
+      const customer = {
+        name: fullName.trim(),
+        cpfCnpj: cpfCnpj.replace(/\D/g, ''),
+        phone: phone.trim() || undefined,
+        postalCode: postalCode.replace(/\D/g, '') || undefined,
+        addressNumber: addressNumber.trim() || undefined,
+      };
       const { data, error: err } = await browserApi.POST('/v1/checkout', {
-        body: { courseSlug: course.slug, method, card, attribution: readAttribution() },
+        body: { courseSlug: course.slug, method, customer, card, attribution: readAttribution() },
       });
-      if (err || !data) throw new Error('Não foi possível iniciar o pagamento. Tente novamente.');
+      if (err || !data)
+        throw new Error(
+          'Não foi possível iniciar o pagamento. Confira seus dados e tente novamente.',
+        );
       onOrder(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Falha no pagamento.');
@@ -234,6 +253,24 @@ function PaymentPanel({
         Passo 2 de 2
       </span>
       <h1 className="mt-1 font-serif text-2xl font-semibold text-green-800">Pagamento</h1>
+
+      <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        <Field
+          label="Nome completo"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          autoComplete="name"
+          required
+        />
+        <Field
+          label="CPF ou CNPJ"
+          inputMode="numeric"
+          value={cpfCnpj}
+          onChange={(e) => setCpfCnpj(e.target.value)}
+          placeholder="000.000.000-00"
+          required
+        />
+      </div>
 
       <div className="mt-5 grid grid-cols-3 gap-2">
         {METHODS.map((m) => (
@@ -301,6 +338,37 @@ function PaymentPanel({
                 ))}
               </select>
             </label>
+            <p className="text-xs text-muted">
+              Dados de cobrança exigidos pela operadora do cartão:
+            </p>
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+              <Field
+                label="Telefone"
+                inputMode="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="(11) 90000-0000"
+                autoComplete="tel"
+                required
+              />
+              <Field
+                label="CEP"
+                inputMode="numeric"
+                value={postalCode}
+                onChange={(e) => setPostalCode(e.target.value)}
+                placeholder="00000-000"
+                autoComplete="postal-code"
+                required
+              />
+              <Field
+                label="Nº"
+                inputMode="numeric"
+                value={addressNumber}
+                onChange={(e) => setAddressNumber(e.target.value)}
+                placeholder="123"
+                required
+              />
+            </div>
           </>
         ) : (
           <p className="rounded-xl bg-paper px-4 py-3 text-sm text-muted">
