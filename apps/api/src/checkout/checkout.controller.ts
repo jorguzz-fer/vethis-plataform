@@ -1,11 +1,24 @@
-import { Body, Controller, Get, Inject, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  HttpCode,
+  Inject,
+  Ip,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { CurrentUser, type AuthUser } from '../common/auth-user';
 import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 import { SessionGuard } from '../auth/guards/session.guard';
 import { CheckoutService } from './checkout.service';
 import {
+  asaasWebhookSchema,
   createCheckoutSchema,
   paymentWebhookSchema,
+  type AsaasWebhookDto,
   type CreateCheckoutDto,
   type OrderDto,
   type PaymentWebhookDto,
@@ -25,8 +38,9 @@ export class CheckoutController {
   create(
     @CurrentUser() user: AuthUser,
     @Body(new ZodValidationPipe(createCheckoutSchema)) dto: CreateCheckoutDto,
+    @Ip() ip: string,
   ): Promise<OrderDto> {
-    return this.checkout.createCheckout(user, dto);
+    return this.checkout.createCheckout(user, dto, ip);
   }
 
   @Get('orders/:id')
@@ -47,5 +61,15 @@ export class CheckoutController {
     @Body(new ZodValidationPipe(paymentWebhookSchema)) dto: PaymentWebhookDto,
   ): Promise<{ ok: true }> {
     return this.checkout.handleWebhook(dto);
+  }
+
+  /** Webhook do Asaas. Autenticidade pelo header `asaas-access-token`. */
+  @Post('webhooks/asaas')
+  @HttpCode(200)
+  webhookAsaas(
+    @Headers('asaas-access-token') token: string | undefined,
+    @Body(new ZodValidationPipe(asaasWebhookSchema)) dto: AsaasWebhookDto,
+  ): Promise<{ ok: true }> {
+    return this.checkout.handleAsaasWebhook(token, dto);
   }
 }

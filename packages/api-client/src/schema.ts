@@ -2486,6 +2486,13 @@ export interface components {
             courseSlug: string;
             /** @enum {string} */
             method: "pix" | "card" | "boleto";
+            customer: {
+                name: string;
+                cpfCnpj: string;
+                phone?: string;
+                postalCode?: string;
+                addressNumber?: string;
+            };
             card?: {
                 number: string;
                 holderName: string;

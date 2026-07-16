@@ -3,13 +3,15 @@ import { createCheckoutSchema, paymentWebhookSchema } from '../src/checkout/dto'
 import { FakePaymentGateway } from '../src/checkout/fake-gateway';
 
 describe('createCheckoutSchema', () => {
+  const customer = { name: 'Ana Vet', cpfCnpj: '39053344705' };
+
   it('aceita Pix sem cartão', () => {
-    const r = createCheckoutSchema.safeParse({ courseSlug: 'x', method: 'pix' });
+    const r = createCheckoutSchema.safeParse({ courseSlug: 'x', method: 'pix', customer });
     expect(r.success).toBe(true);
   });
 
   it('exige dados de cartão quando o método é cartão', () => {
-    const r = createCheckoutSchema.safeParse({ courseSlug: 'x', method: 'card' });
+    const r = createCheckoutSchema.safeParse({ courseSlug: 'x', method: 'card', customer });
     expect(r.success).toBe(false);
   });
 
@@ -17,6 +19,7 @@ describe('createCheckoutSchema', () => {
     const r = createCheckoutSchema.safeParse({
       courseSlug: 'x',
       method: 'card',
+      customer: { ...customer, phone: '11999999999', postalCode: '01310100', addressNumber: '10' },
       card: {
         number: '4111111111111111',
         holderName: 'Ana Vet',
@@ -30,7 +33,7 @@ describe('createCheckoutSchema', () => {
   });
 
   it('rejeita método desconhecido', () => {
-    const r = createCheckoutSchema.safeParse({ courseSlug: 'x', method: 'crypto' });
+    const r = createCheckoutSchema.safeParse({ courseSlug: 'x', method: 'crypto', customer });
     expect(r.success).toBe(false);
   });
 });

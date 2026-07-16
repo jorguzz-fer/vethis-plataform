@@ -19,18 +19,49 @@ export const cardSchema = z.object({
 });
 export type CardDto = z.infer<typeof cardSchema>;
 
-/** Início do checkout: curso + meio de pagamento (cartão exige `card`). */
+/** Só dígitos, 11 (CPF) ou 14 (CNPJ). */
+const cpfCnpjSchema = z
+  .string()
+  .transform((v) => v.replace(/\D/g, ''))
+  .refine((v) => v.length === 11 || v.length === 14, 'CPF ou CNPJ inválido');
+
+/**
+ * Dados do comprador cobrados pelo gateway (Asaas exige CPF/CNPJ). CEP, número e
+ * telefone são exigidos pelo antifraude no cartão — opcionais para Pix/boleto.
+ */
+export const checkoutCustomerSchema = z.object({
+  name: z.string().min(3).max(120),
+  cpfCnpj: cpfCnpjSchema,
+  phone: z.string().max(20).optional(),
+  postalCode: z.string().max(9).optional(),
+  addressNumber: z.string().max(20).optional(),
+});
+export type CheckoutCustomerDto = z.infer<typeof checkoutCustomerSchema>;
+
+/** Início do checkout: curso + comprador + meio de pagamento (cartão exige `card`). */
 export const createCheckoutSchema = z
   .object({
     courseSlug: z.string().min(1),
     method: paymentMethodSchema,
+    customer: checkoutCustomerSchema,
     card: cardSchema.optional(),
     attribution: attributionInputSchema.optional(),
   })
   .refine((v) => v.method !== 'card' || v.card != null, {
     message: 'Dados do cartão são obrigatórios para pagamento com cartão',
     path: ['card'],
-  });
+  })
+  .refine(
+    (v) =>
+      v.method !== 'card' ||
+      (Boolean(v.customer.phone) &&
+        Boolean(v.customer.postalCode) &&
+        Boolean(v.customer.addressNumber)),
+    {
+      message: 'Telefone, CEP e número são obrigatórios para pagamento com cartão',
+      path: ['customer'],
+    },
+  );
 export type CreateCheckoutDto = z.infer<typeof createCheckoutSchema>;
 
 /** Curso resumido no contexto do pedido. */
@@ -60,10 +91,23 @@ export const orderSchema = z.object({
 });
 export type OrderDto = z.infer<typeof orderSchema>;
 
-/** Payload de webhook do gateway (Asaas envia algo compatível com isto). */
+/** Payload de webhook genérico (dev/testes). */
 export const paymentWebhookSchema = z.object({
   event: z.string(),
   providerChargeId: z.string().min(1),
   status: z.enum(['paid', 'failed', 'refunded']),
 });
 export type PaymentWebhookDto = z.infer<typeof paymentWebhookSchema>;
+
+/** Payload de webhook do Asaas (o provedor envia o pagamento no corpo). */
+export const asaasWebhookSchema = z.object({
+  event: z.string(),
+  payment: z
+    .object({
+      id: z.string(),
+      status: z.string(),
+      externalReference: z.string().nullable().optional(),
+    })
+    .optional(),
+});
+export type AsaasWebhookDto = z.infer<typeof asaasWebhookSchema>;

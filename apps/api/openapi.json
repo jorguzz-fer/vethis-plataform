@@ -794,6 +794,35 @@
               "boleto"
             ]
           },
+          "customer": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 3,
+                "maxLength": 120
+              },
+              "cpfCnpj": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string",
+                "maxLength": 20
+              },
+              "postalCode": {
+                "type": "string",
+                "maxLength": 9
+              },
+              "addressNumber": {
+                "type": "string",
+                "maxLength": 20
+              }
+            },
+            "required": [
+              "name",
+              "cpfCnpj"
+            ]
+          },
           "card": {
             "type": "object",
             "properties": {
@@ -881,7 +910,8 @@
         },
         "required": [
           "courseSlug",
-          "method"
+          "method",
+          "customer"
         ]
       },
       "Order": {
