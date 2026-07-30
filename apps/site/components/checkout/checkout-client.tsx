@@ -14,17 +14,61 @@ import {
   type PaymentMethod,
 } from '@/lib/browser-api';
 
-/** Quantas parcelas mostrar no cartão (12x sem juros, dinheiro em centavos). */
+/** Desconto do Pix à vista — espelha a regra server-authoritative da API. */
+const PIX_DISCOUNT_PERCENT = 5;
+/** Teto de parcelas oferecidas (cartão e boleto/carnê). */
+const MAX_INSTALLMENTS = 24;
+
+/** Valor cobrado para o meio escolhido (Pix à vista tem desconto). */
+function netPriceCents(method: PaymentMethod, priceCents: number): number {
+  if (method === 'pix') {
+    return Math.round((priceCents * (100 - PIX_DISCOUNT_PERCENT)) / 100);
+  }
+  return priceCents;
+}
+
+/** Opções de parcelamento (sem juros) até o teto, dinheiro em centavos. */
 function installmentOptions(priceCents: number): { n: number; label: string }[] {
-  return Array.from({ length: 12 }, (_, i) => {
+  return Array.from({ length: MAX_INSTALLMENTS }, (_, i) => {
     const n = i + 1;
     return { n, label: `${n}x de ${formatBRL(Math.round(priceCents / n))}` };
   });
 }
 
+/** Seletor de parcelas (sem juros), usado por cartão e boleto/carnê. */
+function InstallmentsField({
+  priceCents,
+  value,
+  onChange,
+}: {
+  priceCents: number;
+  value: number;
+  onChange: (n: number) => void;
+}) {
+  return (
+    <label className="flex flex-col gap-1.5 text-sm font-semibold text-ink">
+      Parcelas (sem juros)
+      <select
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="rounded-[10px] border-[1.5px] border-border px-3.5 py-3 text-[15px]"
+      >
+        {installmentOptions(priceCents).map((o) => (
+          <option key={o.n} value={o.n}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
 export function CheckoutClient({ course }: { course: CourseDetail }) {
   const [me, setMe] = useState<AuthUser | null | undefined>(undefined);
   const [order, setOrder] = useState<OrderDto | null>(null);
+  // Meio/parcelas ficam aqui em cima para o resumo espelhar preço e parcela.
+  const [method, setMethod] = useState<PaymentMethod>('pix');
+  const [installments, setInstallments] = useState(1);
 
   // Descobre a sessão atual (login-antes-de-pagar).
   useEffect(() => {
@@ -62,13 +106,21 @@ export function CheckoutClient({ course }: { course: CourseDetail }) {
         ) : me === undefined ? (
           <p className="text-muted">Carregando…</p>
         ) : me ? (
-          <PaymentPanel course={course} defaultName="" onOrder={setOrder} />
+          <PaymentPanel
+            course={course}
+            defaultName=""
+            onOrder={setOrder}
+            method={method}
+            setMethod={setMethod}
+            installments={installments}
+            setInstallments={setInstallments}
+          />
         ) : (
           <AuthPanel onAuthed={setMe} />
         )}
       </div>
 
-      <OrderSummary course={course} order={order} />
+      <OrderSummary course={course} order={order} method={method} installments={installments} />
     </div>
   );
 }
@@ -177,21 +229,28 @@ function AuthPanel({ onAuthed }: { onAuthed: (u: AuthUser) => void }) {
 /* ------------------------------------------------------------------ */
 
 const METHODS: { key: PaymentMethod; label: string; hint: string }[] = [
-  { key: 'pix', label: 'Pix', hint: 'Aprovação na hora' },
-  { key: 'card', label: 'Cartão', hint: 'Até 12x' },
-  { key: 'boleto', label: 'Boleto', hint: 'Compensa em 1–2 dias' },
+  { key: 'pix', label: 'Pix', hint: `${PIX_DISCOUNT_PERCENT}% de desconto` },
+  { key: 'card', label: 'Cartão', hint: 'Até 24x' },
+  { key: 'boleto', label: 'Boleto', hint: 'Em até 24x' },
 ];
 
 function PaymentPanel({
   course,
   defaultName,
   onOrder,
+  method,
+  setMethod,
+  installments,
+  setInstallments,
 }: {
   course: CourseDetail;
   defaultName: string;
   onOrder: (o: OrderDto) => void;
+  method: PaymentMethod;
+  setMethod: (m: PaymentMethod) => void;
+  installments: number;
+  setInstallments: (n: number) => void;
 }) {
-  const [method, setMethod] = useState<PaymentMethod>('pix');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -207,7 +266,6 @@ function PaymentPanel({
   const [holderName, setHolderName] = useState('');
   const [exp, setExp] = useState('');
   const [cvv, setCvv] = useState('');
-  const [installments, setInstallments] = useState(1);
 
   async function pay(e: FormEvent) {
     e.preventDefault();
@@ -222,7 +280,6 @@ function PaymentPanel({
               expMonth: Number(exp.split('/')[0]),
               expYear: normalizeYear(exp.split('/')[1]),
               cvv,
-              installments,
             }
           : undefined;
       const customer = {
@@ -233,7 +290,14 @@ function PaymentPanel({
         addressNumber: addressNumber.trim() || undefined,
       };
       const { data, error: err } = await browserApi.POST('/v1/checkout', {
-        body: { courseSlug: course.slug, method, customer, card, attribution: readAttribution() },
+        body: {
+          courseSlug: course.slug,
+          method,
+          customer,
+          card,
+          installments: method === 'pix' ? 1 : installments,
+          attribution: readAttribution(),
+        },
       });
       if (err || !data)
         throw new Error(
@@ -324,20 +388,11 @@ function PaymentPanel({
                 required
               />
             </div>
-            <label className="flex flex-col gap-1.5 text-sm font-semibold text-ink">
-              Parcelas
-              <select
-                value={installments}
-                onChange={(e) => setInstallments(Number(e.target.value))}
-                className="rounded-[10px] border-[1.5px] border-border px-3.5 py-3 text-[15px]"
-              >
-                {installmentOptions(course.priceCents).map((o) => (
-                  <option key={o.n} value={o.n}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <InstallmentsField
+              priceCents={course.priceCents}
+              value={installments}
+              onChange={setInstallments}
+            />
             <p className="text-xs text-muted">
               Dados de cobrança exigidos pela operadora do cartão:
             </p>
@@ -370,11 +425,23 @@ function PaymentPanel({
               />
             </div>
           </>
+        ) : method === 'boleto' ? (
+          <>
+            <InstallmentsField
+              priceCents={course.priceCents}
+              value={installments}
+              onChange={setInstallments}
+            />
+            <p className="rounded-xl bg-paper px-4 py-3 text-sm text-muted">
+              {installments > 1
+                ? `Ao confirmar, geramos um carnê de ${installments}x. A matrícula é liberada após a compensação da 1ª parcela (1–2 dias úteis).`
+                : 'Ao confirmar, geramos um boleto. A matrícula é liberada após a compensação (1–2 dias úteis).'}
+            </p>
+          </>
         ) : (
           <p className="rounded-xl bg-paper px-4 py-3 text-sm text-muted">
-            {method === 'pix'
-              ? 'Ao confirmar, geramos um código Pix para pagamento imediato — a matrícula é liberada assim que o pagamento cair.'
-              : 'Ao confirmar, geramos um boleto. A matrícula é liberada após a compensação (1–2 dias úteis).'}
+            Ao confirmar, geramos um código Pix para pagamento imediato, já com{' '}
+            {PIX_DISCOUNT_PERCENT}% de desconto — a matrícula é liberada assim que o pagamento cair.
           </p>
         )}
 
@@ -384,9 +451,11 @@ function PaymentPanel({
           {busy
             ? 'Processando…'
             : method === 'pix'
-              ? 'Gerar Pix e pagar'
+              ? `Gerar Pix e pagar ${formatBRL(netPriceCents('pix', course.priceCents))}`
               : method === 'boleto'
-                ? 'Gerar boleto'
+                ? installments > 1
+                  ? `Gerar carnê de ${installments}x`
+                  : 'Gerar boleto'
                 : `Pagar ${formatBRL(course.priceCents)}`}
         </Button>
         <p className="text-center text-xs text-muted">
@@ -556,8 +625,22 @@ function SuccessPanel({ course }: { course: CourseDetail }) {
 /* Resumo do pedido (coluna direita)                                   */
 /* ------------------------------------------------------------------ */
 
-function OrderSummary({ course, order }: { course: CourseDetail; order: OrderDto | null }) {
+function OrderSummary({
+  course,
+  order,
+  method,
+  installments,
+}: {
+  course: CourseDetail;
+  order: OrderDto | null;
+  method: PaymentMethod;
+  installments: number;
+}) {
   const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
+  // Antes do pedido, espelha a regra do método escolhido; depois, usa o pedido.
+  const total = order?.amountCents ?? netPriceCents(method, course.priceCents);
+  const parcels = order?.installments ?? (method === 'pix' ? 1 : installments);
+  const pixDiscount = method === 'pix' && !order ? course.priceCents - total : 0;
   return (
     <aside className="h-fit rounded-2xl border border-border bg-white p-6 shadow-sm lg:sticky lg:top-6">
       <div
@@ -582,16 +665,21 @@ function OrderSummary({ course, order }: { course: CourseDetail; order: OrderDto
           <span className="text-muted">Subtotal</span>
           <span className="text-ink">{formatBRL(course.priceCents)}</span>
         </div>
+        {pixDiscount > 0 ? (
+          <div className="mt-2 flex items-center justify-between text-green-700">
+            <span>Desconto Pix ({PIX_DISCOUNT_PERCENT}%)</span>
+            <span>−{formatBRL(pixDiscount)}</span>
+          </div>
+        ) : null}
         <div className="mt-2 flex items-center justify-between">
           <span className="font-semibold text-ink">Total</span>
           <span className="font-serif text-xl font-semibold text-green-800">
-            {formatBRL(order?.amountCents ?? course.priceCents)}
+            {formatBRL(total)}
           </span>
         </div>
-        {order && order.installments > 1 ? (
+        {parcels > 1 ? (
           <p className="mt-1 text-right text-xs text-muted">
-            em {order.installments}x de{' '}
-            {formatBRL(Math.round(order.amountCents / order.installments))}
+            em {parcels}x de {formatBRL(Math.round(total / parcels))}
           </p>
         ) : null}
       </div>

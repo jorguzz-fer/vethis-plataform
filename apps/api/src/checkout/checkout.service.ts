@@ -20,6 +20,7 @@ import type { AuthUser } from '../common/auth-user';
 import type { AsaasWebhookDto, CreateCheckoutDto, OrderDto, PaymentWebhookDto } from './dto';
 import { PAYMENT_GATEWAY, type PaymentGateway } from './payment-gateway';
 import { asaasEventToStatus } from './asaas-gateway';
+import { effectiveInstallments, netAmountCents } from './pricing';
 
 @Injectable()
 export class CheckoutService {
@@ -63,14 +64,17 @@ export class CheckoutService {
       .limit(1);
     if (already) throw new ConflictException('Você já está matriculado neste curso');
 
-    const installments = dto.method === 'card' ? (dto.card?.installments ?? 1) : 1;
+    // Regra comercial (server-authoritative): Pix à vista tem desconto; cartão e
+    // boleto/carnê pagam o preço cheio parcelável (até o teto).
+    const installments = effectiveInstallments(dto.method, dto.installments);
+    const amountCents = netAmountCents(dto.method, course.priceCents);
 
     const [order] = await this.db
       .insert(orders)
       .values({
         userId: user.id,
         courseId: course.id,
-        amountCents: course.priceCents,
+        amountCents,
         ...(dto.attribution ?? {}),
       })
       .returning();
@@ -82,6 +86,7 @@ export class CheckoutService {
         orderId: order.id,
         amountCents: order.amountCents,
         method: dto.method,
+        installments,
         customer: {
           name: dto.customer.name,
           email: user.email,
@@ -98,7 +103,6 @@ export class CheckoutService {
               expMonth: dto.card.expMonth,
               expYear: dto.card.expYear,
               cvv: dto.card.cvv,
-              installments,
             }
           : undefined,
       });

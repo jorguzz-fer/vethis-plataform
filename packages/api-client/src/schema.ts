@@ -2499,9 +2499,9 @@ export interface components {
                 expMonth: number;
                 expYear: number;
                 cvv: string;
-                /** @default 1 */
-                installments: number;
             };
+            /** @default 1 */
+            installments: number;
             attribution?: {
                 utmSource?: string;
                 utmMedium?: string;

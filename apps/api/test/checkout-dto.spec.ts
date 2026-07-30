@@ -59,6 +59,7 @@ describe('FakePaymentGateway', () => {
       orderId: 'o1',
       amountCents: 1000,
       method: 'card',
+      installments: 1,
       customer: { name: null, email: 'a@b.com' },
     });
     expect(r.status).toBe('paid');
@@ -70,6 +71,7 @@ describe('FakePaymentGateway', () => {
       orderId: 'o2',
       amountCents: 149700,
       method: 'pix',
+      installments: 1,
       customer: { name: null, email: 'a@b.com' },
     });
     expect(r.status).toBe('pending');
@@ -81,6 +83,7 @@ describe('FakePaymentGateway', () => {
       orderId: 'o3',
       amountCents: 5000,
       method: 'boleto',
+      installments: 1,
       customer: { name: null, email: 'a@b.com' },
     });
     expect(r.status).toBe('pending');
