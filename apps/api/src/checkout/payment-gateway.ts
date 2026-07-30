@@ -21,13 +21,14 @@ export interface ChargeCard {
   expMonth: number;
   expYear: number;
   cvv: string;
-  installments: number;
 }
 
 export interface CreateChargeInput {
   orderId: string;
   amountCents: number;
   method: PaymentMethodDto;
+  /** Parcelas (cartão e boleto/carnê); 1 = à vista. */
+  installments: number;
   customer: ChargeCustomer;
   card?: ChargeCard;
 }

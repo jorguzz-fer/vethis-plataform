@@ -139,11 +139,19 @@ export class AsaasPaymentGateway implements PaymentGateway {
     const payload: Record<string, unknown> = {
       customer,
       billingType: BILLING_TYPE[input.method],
-      value,
       dueDate: dueDate(input.method === 'boleto' ? 3 : 1),
       externalReference: input.orderId,
       description: `Matrícula Vethis — pedido ${input.orderId}`,
     };
+
+    // Parcelamento (cartão e boleto/carnê): o Asaas divide `totalValue` em
+    // `installmentCount` parcelas. À vista, cobra `value` de uma vez.
+    if (input.installments > 1) {
+      payload.installmentCount = input.installments;
+      payload.totalValue = value;
+    } else {
+      payload.value = value;
+    }
 
     if (input.method === 'card') {
       if (!input.card) throw new BadRequestException('Dados do cartão ausentes.');
@@ -162,7 +170,6 @@ export class AsaasPaymentGateway implements PaymentGateway {
         addressNumber: input.customer.addressNumber,
         phone: onlyDigits(input.customer.phone),
       };
-      payload.installmentCount = input.card.installments > 1 ? input.card.installments : undefined;
       if (input.customer.remoteIp) payload.remoteIp = input.customer.remoteIp;
     }
 

@@ -36,7 +36,7 @@ const INSTRUCTORS: SeedInstructor[] = [
   {
     slug: 'coordenacao-clinica-felinos',
     name: 'Patrícia Bastos e Roberta Ruiz',
-    bio: 'Coordenação acadêmica da Pós-graduação em Clínica Médica de Felinos — médicas-veterinárias atuantes na clínica e no ensino de Medicina Felina.',
+    bio: 'Coordenação acadêmica das Dras. Patrícia Bastos e Roberta Ruiz — médicas-veterinárias com atuação clínica e docente em Medicina Felina. A Dra. Roberta Ruiz é especialista em Patologia e Medicina Veterinária Legal, mestre em Biociências e doutoranda em Patologia pela USP, e preside a Comissão de Responsabilidade Técnica do CRMV-SP.',
   },
   {
     slug: 'dr-ricardo-mendes',

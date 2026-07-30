@@ -15,7 +15,6 @@ export const cardSchema = z.object({
   expMonth: z.coerce.number().int().min(1).max(12),
   expYear: z.coerce.number().int().min(2024).max(2100),
   cvv: z.string().min(3).max(4),
-  installments: z.coerce.number().int().min(1).max(12).default(1),
 });
 export type CardDto = z.infer<typeof cardSchema>;
 
@@ -45,6 +44,8 @@ export const createCheckoutSchema = z
     method: paymentMethodSchema,
     customer: checkoutCustomerSchema,
     card: cardSchema.optional(),
+    // Parcelas para cartão e boleto/carnê (Pix é sempre à vista). Teto 24x.
+    installments: z.coerce.number().int().min(1).max(24).default(1),
     attribution: attributionInputSchema.optional(),
   })
   .refine((v) => v.method !== 'card' || v.card != null, {

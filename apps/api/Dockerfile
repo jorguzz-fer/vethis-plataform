@@ -35,5 +35,6 @@ COPY --from=builder /repo ./
 WORKDIR /repo/apps/api
 USER node
 EXPOSE 3333
-# Migrations: `node dist/db/migrate.js` (o cwd aqui é /repo/apps/api).
-CMD ["node", "dist/main.js"]
+# O entrypoint aplica as migrations (dist/db/migrate.js, cwd /repo/apps/api) e
+# sobe a API. Com SEED_ON_START=true também roda o seed (idempotente).
+CMD ["sh", "docker-entrypoint.sh"]

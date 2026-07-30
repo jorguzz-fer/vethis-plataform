@@ -850,12 +850,6 @@
                 "type": "string",
                 "minLength": 3,
                 "maxLength": 4
-              },
-              "installments": {
-                "type": "integer",
-                "minimum": 1,
-                "maximum": 12,
-                "default": 1
               }
             },
             "required": [
@@ -865,6 +859,12 @@
               "expYear",
               "cvv"
             ]
+          },
+          "installments": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 24,
+            "default": 1
           },
           "attribution": {
             "type": "object",
