@@ -37,6 +37,7 @@ const INSTRUCTORS: SeedInstructor[] = [
     slug: 'coordenacao-clinica-felinos',
     name: 'Patrícia Bastos e Roberta Ruiz',
     bio: 'Coordenação acadêmica das Dras. Patrícia Bastos e Roberta Ruiz — médicas-veterinárias com atuação clínica e docente em Medicina Felina. A Dra. Roberta Ruiz é especialista em Patologia e Medicina Veterinária Legal, mestre em Biociências e doutoranda em Patologia pela USP, e preside a Comissão de Responsabilidade Técnica do CRMV-SP.',
+    photo: 'coordenacao.png',
   },
   {
     slug: 'dr-ricardo-mendes',
@@ -106,7 +107,7 @@ const COURSES: SeedCourse[] = [
     level: 'avancado',
     specialty: 'medicina-felina',
     instructor: 'coordenacao-clinica-felinos',
-    cover: '/cursos/pos-clinica-medica-felinos.svg',
+    cover: '/cursos/pos-clinica-medica-felinos.png',
     workloadHours: 360,
     learningObjectives: [
       'Construir o raciocínio clínico a partir dos sinais apresentados pelo gato.',
