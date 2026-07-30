@@ -13,7 +13,7 @@ const LEVEL_LABEL: Record<CourseDetail['level'], string> = {
   intermediario: 'Intermediário',
   avancado: 'Avançado',
 };
-const INSTALLMENTS = 12;
+const INSTALLMENTS = 24;
 
 function formatDuration(seconds: number): string {
   return `${Math.round(seconds / 60)} min`;
