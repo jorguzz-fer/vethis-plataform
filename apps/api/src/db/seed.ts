@@ -26,7 +26,18 @@ const SPECIALTIES = [
 ];
 
 /** Corpo docente — mesmos nomes/fotos da seção "Instrutores" do site. */
-const INSTRUCTORS = [
+interface SeedInstructor {
+  slug: string;
+  name: string;
+  bio: string;
+  photo?: string;
+}
+const INSTRUCTORS: SeedInstructor[] = [
+  {
+    slug: 'coordenacao-clinica-felinos',
+    name: 'Patrícia Bastos e Roberta Ruiz',
+    bio: 'Coordenação acadêmica da Pós-graduação em Clínica Médica de Felinos — médicas-veterinárias atuantes na clínica e no ensino de Medicina Felina.',
+  },
   {
     slug: 'dr-ricardo-mendes',
     name: 'Dr. Ricardo Mendes',
@@ -62,6 +73,10 @@ interface SeedModule {
   title: string;
   lessons: SeedLesson[];
 }
+interface SeedFaqItem {
+  question: string;
+  answer: string;
+}
 interface SeedCourse {
   slug: string;
   title: string;
@@ -71,11 +86,263 @@ interface SeedCourse {
   level: CourseLevel;
   specialty: string;
   instructor: string;
+  cover?: string;
+  workloadHours?: number;
+  learningObjectives?: string[];
+  faq?: SeedFaqItem[];
   modules: SeedModule[];
 }
 
 /** Catálogo Vethis — cursos publicados com módulos e aulas. */
 const COURSES: SeedCourse[] = [
+  {
+    slug: 'pos-clinica-medica-felinos',
+    title: 'Pós-graduação em Clínica Médica de Felinos',
+    subtitle:
+      'Atenda gatos com mais segurança, raciocínio clínico e confiança — do ambulatório à emergência.',
+    description:
+      'Pós-graduação 100% online e aplicada à rotina, com 360 horas e certificação. O gato não é um cão pequeno: aqui você desenvolve o raciocínio clínico orientado por problemas e domina as principais afecções da espécie — nefrologia e urologia, doenças infecciosas (PIF, FeLV, FIV, esporotricose), cardiologia, neurologia, gastroenterologia e hepatologia, endocrinologia, oncologia, dermatologia, oftalmologia, emergência, anestesia e analgesia, comportamento, cirurgia e odontologia felina. São 80 horas de videoaulas somadas a leituras dirigidas, quatro casos clínicos por módulo (52 no total), fóruns, quizzes e projeto aplicado.',
+    priceCents: 693600,
+    level: 'avancado',
+    specialty: 'medicina-felina',
+    instructor: 'coordenacao-clinica-felinos',
+    cover: '/cursos/pos-clinica-medica-felinos.svg',
+    workloadHours: 360,
+    learningObjectives: [
+      'Construir o raciocínio clínico a partir dos sinais apresentados pelo gato.',
+      'Interpretar hemograma, bioquímica, urinálise, ultrassonografia, radiografia, AFAST e TFAST com olhar felino.',
+      'Estadiar e conduzir pacientes renais de acordo com os critérios IRIS.',
+      'Investigar e manejar PIF, FeLV, FIV, esporotricose, micoplasmose, calicivirose e herpesvirose.',
+      'Reconhecer cardiomiopatia hipertrófica, interpretar NT-proBNP e abordar o tromboembolismo aórtico.',
+      'Diferenciar doença inflamatória intestinal de linfoma e conduzir lipidose, pancreatite e tríade felina.',
+      'Atualizar-se sobre velagliflozina, monitoramento contínuo da glicose e remissão diabética.',
+      'Tomar decisões em emergência: obstrução uretral, dispneia, choque e trauma.',
+      'Planejar anestesia e analgesia para gatos braquicefálicos, cardiopatas e renais.',
+      'Compreender comportamento, tensão intergatos, enriquecimento ambiental e estratégias para reduzir o estresse.',
+      'Reconhecer quando indicar endoscopia, laparotomia, procedimentos cirúrgicos e abordagens odontológicas.',
+    ],
+    faq: [
+      {
+        question: 'Para quem é esta pós-graduação?',
+        answer:
+          'Para médicos-veterinários que atendem gatos na rotina clínica, atuam em hospitais, internação, emergência ou terapia intensiva, ou desejam construir uma atuação especializada em Medicina Felina.',
+      },
+      {
+        question: 'Qual a duração e a carga horária?',
+        answer:
+          'A formação tem duração de até 12 meses e 360 horas no total: 80 horas de videoaulas gravadas somadas a leituras dirigidas, casos clínicos, exercícios, fóruns, atividades avaliativas e projeto final.',
+      },
+      {
+        question: 'Como funciona o pagamento?',
+        answer:
+          'Investimento de R$ 6.936,00. Você pode parcelar em até 24x de R$ 289,00 no boleto, pagar no Pix à vista com 5% de desconto (R$ 6.589,20) ou no cartão com condição especial.',
+      },
+      {
+        question: 'Como funciona a metodologia?',
+        answer:
+          'Modalidade EaD, com os módulos liberados progressivamente no ambiente virtual. Cada módulo reúne videoaulas, material de apoio (artigos, consensos e guidelines), quatro casos clínicos, quiz e exercícios de interpretação de exames — estudo no seu ritmo, de qualquer dispositivo.',
+      },
+      {
+        question: 'Como é a avaliação?',
+        answer:
+          'A avaliação é contínua e considera os quizzes de cada módulo, a resolução dos casos clínicos, os exercícios, a participação nos fóruns e a atividade final aplicada.',
+      },
+      {
+        question: 'O curso é certificado e reconhecido?',
+        answer:
+          'Sim. Curso certificado e reconhecido pelo MEC, ofertado em parceria com a Rede de Ensino Doctum. Ao concluir, você recebe o certificado de pós-graduação de 360 horas, disponível na área do aluno.',
+      },
+    ],
+    modules: [
+      {
+        title: 'Módulo 1 — Bases da Medicina Felina',
+        lessons: [
+          {
+            title: 'Particularidades fisiológicas e farmacológicas do felino',
+            min: 50,
+            free: true,
+          },
+          { title: 'Metabolismo hepático idiossincrático', min: 50 },
+          { title: 'Toxicidade de fármacos', min: 50 },
+          { title: 'Resposta imune diferenciada', min: 50 },
+          { title: 'Semiologia orientada por problemas', min: 50 },
+          { title: 'Construção do raciocínio clínico a partir dos sinais do paciente', min: 50 },
+        ],
+      },
+      {
+        title: 'Módulo 2 — Exames Laboratoriais e Diagnóstico por Imagem',
+        lessons: [
+          { title: 'Interpretação de exames laboratoriais', min: 39 },
+          { title: 'Hematologia felina', min: 39 },
+          { title: 'Bioquímica sérica', min: 38 },
+          { title: 'Urinálise com enfoque nas particularidades dos felinos', min: 38 },
+          { title: 'Alterações decorrentes de estresse', min: 38 },
+          { title: 'Hemólise e interferências pré-analíticas', min: 38 },
+          { title: 'Particularidades dos intervalos de referência', min: 38 },
+          { title: 'Ultrassonografia', min: 38 },
+          { title: 'AFAST', min: 38 },
+          { title: 'TFAST', min: 38 },
+          { title: 'Radiografia', min: 38 },
+        ],
+      },
+      {
+        title: 'Módulo 3 — Nefrologia e Urologia',
+        lessons: [
+          { title: 'Doença renal crônica', min: 54 },
+          { title: 'Estadiamento IRIS', min: 54 },
+          { title: 'Monitoramento do paciente renal', min: 54 },
+          { title: 'Manejo nutricional', min: 54 },
+          { title: 'Novas terapias', min: 54 },
+          { title: 'Doença do trato urinário inferior dos felinos', min: 54 },
+          { title: 'Cistite idiopática', min: 54 },
+          { title: 'Urolitíase', min: 54 },
+          { title: 'Insuficiência ou injúria renal aguda', min: 54 },
+          { title: 'Ureterolitíase', min: 54 },
+        ],
+      },
+      {
+        title: 'Módulo 4 — Doenças Infecciosas',
+        lessons: [
+          { title: 'Peritonite infecciosa felina (PIF)', min: 45 },
+          { title: 'Diagnóstico da PIF', min: 45 },
+          { title: 'PCR', min: 45 },
+          { title: 'Teste de Rivalta', min: 45 },
+          { title: 'Citologia e avaliação de efusões', min: 45 },
+          { title: 'Protocolo terapêutico com GS-441524', min: 45 },
+          { title: 'FeLV', min: 45 },
+          { title: 'FIV', min: 45 },
+          { title: 'Esporotricose', min: 45 },
+          { title: 'Micoplasmose hemotrópica', min: 45 },
+          { title: 'Calicivirose', min: 45 },
+          { title: 'Herpesvírus felino', min: 45 },
+        ],
+      },
+      {
+        title: 'Módulo 5 — Cardiologia e Neurologia',
+        lessons: [
+          { title: 'Convulsões em gatos', min: 22 },
+          { title: 'Particularidades das manifestações convulsivas felinas', min: 22 },
+          { title: 'Síndrome vestibular felina', min: 22 },
+          { title: 'Meningoencefalites infecciosas', min: 22 },
+          { title: 'Toxoplasmose neurológica', min: 22 },
+          { title: 'Manifestações neurológicas da PIF', min: 22 },
+          { title: 'Dor neuropática', min: 21 },
+          { title: 'Manejo prático da dor neuropática', min: 21 },
+          { title: 'Síndrome de hiperestesia felina', min: 21 },
+          { title: 'Cardiomiopatia hipertrófica', min: 21 },
+          { title: 'Biomarcadores cardíacos (NT-proBNP)', min: 21 },
+          { title: 'Ecocardiografia', min: 21 },
+          { title: 'Eletrocardiografia', min: 21 },
+          { title: 'Tromboembolismo aórtico', min: 21 },
+        ],
+      },
+      {
+        title: 'Módulo 6 — Gastroenterologia e Hepatologia',
+        lessons: [
+          { title: 'Doença inflamatória intestinal', min: 68 },
+          { title: 'Diferenciação entre doença inflamatória intestinal e linfoma', min: 68 },
+          { title: 'Lipidose hepática e manejo nutricional', min: 68 },
+          { title: 'Alimentação por sonda', min: 68 },
+          { title: 'Pancreatite felina', min: 67 },
+          { title: 'Dificuldades e limitações diagnósticas da pancreatite', min: 67 },
+          { title: 'Abordagem ao vômito crônico', min: 67 },
+          { title: 'Tríade felina', min: 67 },
+        ],
+      },
+      {
+        title: 'Módulo 7 — Endocrinologia',
+        lessons: [
+          { title: 'Diabetes mellitus', min: 40 },
+          { title: 'Insulinoterapia', min: 40 },
+          { title: 'Monitoramento contínuo da glicose', min: 40 },
+          { title: 'Remissão diabética', min: 40 },
+          { title: 'Uso do Senvelgo® (velagliflozina)', min: 40 },
+          { title: 'Critérios para seleção e acompanhamento de pacientes', min: 40 },
+          { title: 'Hipertireoidismo', min: 40 },
+          { title: 'Tratamento com iodo radioativo', min: 40 },
+          { title: 'Manejo clínico do hipertireoidismo', min: 40 },
+        ],
+      },
+      {
+        title: 'Módulo 8 — Oncologia',
+        lessons: [
+          { title: 'Linfoma alimentar', min: 30 },
+          { title: 'Linfoma mediastinal', min: 30 },
+          { title: 'Linfoma extranodal', min: 30 },
+          { title: 'Carcinoma de células escamosas', min: 30 },
+          { title: 'Mastocitoma', min: 30 },
+          { title: 'Adenocarcinoma mamário', min: 30 },
+          { title: 'Quimioterapia em felinos', min: 30 },
+          { title: 'Efeitos colaterais', min: 30 },
+          { title: 'Tratamento de suporte', min: 30 },
+          { title: 'Cuidados paliativos', min: 30 },
+          { title: 'Eutanásia', min: 30 },
+          { title: 'Diretrizes AAFP/IAAHPC 2023', min: 30 },
+        ],
+      },
+      {
+        title: 'Módulo 9 — Dermatologia e Oftalmologia',
+        lessons: [
+          { title: 'Síndrome atópica felina', min: 50 },
+          { title: 'Complexo granuloma eosinofílico', min: 50 },
+          { title: 'Ceratite eosinofílica', min: 50 },
+          { title: 'Uveíte', min: 50 },
+          { title: 'Glaucoma', min: 50 },
+          { title: 'Diagnóstico diferencial das doenças oftalmológicas', min: 50 },
+        ],
+      },
+      {
+        title: 'Módulo 10 — Emergência e Intensivismo',
+        lessons: [
+          { title: 'Suporte hemodinâmico', min: 60 },
+          { title: 'Obstrução uretral e desobstrução segura', min: 60 },
+          { title: 'Dispneia', min: 60 },
+          { title: 'Toracocentese', min: 60 },
+          { title: 'Oxigenioterapia', min: 60 },
+          { title: 'Trauma', min: 60 },
+          { title: 'Choque', min: 60 },
+        ],
+      },
+      {
+        title: 'Módulo 11 — Anestesia e Controle da Dor',
+        lessons: [
+          { title: 'Drogas seguras em felinos', min: 30 },
+          { title: 'Drogas contraindicadas ou que exigem cautela', min: 30 },
+          { title: 'Protocolos para gatos braquicefálicos', min: 30 },
+          { title: 'Protocolos para gatos cardiopatas', min: 30 },
+          { title: 'Protocolos para gatos renais', min: 30 },
+          { title: 'Analgesia multimodal', min: 30 },
+          { title: 'Pregabalina (Bonqat®)', min: 30 },
+          { title: 'Redução do estresse no transporte e na consulta', min: 30 },
+        ],
+      },
+      {
+        title: 'Módulo 12 — Comportamento e Bem-estar',
+        lessons: [
+          { title: 'Tensão entre gatos', min: 36 },
+          { title: 'Identificação de conflitos entre gatos', min: 36 },
+          { title: 'Manejo da tensão intergatos', min: 36 },
+          { title: 'Enriquecimento ambiental', min: 36 },
+          { title: 'Introdução de novos gatos', min: 36 },
+        ],
+      },
+      {
+        title: 'Módulo 13 — Cirurgia e Odontologia',
+        lessons: [
+          { title: 'Técnica cirúrgica com foco em felinos', min: 30 },
+          { title: 'Ovariohisterectomia', min: 30 },
+          { title: 'Orquiectomia', min: 30 },
+          { title: 'Endoscopia', min: 30 },
+          { title: 'Comparação entre endoscopia e laparotomia', min: 30 },
+          { title: 'Odontologia felina', min: 30 },
+          { title: 'Reabsorção dentária felina (FORL)', min: 30 },
+          { title: 'Estomatite crônica', min: 30 },
+          { title: 'Extrações dentárias', min: 30 },
+          { title: 'Neoplasias da cavidade oral', min: 30 },
+        ],
+      },
+    ],
+  },
   {
     slug: 'pos-medicina-felina',
     title: 'Pós-graduação em Medicina Felina',
@@ -285,7 +552,10 @@ async function main(): Promise<void> {
       .onConflictDoNothing({ target: instructors.slug });
     await db
       .update(instructors)
-      .set({ bio: i.bio, avatarUrl: `${config.APP_URL}/instrutores/${i.photo}` })
+      .set({
+        bio: i.bio,
+        avatarUrl: i.photo ? `${config.APP_URL}/instrutores/${i.photo}` : null,
+      })
       .where(eq(instructors.slug, i.slug));
   }
 
@@ -317,6 +587,10 @@ async function main(): Promise<void> {
         status: 'published',
         specialtyId: specialtyId.get(c.specialty) ?? null,
         instructorId: instructorId.get(c.instructor) ?? null,
+        coverUrl: c.cover ? `${config.APP_URL}${c.cover}` : null,
+        workloadHours: c.workloadHours ?? null,
+        learningObjectives: c.learningObjectives ?? [],
+        faq: c.faq ?? [],
         publishedAt: new Date(),
       })
       .onConflictDoNothing({ target: courses.slug })

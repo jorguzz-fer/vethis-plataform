@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="Pós-graduação em Clínica Médica de Felinos — certificado e reconhecido pelo MEC, parceiro Rede de Ensino Doctum">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#02301B"/>
+      <stop offset="0.55" stop-color="#0B3D2A"/>
+      <stop offset="1" stop-color="#02301B"/>
+    </linearGradient>
+    <radialGradient id="glowGold" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#C9A461" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#C9A461" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowGreen" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#3E7D5F" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#3E7D5F" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .serif { font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', Palatino, serif; }
+      .sans  { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+  </defs>
+
+  <!-- Fundo -->
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <circle cx="1050" cy="120" r="360" fill="url(#glowGold)"/>
+  <circle cx="240" cy="640" r="360" fill="url(#glowGreen)"/>
+  <rect x="24" y="24" width="1232" height="672" rx="20" fill="none" stroke="#C9A461" stroke-opacity="0.35" stroke-width="2"/>
+
+  <!-- Marca -->
+  <text x="640" y="150" text-anchor="middle" class="serif" font-size="40" fill="#C9A461" letter-spacing="8">VETHIS</text>
+  <text x="640" y="178" text-anchor="middle" class="sans" font-size="13" fill="#B58D4F" letter-spacing="5">ESCOLA DE EDUCAÇÃO CONTINUADA</text>
+
+  <!-- Pata felina (motivo) -->
+  <g fill="#C9A461" opacity="0.9" transform="translate(640 236)">
+    <ellipse cx="0" cy="10" rx="20" ry="15"/>
+    <circle cx="-19" cy="-8" r="6.5"/>
+    <circle cx="-6.5" cy="-15" r="6.5"/>
+    <circle cx="6.5" cy="-15" r="6.5"/>
+    <circle cx="19" cy="-8" r="6.5"/>
+  </g>
+
+  <!-- Título -->
+  <text x="640" y="300" text-anchor="middle" class="sans" font-size="20" fill="#C9A461" letter-spacing="7">PÓS-GRADUAÇÃO</text>
+  <text x="640" y="376" text-anchor="middle" class="serif" font-size="62" font-weight="600" fill="#EAF3EE">Clínica Médica de Felinos</text>
+  <text x="640" y="422" text-anchor="middle" class="sans" font-size="19" fill="#9DB0A5">Atenda gatos com mais segurança e raciocínio clínico</text>
+
+  <!-- Selo de certificação (destaque) -->
+  <g transform="translate(640 512)">
+    <rect x="-310" y="0" width="620" height="58" rx="29" fill="#C9A461" fill-opacity="0.14" stroke="#C9A461" stroke-opacity="0.8" stroke-width="1.5"/>
+    <g transform="translate(-268 29)">
+      <circle cx="0" cy="0" r="15" fill="#C9A461"/>
+      <path d="M -6 0 L -2 5 L 7 -6" fill="none" stroke="#02301B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <text x="18" y="37" text-anchor="middle" class="sans" font-size="22" font-weight="700" fill="#F5ECDA" letter-spacing="0.5">Certificado e reconhecido pelo MEC</text>
+  </g>
+  <text x="640" y="612" text-anchor="middle" class="sans" font-size="18" fill="#EAF3EE">Parceiro <tspan font-weight="700" fill="#C9A461">Rede de Ensino Doctum</tspan></text>
+
+  <!-- Rodapé -->
+  <text x="640" y="662" text-anchor="middle" class="sans" font-size="15" fill="#B58D4F" letter-spacing="2">360 HORAS · 12 MESES · 100% ONLINE</text>
+</svg>
