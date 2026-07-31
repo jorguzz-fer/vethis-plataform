@@ -1,6 +1,8 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and, asc, desc, eq, isNull } from 'drizzle-orm';
 import { DB, type Database } from '../db/client';
+import { APP_CONFIG, type AppConfig } from '../config/configuration';
+import { resolveAssetUrl } from '../common/asset-url';
 import { courseModules, courses, instructors, lessons, specialties } from '../db/schema/catalog';
 import type { CourseDetail, CourseSummary, ListCoursesQuery, specialtySchema } from './dto';
 import type { z } from 'zod';
@@ -9,7 +11,10 @@ type SpecialtyDto = z.infer<typeof specialtySchema>;
 
 @Injectable()
 export class CatalogService {
-  constructor(@Inject(DB) private readonly db: Database) {}
+  constructor(
+    @Inject(DB) private readonly db: Database,
+    @Inject(APP_CONFIG) private readonly config: AppConfig,
+  ) {}
 
   async listSpecialties(): Promise<SpecialtyDto[]> {
     return this.db
@@ -51,7 +56,7 @@ export class CatalogService {
       .where(and(...filters))
       .orderBy(desc(courses.featuredRank), asc(courses.title));
 
-    return rows.map(toSummary);
+    return rows.map((r) => toSummary(r, this.config.APP_URL));
   }
 
   async getCourseBySlug(slug: string): Promise<CourseDetail> {
@@ -115,7 +120,7 @@ export class CatalogService {
     );
 
     return {
-      ...toSummary(course),
+      ...toSummary(course, this.config.APP_URL),
       description: course.description,
       workloadHours: course.workloadHours,
       learningObjectives: course.learningObjectives ?? [],
@@ -141,7 +146,7 @@ interface JoinedCourse {
   instructorAvatarUrl: string | null;
 }
 
-function toSummary(c: JoinedCourse): CourseSummary {
+function toSummary(c: JoinedCourse, appUrl: string): CourseSummary {
   return {
     id: c.id,
     slug: c.slug,
@@ -149,7 +154,7 @@ function toSummary(c: JoinedCourse): CourseSummary {
     subtitle: c.subtitle,
     priceCents: c.priceCents,
     level: c.level,
-    coverUrl: c.coverUrl,
+    coverUrl: resolveAssetUrl(appUrl, c.coverUrl),
     specialty:
       c.specialtySlug && c.specialtyName ? { slug: c.specialtySlug, name: c.specialtyName } : null,
     instructor:
@@ -158,7 +163,7 @@ function toSummary(c: JoinedCourse): CourseSummary {
             slug: c.instructorSlug,
             name: c.instructorName,
             bio: c.instructorBio,
-            avatarUrl: c.instructorAvatarUrl,
+            avatarUrl: resolveAssetUrl(appUrl, c.instructorAvatarUrl),
           }
         : null,
   };
