@@ -8,6 +8,8 @@ import {
 } from '@nestjs/common';
 import { and, asc, count, eq, desc, ne } from 'drizzle-orm';
 import { DB, type Database } from '../db/client';
+import { APP_CONFIG, type AppConfig } from '../config/configuration';
+import { resolveAssetUrl } from '../common/asset-url';
 import { courseModules, courses, instructors, lessons, specialties } from '../db/schema/catalog';
 import { enrollments, lessonProgress, secretariaRequests } from '../db/schema/enrollment';
 import { users } from '../db/schema/identity';
@@ -28,6 +30,7 @@ export class MeService {
   constructor(
     @Inject(DB) private readonly db: Database,
     @Inject(PasswordService) private readonly passwords: PasswordService,
+    @Inject(APP_CONFIG) private readonly config: AppConfig,
   ) {}
 
   private async countLessons(courseId: string): Promise<number> {
@@ -74,7 +77,7 @@ export class MeService {
           id: c.id,
           slug: c.slug,
           title: c.title,
-          coverUrl: c.coverUrl,
+          coverUrl: resolveAssetUrl(this.config.APP_URL, c.coverUrl),
           specialty:
             c.specialtySlug && c.specialtyName
               ? { slug: c.specialtySlug, name: c.specialtyName }
@@ -146,7 +149,10 @@ export class MeService {
       title: course.title,
       subtitle: course.subtitle,
       instructor: course.instructorName
-        ? { name: course.instructorName, avatarUrl: course.instructorAvatar }
+        ? {
+            name: course.instructorName,
+            avatarUrl: resolveAssetUrl(this.config.APP_URL, course.instructorAvatar),
+          }
         : null,
       modules,
     };
