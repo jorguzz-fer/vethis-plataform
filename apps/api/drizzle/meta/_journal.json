@@ -64,6 +64,13 @@
       "when": 1784126901783,
       "tag": "0008_harsh_cable",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1785519680523,
+      "tag": "0009_brief_lightspeed",
+      "breakpoints": true
     }
   ]
 }

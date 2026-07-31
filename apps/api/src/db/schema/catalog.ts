@@ -51,6 +51,8 @@ export const courses = pgTable('courses', {
   priceCents: integer('price_cents').notNull().default(0),
   level: courseLevelEnum('level').notNull().default('iniciante'),
   status: courseStatusEnum('status').notNull().default('draft'),
+  // Destaque/curadoria: maior = aparece antes na home e no catálogo (empata por título).
+  featuredRank: integer('featured_rank').notNull().default(0),
   coverUrl: text('cover_url'),
   // Conteúdo rico da página de venda (dirige seções antes fixas no site).
   workloadHours: integer('workload_hours'),

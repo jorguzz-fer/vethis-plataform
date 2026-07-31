@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { and, asc, eq, isNull } from 'drizzle-orm';
+import { and, asc, desc, eq, isNull } from 'drizzle-orm';
 import { DB, type Database } from '../db/client';
 import { courseModules, courses, instructors, lessons, specialties } from '../db/schema/catalog';
 import type { CourseDetail, CourseSummary, ListCoursesQuery, specialtySchema } from './dto';
@@ -49,7 +49,7 @@ export class CatalogService {
       .leftJoin(specialties, eq(courses.specialtyId, specialties.id))
       .leftJoin(instructors, eq(courses.instructorId, instructors.id))
       .where(and(...filters))
-      .orderBy(asc(courses.title));
+      .orderBy(desc(courses.featuredRank), asc(courses.title));
 
     return rows.map(toSummary);
   }
