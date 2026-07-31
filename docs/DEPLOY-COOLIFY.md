@@ -41,6 +41,12 @@ COOKIE_DOMAIN=.vethis.com.br
 
 Opcionais (checkout/hardening), quando tiver: `GOOGLE_*`, `ASAAS_*`, `VIMEO_ACCESS_TOKEN`, `SENTRY_DSN`.
 
+> **Publicar o catálogo (primeiro deploy):** defina `SEED_ON_START=true`. O
+> entrypoint da API roda o seed idempotente (cria/atualiza o curso). As
+> migrations rodam sempre; o seed só quando esta var é `true`. Depois do
+> primeiro deploy você pode voltar para `false` (ou remover) — o seed é
+> idempotente, então rodar de novo não duplica nada.
+
 > `PUBLIC_API_URL` (aluno/backoffice) e `NEXT_PUBLIC_*` (site) são **build args**
 > assados no bundle. Marque-os como disponíveis em build time no Coolify (a UI tem
 > essa opção por variável) e faça **rebuild** ao alterá-los.

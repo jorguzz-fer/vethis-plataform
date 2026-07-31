@@ -50,6 +50,10 @@ services:
     environment:
       NODE_ENV: production
       API_PORT: '3333'
+      # Publica o catálogo (curso) no primeiro deploy: defina SEED_ON_START=true
+      # nas Environment Variables do Coolify. Sem esta linha, a var da UI não
+      # chega ao container e o seed não roda (banco fica sem cursos → site vazio).
+      SEED_ON_START: ${SEED_ON_START:-false}
       APP_URL: ${APP_URL}
       CORS_ORIGINS: ${CORS_ORIGINS}
       DATABASE_URL: ${DATABASE_URL}
