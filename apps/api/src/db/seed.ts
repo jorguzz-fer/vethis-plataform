@@ -87,6 +87,8 @@ interface SeedCourse {
   level: CourseLevel;
   specialty: string;
   instructor: string;
+  /** Destaque: maior aparece antes na home e no catálogo. Padrão 0. */
+  featuredRank?: number;
   cover?: string;
   workloadHours?: number;
   learningObjectives?: string[];
@@ -107,6 +109,7 @@ const COURSES: SeedCourse[] = [
     level: 'avancado',
     specialty: 'medicina-felina',
     instructor: 'coordenacao-clinica-felinos',
+    featuredRank: 100,
     cover: '/cursos/pos-clinica-medica-felinos.png',
     workloadHours: 360,
     learningObjectives: [
@@ -576,29 +579,38 @@ async function main(): Promise<void> {
 
   // Cursos + módulos + aulas.
   for (const c of COURSES) {
+    // Campos escalares do curso — idempotentes: atualiza se já existir (para que
+    // mudanças de preço, capa, destaque, ementa etc. sejam aplicadas em re-seed).
+    const scalars = {
+      title: c.title,
+      subtitle: c.subtitle,
+      description: c.description,
+      priceCents: c.priceCents,
+      level: c.level,
+      status: 'published' as const,
+      featuredRank: c.featuredRank ?? 0,
+      specialtyId: specialtyId.get(c.specialty) ?? null,
+      instructorId: instructorId.get(c.instructor) ?? null,
+      coverUrl: c.cover ? `${config.APP_URL}${c.cover}` : null,
+      workloadHours: c.workloadHours ?? null,
+      learningObjectives: c.learningObjectives ?? [],
+      faq: c.faq ?? [],
+    };
     const [course] = await db
       .insert(courses)
-      .values({
-        slug: c.slug,
-        title: c.title,
-        subtitle: c.subtitle,
-        description: c.description,
-        priceCents: c.priceCents,
-        level: c.level,
-        status: 'published',
-        specialtyId: specialtyId.get(c.specialty) ?? null,
-        instructorId: instructorId.get(c.instructor) ?? null,
-        coverUrl: c.cover ? `${config.APP_URL}${c.cover}` : null,
-        workloadHours: c.workloadHours ?? null,
-        learningObjectives: c.learningObjectives ?? [],
-        faq: c.faq ?? [],
-        publishedAt: new Date(),
-      })
-      .onConflictDoNothing({ target: courses.slug })
+      .values({ slug: c.slug, publishedAt: new Date(), ...scalars })
+      .onConflictDoUpdate({ target: courses.slug, set: scalars })
       .returning({ id: courses.id });
-
-    // Só popula módulos/aulas quando o curso foi criado agora (evita duplicar).
     if (!course) continue;
+
+    // Só popula módulos/aulas quando o curso ainda não tem nenhum (evita duplicar
+    // em re-seed — o upsert acima sempre retorna a linha, criada ou atualizada).
+    const [hasModule] = await db
+      .select({ id: courseModules.id })
+      .from(courseModules)
+      .where(eq(courseModules.courseId, course.id))
+      .limit(1);
+    if (hasModule) continue;
     let mPos = 0;
     for (const m of c.modules) {
       mPos += 1;
