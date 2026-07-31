@@ -5,6 +5,7 @@ import { formatBRL } from '@vethis/shared';
 import { buttonClasses } from '@vethis/ui';
 import { getCourse, getCourses, type CourseDetail, type CourseSummary } from '@/lib/api';
 import { LeadFormTrigger } from '@/components/site/lead-form';
+import { OfferCard } from '@/components/site/offer-card';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,19 +34,18 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
   related = related.slice(0, 3);
 
   const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
-  const perMonth = Math.ceil(course.priceCents / INSTALLMENTS);
   const objectives = course.learningObjectives ?? [];
 
   return (
     <article className="bg-paper">
-      <Hero course={course} perMonth={perMonth} />
+      <Hero course={course} />
       <Conditions workloadHours={course.workloadHours} />
       {objectives.length > 0 ? <Objectives items={objectives} /> : null}
-      <Curriculum course={course} totalLessons={totalLessons} perMonth={perMonth} />
+      <Curriculum course={course} totalLessons={totalLessons} />
       <GuideBanner />
       {course.instructor ? <Faculty instructor={course.instructor} /> : null}
       <Benefits />
-      <InvestmentBand course={course} perMonth={perMonth} />
+      <InvestmentBand course={course} />
       {related.length > 0 ? <Related courses={related} /> : null}
       <Faq items={course.faq ?? []} />
     </article>
@@ -54,7 +54,7 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
 
 // ---------------------------------------------------------------------------
 
-function Hero({ course, perMonth }: { course: CourseDetail; perMonth: number }) {
+function Hero({ course }: { course: CourseDetail }) {
   return (
     <header className="relative overflow-hidden bg-green-900 text-[#EAF0EC]">
       <div
@@ -80,20 +80,15 @@ function Hero({ course, perMonth }: { course: CourseDetail; perMonth: number }) 
             <p className="mt-4 max-w-xl text-lg text-[#C6D3CA]">{course.subtitle}</p>
           ) : null}
 
-          <div className="mt-8 flex flex-wrap items-end gap-x-6 gap-y-3">
-            <div>
-              <p className="text-xs uppercase tracking-wide text-[#9DB0A5]">Investimento</p>
-              <p className="font-serif text-3xl font-semibold text-gold-400">
-                {formatBRL(course.priceCents)}
-              </p>
-              <p className="text-sm text-[#C6D3CA]">
-                ou em até {INSTALLMENTS}x de {formatBRL(perMonth)}
-              </p>
+          {course.coverUrl ? (
+            <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl lg:hidden">
+              <img
+                src={course.coverUrl}
+                alt={course.title}
+                className="h-full w-full object-cover"
+              />
             </div>
-            <Link href={`/checkout/${course.slug}`} className={buttonClasses('gold')}>
-              Matricule-se agora
-            </Link>
-          </div>
+          ) : null}
           {course.instructor ? (
             <p className="mt-6 text-sm text-[#9DB0A5]">
               Coordenação: <span className="text-[#EAF0EC]">{course.instructor.name}</span>
@@ -101,20 +96,8 @@ function Hero({ course, perMonth }: { course: CourseDetail; perMonth: number }) 
           ) : null}
         </div>
 
-        <div className="hidden lg:block">
-          <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl">
-            {course.coverUrl ? (
-              <img
-                src={course.coverUrl}
-                alt={course.title}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <div className="flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-green-800 to-green-900">
-                <span className="font-serif text-2xl text-gold-400/80">Vethis</span>
-              </div>
-            )}
-          </div>
+        <div className="lg:pl-4">
+          <OfferCard course={course} />
         </div>
       </div>
     </header>
@@ -193,15 +176,7 @@ function Objectives({ items }: { items: string[] }) {
 
 // ---------------------------------------------------------------------------
 
-function Curriculum({
-  course,
-  totalLessons,
-  perMonth,
-}: {
-  course: CourseDetail;
-  totalLessons: number;
-  perMonth: number;
-}) {
+function Curriculum({ course, totalLessons }: { course: CourseDetail; totalLessons: number }) {
   return (
     <section id="disciplinas" className="mx-auto max-w-[1140px] px-6 py-4">
       <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr]">
@@ -263,42 +238,14 @@ function Curriculum({
           </div>
         </div>
 
-        {/* Card de investimento fixo */}
+        {/* Card de oferta fixo */}
         <aside className="lg:pt-14">
-          <div className="sticky top-6 rounded-2xl border border-border bg-white p-6 shadow-[0_8px_30px_rgba(2,20,12,.08)]">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-green-700">
-              Matrícula aberta
-            </span>
-            <p className="mt-3 text-sm text-muted">Investimento</p>
-            <p className="font-serif text-3xl font-semibold text-green-800">
-              {formatBRL(course.priceCents)}
-            </p>
-            <p className="text-sm text-muted">
-              ou em até {INSTALLMENTS}x de{' '}
-              <strong className="text-ink">{formatBRL(perMonth)}</strong>
-            </p>
-            <Link
-              href={`/checkout/${course.slug}`}
-              className={`${buttonClasses('gold')} mt-4 w-full`}
-            >
-              Matricule-se
-            </Link>
+          <div className="sticky top-6">
+            <OfferCard course={course} />
             <div className="mt-3 flex items-center justify-center gap-2 text-xs text-muted">
               <LockIcon />
               Pagamento seguro — Pix, cartão ou boleto
             </div>
-            <ul className="mt-5 flex flex-col gap-2 border-t border-border pt-5 text-sm text-ink">
-              {[
-                'Acesso imediato após a matrícula',
-                'Certificado ao concluir',
-                'Conteúdo 100% online',
-              ].map((b) => (
-                <li key={b} className="flex items-start gap-2">
-                  <CheckIcon small />
-                  {b}
-                </li>
-              ))}
-            </ul>
           </div>
         </aside>
       </div>
@@ -396,22 +343,18 @@ function Benefits() {
 
 // ---------------------------------------------------------------------------
 
-function InvestmentBand({ course, perMonth }: { course: CourseDetail; perMonth: number }) {
+function InvestmentBand({ course }: { course: CourseDetail }) {
   return (
-    <section className="mx-auto max-w-[1140px] px-6 py-8">
-      <div className="flex flex-col items-start justify-between gap-5 rounded-2xl bg-green-900 p-8 text-[#EAF0EC] sm:flex-row sm:items-center">
+    <section className="mx-auto max-w-[1140px] px-6 py-10">
+      <div className="grid items-center gap-8 rounded-3xl bg-green-900 p-8 text-[#EAF0EC] sm:p-10 lg:grid-cols-[1fr_minmax(0,380px)]">
         <div>
-          <p className="text-sm text-[#9DB0A5]">Investimento</p>
-          <p className="font-serif text-3xl font-semibold text-gold-400">
-            {formatBRL(course.priceCents)}
-          </p>
-          <p className="text-sm text-[#C6D3CA]">
-            ou em até {INSTALLMENTS}x de {formatBRL(perMonth)}
+          <h2 className="font-serif text-3xl font-semibold text-gold-400">Garanta sua vaga</h2>
+          <p className="mt-3 max-w-md text-[15px] leading-relaxed text-[#C6D3CA]">
+            Matrícula aberta com condição especial por tempo limitado. Comece hoje, estude no seu
+            ritmo e emita seu certificado de 360h ao concluir.
           </p>
         </div>
-        <Link href={`/checkout/${course.slug}`} className={buttonClasses('gold')}>
-          Matricule-se
-        </Link>
+        <OfferCard course={course} />
       </div>
     </section>
   );
