@@ -14,7 +14,9 @@ const brl = new Intl.NumberFormat('pt-BR', {
 
 /**
  * Card de oferta da página do curso: preço cheio, parcela em destaque e CTA.
- * Reutilizado no hero, no card fixo lateral e na faixa final.
+ * Cores da marca Vethis (verde escuro + dourado). Reutilizado no hero, no card
+ * fixo lateral e na faixa final — o gradiente verde + borda dourada garante
+ * contraste tanto sobre fundo claro quanto sobre o verde.
  */
 export function OfferCard({
   course,
@@ -28,19 +30,19 @@ export function OfferCard({
 
   return (
     <div
-      className={`rounded-3xl border border-white/10 bg-[#233248] p-7 text-white shadow-[0_20px_50px_rgba(2,20,12,.35)] ${className}`}
+      className={`rounded-3xl border border-gold-400/30 bg-gradient-to-br from-green-800 to-green-900 p-7 text-[#EAF0EC] shadow-[0_20px_50px_rgba(2,20,12,.35)] ${className}`}
     >
-      <span className="inline-flex items-center rounded-md bg-[#E23B3B] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
+      <span className="inline-flex items-center rounded-md bg-[#C0392B] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
         Oferta por tempo limitado
       </span>
 
-      <h3 className="mt-4 font-serif text-2xl font-semibold">Investimentos</h3>
+      <h3 className="mt-4 font-serif text-2xl font-semibold text-[#EAF0EC]">Investimentos</h3>
 
-      <p className="mt-3 text-[15px] text-slate-300">
+      <p className="mt-3 text-[15px] text-[#C6D3CA]">
         Por: <span className="font-semibold text-white">{formatBRL(course.priceCents)}</span>
       </p>
 
-      <p className="mt-5 text-[15px] text-slate-300">
+      <p className="mt-5 text-[15px] text-[#C6D3CA]">
         Ou até <span className="font-semibold text-white">{INSTALLMENTS}x</span> de:
       </p>
       <p className="mt-1 flex items-baseline gap-1.5 font-serif text-gold-400">
@@ -48,8 +50,8 @@ export function OfferCard({
         <span className="text-6xl font-bold leading-none">{brl.format(perMonth / 100)}</span>
       </p>
 
-      <p className="mt-5 text-xs leading-relaxed text-slate-400">
-        No Pix à vista: <span className="font-medium text-slate-200">{formatBRL(pixCents)}</span> —
+      <p className="mt-5 text-xs leading-relaxed text-[#9DB0A5]">
+        No Pix à vista: <span className="font-medium text-[#EAF0EC]">{formatBRL(pixCents)}</span> —
         5% de desconto
       </p>
 
