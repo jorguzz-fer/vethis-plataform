@@ -644,21 +644,20 @@ async function main(): Promise<void> {
   }
   console.log(`Cursos: ${COURSES.length} definidos (idempotente).`);
 
-  // Poda: remove (soft-delete) cursos órfãos — que não estão mais no seed e não
-  // têm matrícula. Limpa duplicatas legadas (ex.: Farmacologia repetida) sem
-  // apagar nada comprado. Reversível (deleted_at); o catálogo já filtra por ele.
+  // Poda: em pré-lançamento o seed é a FONTE DE VERDADE do catálogo. Todo curso
+  // publicado fora do seed é legado/duplicata (ex.: Farmacologia repetida com
+  // preço) → soft-delete. Reversível (deleted_at); o catálogo já filtra por ele.
+  // Felinos e os demais do seed são preservados (estão em seedSlugs).
+  // OBS: mantenha SEED_ON_START=false após o lançamento para não podar cursos
+  // criados pelo backoffice.
   const seedSlugs = COURSES.map((c) => c.slug);
-  const enrolled = await db.selectDistinct({ courseId: enrollments.courseId }).from(enrollments);
-  const enrolledIds = enrolled.map((e) => e.courseId);
-  const pruneFilters = [notInArray(courses.slug, seedSlugs), isNull(courses.deletedAt)];
-  if (enrolledIds.length > 0) pruneFilters.push(notInArray(courses.id, enrolledIds));
   const pruned = await db
     .update(courses)
     .set({ deletedAt: new Date() })
-    .where(and(...pruneFilters))
+    .where(and(notInArray(courses.slug, seedSlugs), isNull(courses.deletedAt)))
     .returning({ slug: courses.slug });
   if (pruned.length > 0) {
-    console.log(`Cursos podados (órfãos, sem matrícula): ${pruned.map((p) => p.slug).join(', ')}`);
+    console.log(`Cursos podados (fora do seed): ${pruned.map((p) => p.slug).join(', ')}`);
   }
 
   // Aluno demo + matrícula no primeiro curso (para testar a área do aluno).
