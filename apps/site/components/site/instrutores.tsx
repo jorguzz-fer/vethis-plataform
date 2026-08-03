@@ -6,61 +6,24 @@ type Inst = {
   gradient: string;
   /** Foto em /public/instrutores; cai para a inicial se o arquivo não existir. */
   photo?: string;
-  stats: { value: string; label: string }[];
 };
 
 const INSTRUTORES: Inst[] = [
   {
-    initial: 'R',
-    name: 'Dr. Ricardo Mendes',
-    role: 'Cardiologia',
-    bio: 'Diretor clínico e pesquisador em cardiologia de pequenos animais.',
+    initial: 'P',
+    name: 'Dra. Patrícia Bastos',
+    role: 'Coordenação · Medicina Felina',
+    bio: 'Coordenadora acadêmica da Pós-graduação em Clínica Médica de Felinos. Médica-veterinária com atuação clínica e docente em Medicina Felina, com ensino baseado em casos reais.',
     gradient: 'linear-gradient(150deg,#12603f,#0a2b20)',
-    photo: '/instrutores/ricardo-mendes.webp',
-    stats: [
-      { value: '18', label: 'cursos' },
-      { value: '4,9', label: 'nota' },
-      { value: '6,2k', label: 'alunos' },
-    ],
+    photo: '/instrutores/patricia.jpg',
   },
   {
-    initial: 'A',
-    name: 'Dra. Ana B. Faria',
-    role: 'Cirurgia',
-    bio: 'Cirurgiã de tecidos moles com mais de 15 anos de centro cirúrgico.',
+    initial: 'R',
+    name: 'Dra. Roberta Ruiz',
+    role: 'Patologia · Medicina Legal',
+    bio: 'Especialista em Patologia e Medicina Veterinária Legal, mestre em Biociências e doutoranda em Patologia pela USP. Preside a Comissão de Responsabilidade Técnica do CRMV-SP.',
     gradient: 'linear-gradient(150deg,#3a5a4a,#0f2f24)',
-    photo: '/instrutores/ana-faria.webp',
-    stats: [
-      { value: '22', label: 'cursos' },
-      { value: '4,8', label: 'nota' },
-      { value: '5,1k', label: 'alunos' },
-    ],
-  },
-  {
-    initial: 'C',
-    name: 'Dr. Carlos Nunes',
-    role: 'Dermatologia',
-    bio: 'Especialista em dermatoses e alergias, referência em citologia.',
-    gradient: 'linear-gradient(150deg,#8a6a2e,#4a3818)',
-    photo: '/instrutores/carlos-nunes.webp',
-    stats: [
-      { value: '9', label: 'cursos' },
-      { value: '4,9', label: 'nota' },
-      { value: '3,8k', label: 'alunos' },
-    ],
-  },
-  {
-    initial: 'L',
-    name: 'Dra. Lúcia Prado',
-    role: 'Anestesiologia',
-    bio: 'Anestesiologista de pacientes críticos e docente de pós-graduação.',
-    gradient: 'linear-gradient(150deg,#2f5b52,#10302a)',
-    photo: '/instrutores/lucia-prado.webp',
-    stats: [
-      { value: '8', label: 'cursos' },
-      { value: '4,9', label: 'nota' },
-      { value: '2,9k', label: 'alunos' },
-    ],
+    photo: '/instrutores/roberta.jpg',
   },
 ];
 
@@ -100,15 +63,6 @@ export function Instrutores() {
                 <b>{i.name}</b>
                 <div className="role">{i.role}</div>
                 <p className="bio">{i.bio}</p>
-                <div className="st">
-                  {i.stats.map((s) => (
-                    <div key={s.label}>
-                      <b className="num">{s.value}</b>
-                      <br />
-                      {s.label}
-                    </div>
-                  ))}
-                </div>
               </div>
             </article>
           ))}

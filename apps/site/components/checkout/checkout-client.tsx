@@ -220,6 +220,14 @@ function AuthPanel({ onAuthed }: { onAuthed: (u: AuthUser) => void }) {
           {busy ? 'Aguarde…' : 'Continuar para o pagamento'}
         </Button>
       </form>
+
+      {mode === 'register' ? (
+        <p className="mt-4 rounded-lg bg-gold-50 px-3 py-2 text-xs leading-relaxed text-gold-700">
+          Enviamos um e-mail de confirmação. Se não estiver na caixa de entrada, verifique o{' '}
+          <strong>spam / lixo eletrônico</strong> e marque como “não é spam” para receber os
+          próximos avisos.
+        </p>
+      ) : null}
     </section>
   );
 }

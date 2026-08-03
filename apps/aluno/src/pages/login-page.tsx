@@ -70,6 +70,10 @@ export function LoginPage() {
             <LockIcon />
             <span>Conexão segura — seus dados são criptografados.</span>
           </div>
+          <p className="mt-3 text-xs leading-relaxed text-muted">
+            Acabou de se cadastrar e não recebeu o e-mail de confirmação? Verifique a caixa de{' '}
+            <strong>spam / lixo eletrônico</strong>.
+          </p>
           <p className="mt-8 text-center text-xs text-muted">
             Ao entrar você concorda com a{' '}
             <a

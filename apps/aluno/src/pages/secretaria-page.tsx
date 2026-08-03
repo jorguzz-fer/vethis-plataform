@@ -59,6 +59,7 @@ export function SecretariaPage() {
               onChange={(e) => setType(e.target.value)}
               className="rounded-[10px] border-[1.5px] border-border px-3.5 py-3 text-[15px]"
             >
+              <option value="academico">Acadêmico</option>
               <option value="documentos">Documentos</option>
               <option value="suporte">Suporte</option>
               <option value="financeiro">Financeiro</option>

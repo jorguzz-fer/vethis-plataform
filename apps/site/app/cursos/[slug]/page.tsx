@@ -6,6 +6,7 @@ import { buttonClasses } from '@vethis/ui';
 import { getCourse, getCourses, type CourseDetail, type CourseSummary } from '@/lib/api';
 import { LeadFormTrigger } from '@/components/site/lead-form';
 import { OfferCard } from '@/components/site/offer-card';
+import { Credenciamento } from '@/components/site/credenciamento';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,6 +36,9 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
     <article className="bg-paper">
       <Hero course={course} />
       <Conditions workloadHours={course.workloadHours} />
+      <section className="mx-auto max-w-[1140px] px-6">
+        <Credenciamento className="rounded-2xl border border-border bg-white p-5" />
+      </section>
       {objectives.length > 0 ? <Objectives items={objectives} /> : null}
       <Curriculum course={course} totalLessons={totalLessons} />
       <GuideBanner />

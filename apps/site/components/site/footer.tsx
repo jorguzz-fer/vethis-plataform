@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { LeadFormTrigger } from './lead-form';
+import { Credenciamento } from './credenciamento';
 
 export function Footer() {
   return (
@@ -61,6 +62,7 @@ export function Footer() {
             <a href="#">Central de ajuda</a>
           </div>
         </div>
+        <Credenciamento dark className="border-t border-white/10 py-6" />
         <div className="ft-bot">
           <span>© 2026 Vethis · Educação Médica Veterinária.</span>
           <div className="soc">
