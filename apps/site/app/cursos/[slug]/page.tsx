@@ -294,7 +294,7 @@ function Faculty({ instructor }: { instructor: NonNullable<CourseDetail['instruc
           <img
             src={avatarUrl}
             alt={name}
-            className="h-16 w-16 shrink-0 rounded-full object-cover"
+            className="h-16 w-16 shrink-0 rounded-full object-cover object-top"
           />
         ) : (
           <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-green-900 font-serif text-xl font-semibold text-gold-400">
