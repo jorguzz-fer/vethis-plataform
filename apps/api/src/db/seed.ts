@@ -40,6 +40,12 @@ const INSTRUCTORS: SeedInstructor[] = [
     photo: 'patricia.jpg',
   },
   {
+    slug: 'dra-roberta-ruiz',
+    name: 'Dra. Roberta Ruiz',
+    bio: 'Especialista em Patologia e Medicina Veterinária Legal, mestre em Biociências e doutoranda em Patologia pela USP. Preside a Comissão de Responsabilidade Técnica do CRMV-SP.',
+    photo: 'roberta.jpg',
+  },
+  {
     slug: 'dr-ricardo-mendes',
     name: 'Dr. Ricardo Mendes',
     bio: 'Diretor clínico e pesquisador em clínica médica de pequenos animais.',
@@ -557,19 +563,18 @@ async function main(): Promise<void> {
     .values(SPECIALTIES)
     .onConflictDoNothing({ target: specialties.slug });
 
-  // Instrutores (upsert): cria e garante bio + foto (idempotente em re-seed).
+  // Instrutores (upsert idempotente): cria e ATUALIZA nome, bio e foto — antes o
+  // nome não era atualizado em re-seed (por isso "Patrícia Bastos e Roberta Ruiz"
+  // persistia mesmo após a mudança para só a Dra. Patrícia).
   for (const i of INSTRUCTORS) {
+    const avatarUrl = i.photo ? `${config.APP_URL}/instrutores/${i.photo}` : null;
     await db
       .insert(instructors)
-      .values({ slug: i.slug, name: i.name, bio: i.bio })
-      .onConflictDoNothing({ target: instructors.slug });
-    await db
-      .update(instructors)
-      .set({
-        bio: i.bio,
-        avatarUrl: i.photo ? `${config.APP_URL}/instrutores/${i.photo}` : null,
-      })
-      .where(eq(instructors.slug, i.slug));
+      .values({ slug: i.slug, name: i.name, bio: i.bio, avatarUrl })
+      .onConflictDoUpdate({
+        target: instructors.slug,
+        set: { name: i.name, bio: i.bio, avatarUrl },
+      });
   }
 
   // Mapas slug → id para especialidades e instrutores.
