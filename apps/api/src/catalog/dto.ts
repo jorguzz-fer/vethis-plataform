@@ -39,6 +39,7 @@ export const courseSummarySchema = z.object({
   subtitle: z.string().nullable(),
   priceCents: z.number().int(),
   level: z.enum(['iniciante', 'intermediario', 'avancado']),
+  comingSoon: z.boolean(),
   coverUrl: z.string().nullable(),
   specialty: specialtyRefSchema,
   instructor: instructorRefSchema,

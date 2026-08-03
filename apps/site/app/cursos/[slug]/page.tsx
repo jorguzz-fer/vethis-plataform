@@ -9,11 +9,6 @@ import { OfferCard } from '@/components/site/offer-card';
 
 export const dynamic = 'force-dynamic';
 
-const LEVEL_LABEL: Record<CourseDetail['level'], string> = {
-  iniciante: 'Iniciante',
-  intermediario: 'Intermediário',
-  avancado: 'Avançado',
-};
 const INSTALLMENTS = 24;
 
 function formatDuration(seconds: number): string {
@@ -69,7 +64,6 @@ function Hero({ course }: { course: CourseDetail }) {
         <div>
           <div className="mb-4 flex flex-wrap gap-2">
             {course.specialty ? <Pill>{course.specialty.name}</Pill> : null}
-            <Pill>{LEVEL_LABEL[course.level]}</Pill>
             {course.workloadHours ? <Pill>{course.workloadHours}h de conteúdo</Pill> : null}
             <Pill gold>Curso online</Pill>
           </div>
@@ -97,7 +91,7 @@ function Hero({ course }: { course: CourseDetail }) {
         </div>
 
         <div className="lg:pl-4">
-          <OfferCard course={course} />
+          <OfferCard course={course} comingSoon={course.comingSoon} />
         </div>
       </div>
     </header>
@@ -241,11 +235,13 @@ function Curriculum({ course, totalLessons }: { course: CourseDetail; totalLesso
         {/* Card de oferta fixo */}
         <aside className="lg:pt-14">
           <div className="sticky top-6">
-            <OfferCard course={course} />
-            <div className="mt-3 flex items-center justify-center gap-2 text-xs text-muted">
-              <LockIcon />
-              Pagamento seguro — Pix, cartão ou boleto
-            </div>
+            <OfferCard course={course} comingSoon={course.comingSoon} />
+            {!course.comingSoon ? (
+              <div className="mt-3 flex items-center justify-center gap-2 text-xs text-muted">
+                <LockIcon />
+                Pagamento seguro — Pix, cartão ou boleto
+              </div>
+            ) : null}
           </div>
         </aside>
       </div>
@@ -354,7 +350,7 @@ function InvestmentBand({ course }: { course: CourseDetail }) {
             ritmo e emita seu certificado de 360h ao concluir.
           </p>
         </div>
-        <OfferCard course={course} />
+        <OfferCard course={course} comingSoon={course.comingSoon} />
       </div>
     </section>
   );
