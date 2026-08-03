@@ -176,6 +176,9 @@
               "avancado"
             ]
           },
+          "comingSoon": {
+            "type": "boolean"
+          },
           "coverUrl": {
             "type": [
               "string",
@@ -240,6 +243,7 @@
           "subtitle",
           "priceCents",
           "level",
+          "comingSoon",
           "coverUrl",
           "specialty",
           "instructor"
@@ -274,6 +278,9 @@
               "intermediario",
               "avancado"
             ]
+          },
+          "comingSoon": {
+            "type": "boolean"
           },
           "coverUrl": {
             "type": [
@@ -430,6 +437,7 @@
           "subtitle",
           "priceCents",
           "level",
+          "comingSoon",
           "coverUrl",
           "specialty",
           "instructor",

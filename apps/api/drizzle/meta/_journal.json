@@ -71,6 +71,13 @@
       "when": 1785519680523,
       "tag": "0009_brief_lightspeed",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1785758588127,
+      "tag": "0010_zippy_la_nuit",
+      "breakpoints": true
     }
   ]
 }

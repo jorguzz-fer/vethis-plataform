@@ -2348,6 +2348,7 @@ export interface components {
             priceCents: number;
             /** @enum {string} */
             level: "iniciante" | "intermediario" | "avancado";
+            comingSoon: boolean;
             coverUrl: string | null;
             specialty: {
                 slug: string;
@@ -2369,6 +2370,7 @@ export interface components {
             priceCents: number;
             /** @enum {string} */
             level: "iniciante" | "intermediario" | "avancado";
+            comingSoon: boolean;
             coverUrl: string | null;
             specialty: {
                 slug: string;

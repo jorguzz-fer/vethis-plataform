@@ -1,5 +1,5 @@
 import { hash } from '@node-rs/argon2';
-import { eq } from 'drizzle-orm';
+import { and, eq, isNull, notInArray } from 'drizzle-orm';
 import { loadConfig, type AppConfig } from '../config/configuration';
 import { createDb } from './client';
 import { courseModules, courses, instructors, lessons, specialties } from './schema/catalog';
@@ -20,7 +20,7 @@ const SPECIALTIES = [
   { slug: 'gestao-rt', name: 'Gestão & Responsabilidade Técnica' },
   { slug: 'cardiologia', name: 'Cardiologia' },
   { slug: 'cirurgia', name: 'Cirurgia' },
-  { slug: 'diagnostico-por-imagem', name: 'Diagnóstico por Imagem' },
+  { slug: 'clinica-medica', name: 'Clínica Médica' },
   { slug: 'dermatologia', name: 'Dermatologia' },
   { slug: 'anestesiologia', name: 'Anestesiologia' },
 ];
@@ -35,9 +35,9 @@ interface SeedInstructor {
 const INSTRUCTORS: SeedInstructor[] = [
   {
     slug: 'coordenacao-clinica-felinos',
-    name: 'Patrícia Bastos e Roberta Ruiz',
-    bio: 'Coordenação acadêmica das Dras. Patrícia Bastos e Roberta Ruiz — médicas-veterinárias com atuação clínica e docente em Medicina Felina. A Dra. Roberta Ruiz é especialista em Patologia e Medicina Veterinária Legal, mestre em Biociências e doutoranda em Patologia pela USP, e preside a Comissão de Responsabilidade Técnica do CRMV-SP.',
-    photo: 'coordenacao.png',
+    name: 'Dra. Patrícia Bastos',
+    bio: 'Coordenadora acadêmica da Pós-graduação em Clínica Médica de Felinos. Médica-veterinária com atuação clínica e docente em Medicina Felina, dedicada ao ensino baseado em casos reais e ao raciocínio clínico aplicado à rotina do gato.',
+    photo: 'patricia.jpg',
   },
   {
     slug: 'dr-ricardo-mendes',
@@ -89,6 +89,8 @@ interface SeedCourse {
   instructor: string;
   /** Destaque: maior aparece antes na home e no catálogo. Padrão 0. */
   featuredRank?: number;
+  /** Vitrine "Em breve": sem preço nem checkout. Padrão false. */
+  comingSoon?: boolean;
   cover?: string;
   workloadHours?: number;
   learningObjectives?: string[];
@@ -357,6 +359,7 @@ const COURSES: SeedCourse[] = [
     level: 'avancado',
     specialty: 'medicina-felina',
     instructor: 'dra-ana-faria',
+    comingSoon: true,
     modules: [
       {
         title: 'O paciente felino',
@@ -384,6 +387,7 @@ const COURSES: SeedCourse[] = [
     level: 'avancado',
     specialty: 'emergencia-uti',
     instructor: 'dra-lucia-prado',
+    comingSoon: true,
     modules: [
       {
         title: 'Atendimento inicial',
@@ -411,6 +415,7 @@ const COURSES: SeedCourse[] = [
     level: 'intermediario',
     specialty: 'farmacologia',
     instructor: 'dr-carlos-nunes',
+    comingSoon: true,
     modules: [
       {
         title: 'Fundamentos',
@@ -438,6 +443,7 @@ const COURSES: SeedCourse[] = [
     level: 'intermediario',
     specialty: 'patologia',
     instructor: 'dr-ricardo-mendes',
+    comingSoon: true,
     modules: [
       {
         title: 'Patologia geral',
@@ -465,6 +471,7 @@ const COURSES: SeedCourse[] = [
     level: 'avancado',
     specialty: 'nefrologia',
     instructor: 'dr-ricardo-mendes',
+    comingSoon: true,
     modules: [
       {
         title: 'Avaliação renal',
@@ -492,6 +499,7 @@ const COURSES: SeedCourse[] = [
     level: 'intermediario',
     specialty: 'hematologia',
     instructor: 'dra-lucia-prado',
+    comingSoon: true,
     modules: [
       {
         title: 'Hematologia clínica',
@@ -519,6 +527,7 @@ const COURSES: SeedCourse[] = [
     level: 'iniciante',
     specialty: 'gestao-rt',
     instructor: 'dra-ana-faria',
+    comingSoon: true,
     modules: [
       {
         title: 'Fundamentos da RT',
@@ -589,6 +598,7 @@ async function main(): Promise<void> {
       level: c.level,
       status: 'published' as const,
       featuredRank: c.featuredRank ?? 0,
+      comingSoon: c.comingSoon ?? false,
       specialtyId: specialtyId.get(c.specialty) ?? null,
       instructorId: instructorId.get(c.instructor) ?? null,
       coverUrl: c.cover ? `${config.APP_URL}${c.cover}` : null,
@@ -633,6 +643,23 @@ async function main(): Promise<void> {
     }
   }
   console.log(`Cursos: ${COURSES.length} definidos (idempotente).`);
+
+  // Poda: remove (soft-delete) cursos órfãos — que não estão mais no seed e não
+  // têm matrícula. Limpa duplicatas legadas (ex.: Farmacologia repetida) sem
+  // apagar nada comprado. Reversível (deleted_at); o catálogo já filtra por ele.
+  const seedSlugs = COURSES.map((c) => c.slug);
+  const enrolled = await db.selectDistinct({ courseId: enrollments.courseId }).from(enrollments);
+  const enrolledIds = enrolled.map((e) => e.courseId);
+  const pruneFilters = [notInArray(courses.slug, seedSlugs), isNull(courses.deletedAt)];
+  if (enrolledIds.length > 0) pruneFilters.push(notInArray(courses.id, enrolledIds));
+  const pruned = await db
+    .update(courses)
+    .set({ deletedAt: new Date() })
+    .where(and(...pruneFilters))
+    .returning({ slug: courses.slug });
+  if (pruned.length > 0) {
+    console.log(`Cursos podados (órfãos, sem matrícula): ${pruned.map((p) => p.slug).join(', ')}`);
+  }
 
   // Aluno demo + matrícula no primeiro curso (para testar a área do aluno).
   const [firstCourse] = await db

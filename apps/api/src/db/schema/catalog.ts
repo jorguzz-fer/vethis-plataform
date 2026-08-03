@@ -53,6 +53,8 @@ export const courses = pgTable('courses', {
   status: courseStatusEnum('status').notNull().default('draft'),
   // Destaque/curadoria: maior = aparece antes na home e no catálogo (empata por título).
   featuredRank: integer('featured_rank').notNull().default(0),
+  // "Em breve": curso listado como vitrine, sem preço nem checkout ainda.
+  comingSoon: boolean('coming_soon').notNull().default(false),
   coverUrl: text('cover_url'),
   // Conteúdo rico da página de venda (dirige seções antes fixas no site).
   workloadHours: integer('workload_hours'),

@@ -17,9 +17,8 @@ export function CourseGrid({ courses }: { courses: CourseSummary[] }) {
         <CourseCard
           key={c.id}
           title={c.title}
-          priceLabel={formatBRL(c.priceCents)}
+          priceLabel={c.comingSoon ? 'Em breve' : formatBRL(c.priceCents)}
           specialty={c.specialty?.name}
-          level={c.level}
           coverUrl={c.coverUrl ?? undefined}
           cta={
             <Link href={`/cursos/${c.slug}`}>

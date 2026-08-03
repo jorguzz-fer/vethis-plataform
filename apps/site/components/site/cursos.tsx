@@ -9,12 +9,6 @@ const GRADIENTS = [
   'linear-gradient(150deg,#8a6a2e,#4a3818)',
 ];
 
-const LEVEL_LABEL: Record<CourseSummary['level'], string> = {
-  iniciante: 'Iniciante',
-  intermediario: 'Intermediário',
-  avancado: 'Avançado',
-};
-
 const cimgSvgProps = {
   fill: 'none' as const,
   stroke: 'currentColor',
@@ -114,7 +108,6 @@ export function Cursos({ courses }: { courses: CourseSummary[] }) {
                 <Link key={c.id} href={`/cursos/${c.slug}`} className="course">
                   <div className="cimg" style={cimgStyle}>
                     {c.specialty ? <span className="badge">{c.specialty.name}</span> : null}
-                    <span className="lvl">{LEVEL_LABEL[c.level]}</span>
                     {c.coverUrl ? null : iconFor(c.specialty?.slug)}
                   </div>
                   <div className="cbody">
@@ -131,8 +124,14 @@ export function Cursos({ courses }: { courses: CourseSummary[] }) {
                     ) : null}
                     <div className="cfoot">
                       <div className="price">
-                        {formatBRL(c.priceCents)}
-                        <small>/à vista</small>
+                        {c.comingSoon ? (
+                          'Em breve'
+                        ) : (
+                          <>
+                            {formatBRL(c.priceCents)}
+                            <small>/à vista</small>
+                          </>
+                        )}
                       </div>
                       <div className="go">
                         <svg
