@@ -194,7 +194,7 @@ export function ClinicasDash() {
                 <div className="card-d">
                   <div className="cdh">
                     <b>Turmas ativas</b>
-                    <span style={{ fontSize: '10.5px', color: '#93a99d' }}>4 trilhas</span>
+                    <span style={{ fontSize: '10.5px', color: '#93a99d' }}>4 turmas</span>
                   </div>
                   <div className="tbl">
                     <div className="tr">

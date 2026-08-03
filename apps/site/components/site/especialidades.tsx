@@ -52,16 +52,28 @@ const ESPECIALIDADES: Esp[] = [
     ),
   },
   {
-    slug: 'diagnostico-por-imagem',
-    name: 'Diagnóstico por Imagem',
-    desc: 'Radiologia, ultrassom e interpretação prática.',
-    count: '14 cursos',
+    slug: 'medicina-felina',
+    name: 'Medicina Felina',
+    desc: 'Do ambulatório à emergência, com raciocínio felino.',
+    count: 'Em breve',
     icon: (
       <svg viewBox="0 0 24 24" {...S}>
-        <rect x="3" y="4" width="18" height="16" rx="2" />
-        <path d="M8 4v16M8 8h13M8 13h13" />
-        <circle cx="5.5" cy="6.4" r=".8" fill="currentColor" />
-        <circle cx="5.5" cy="10.4" r=".8" fill="currentColor" />
+        <path d="M5 10V4.5l3.2 2.6a7 7 0 017.6 0L19 4.5V10a7 7 0 01-14 0z" />
+        <path d="M9.5 12h.01M14.5 12h.01" />
+        <path d="M10.5 15c.5.6 2.5.6 3 0" />
+      </svg>
+    ),
+  },
+  {
+    slug: 'clinica-medica',
+    name: 'Clínica Médica',
+    desc: 'Raciocínio clínico, exames e conduta na rotina.',
+    count: 'Em breve',
+    icon: (
+      <svg viewBox="0 0 24 24" {...S}>
+        <path d="M6 3v5a4 4 0 008 0V3" />
+        <path d="M10 12v3a5 5 0 0010 0v-1" />
+        <circle cx="20" cy="12" r="2" />
       </svg>
     ),
   },
@@ -120,12 +132,12 @@ export function Especialidades() {
       <div className="wrap">
         <div className="head-row">
           <div className="lead">
-            <span className="eyebrow">Trilhas por especialidade</span>
+            <span className="eyebrow">Áreas de especialidade</span>
             <h2>Cada área da clínica, com profundidade</h2>
           </div>
           <p className="desc">
-            Do generalista ao especialista: trilhas estruturadas com casos reais, protocolos
-            atualizados e prática guiada.
+            Do generalista ao especialista: cursos com casos reais, protocolos atualizados e prática
+            guiada.
           </p>
         </div>
         <div className="esp-grid">
@@ -134,7 +146,8 @@ export function Especialidades() {
               <div className="ic">{e.icon}</div>
               <b>{e.name}</b>
               <span>{e.desc}</span>
-              <span className="cnt">{e.count}</span>
+              {/* Enquanto o catálogo é preenchido, todas as áreas exibem "Em breve". */}
+              <span className="cnt">Em breve</span>
             </Link>
           ))}
         </div>

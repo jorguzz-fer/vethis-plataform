@@ -16,9 +16,8 @@ export function Header() {
           />
         </Link>
         <nav className="nav-links" aria-label="Principal">
-          <Link href="/#especialidades">Especialidades</Link>
-          <Link href="/#cursos">Cursos</Link>
-          <Link href="/#app">App</Link>
+          <Link href="/cursos">Pós-graduação</Link>
+          <Link href="/cursos">Cursos livres</Link>
           <Link href="/#clinicas">Para Clínicas</Link>
           <Link href="/#instrutores">Instrutores</Link>
         </nav>

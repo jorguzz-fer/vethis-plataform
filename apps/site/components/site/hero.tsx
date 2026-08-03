@@ -20,11 +20,11 @@ export function Hero() {
               Explorar cursos
             </Link>
             <Link
-              href="/#app"
+              href="/cursos"
               className="btn btn-ghost"
               style={{ color: '#EAF1EC', borderColor: 'rgba(255,255,255,.25)' }}
             >
-              Ver o app
+              Ver cursos
               <svg
                 viewBox="0 0 24 24"
                 width="16"
@@ -81,7 +81,7 @@ export function Hero() {
                 <circle cx="7" cy="18" r="2" />
                 <circle cx="17" cy="18" r="2" />
               </svg>
-              Acesso offline no app
+              Acesse de qualquer dispositivo
             </div>
           </div>
         </div>
