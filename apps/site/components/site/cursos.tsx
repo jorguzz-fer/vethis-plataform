@@ -96,8 +96,7 @@ export function Cursos({ courses }: { courses: CourseSummary[] }) {
               color: 'var(--sage)',
             }}
           >
-            Nenhum curso disponível no momento. Volte em breve — novas trilhas clínicas estão a
-            caminho.
+            Nenhum curso disponível no momento. Volte em breve — novos cursos estão a caminho.
           </p>
         ) : (
           <div className="courses">

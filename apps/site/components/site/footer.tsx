@@ -27,9 +27,9 @@ export function Footer() {
           </div>
           <div className="ft-col">
             <h5>Plataforma</h5>
-            <Link href="/#cursos">Cursos</Link>
+            <Link href="/cursos">Pós-graduação</Link>
+            <Link href="/cursos">Cursos livres</Link>
             <Link href="/#especialidades">Especialidades</Link>
-            <Link href="/#app">App móvel</Link>
             <a href="#">Certificados</a>
           </div>
           <div className="ft-col">
@@ -62,7 +62,7 @@ export function Footer() {
           </div>
         </div>
         <div className="ft-bot">
-          <span>© 2026 Vethis · Educação Médica Veterinária. Mockup de demonstração.</span>
+          <span>© 2026 Vethis · Educação Médica Veterinária.</span>
           <div className="soc">
             <a href="#" aria-label="Instagram">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">

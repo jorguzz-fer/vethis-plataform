@@ -62,8 +62,8 @@ export function AppBand() {
           <span className="eyebrow">No seu bolso</span>
           <h2>A plantão inteira cabe no seu celular</h2>
           <p className="desc">
-            Baixe as aulas, revise protocolos entre atendimentos e acompanhe seu progresso — mesmo
-            sem internet, direto do centro cirúrgico ou da fazenda.
+            Acesse as aulas, revise protocolos entre atendimentos e acompanhe seu progresso — de
+            qualquer celular, tablet ou computador, direto pelo navegador.
           </p>
           <ul className="feat">
             <li>
@@ -81,8 +81,8 @@ export function AppBand() {
                 </svg>
               </span>
               <div>
-                <b>Aulas offline</b>
-                <span>Baixe e assista onde estiver, sem depender de sinal.</span>
+                <b>Acesse de qualquer tela</b>
+                <span>Assista pelo navegador do celular, tablet ou computador.</span>
               </div>
             </li>
             <li>
@@ -119,7 +119,7 @@ export function AppBand() {
               </span>
               <div>
                 <b>Progresso e metas</b>
-                <span>Trilhas com marcos claros e retomada de onde parou.</span>
+                <span>Continue de onde parou, com marcos claros.</span>
               </div>
             </li>
           </ul>
@@ -196,7 +196,7 @@ export function AppBand() {
                 <div className="app-head" style={{ paddingTop: 12 }}>
                   <div>
                     <div className="hi">Meu progresso</div>
-                    <div className="nm">Trilha de Cardiologia</div>
+                    <div className="nm">Cardiologia Clínica</div>
                   </div>
                 </div>
                 <div className="app-scroll">

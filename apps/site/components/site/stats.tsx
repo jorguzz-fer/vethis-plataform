@@ -6,7 +6,7 @@ export function Stats() {
           <b className="num">
             120<span style={{ fontSize: 24 }}>+</span>
           </b>
-          <span className="lb">Cursos e trilhas clínicas</span>
+          <span className="lb">Cursos clínicos</span>
         </div>
         <div className="stat">
           <b className="num">
