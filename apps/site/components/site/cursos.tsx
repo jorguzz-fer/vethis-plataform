@@ -104,8 +104,8 @@ export function Cursos({ courses }: { courses: CourseSummary[] }) {
                   }
                 : { background: gradient };
               const initial = c.instructor?.name?.trim().charAt(0).toUpperCase() ?? 'V';
-              return (
-                <Link key={c.id} href={`/cursos/${c.slug}`} className="course">
+              const content = (
+                <>
                   <div className="cimg" style={cimgStyle}>
                     {c.specialty ? <span className="badge">{c.specialty.name}</span> : null}
                     {c.coverUrl ? null : iconFor(c.specialty?.slug)}
@@ -133,19 +133,31 @@ export function Cursos({ courses }: { courses: CourseSummary[] }) {
                           </>
                         )}
                       </div>
-                      <div className="go">
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                        >
-                          <path d="M5 12h14M13 6l6 6-6 6" />
-                        </svg>
-                      </div>
+                      {c.comingSoon ? null : (
+                        <div className="go">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          >
+                            <path d="M5 12h14M13 6l6 6-6 6" />
+                          </svg>
+                        </div>
+                      )}
                     </div>
                   </div>
+                </>
+              );
+              // Curso "Em breve": card não clicável (sem link).
+              return c.comingSoon ? (
+                <div key={c.id} className="course" style={{ cursor: 'default' }}>
+                  {content}
+                </div>
+              ) : (
+                <Link key={c.id} href={`/cursos/${c.slug}`} className="course">
+                  {content}
                 </Link>
               );
             })}

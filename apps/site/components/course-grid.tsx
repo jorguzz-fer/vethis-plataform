@@ -21,9 +21,11 @@ export function CourseGrid({ courses }: { courses: CourseSummary[] }) {
           specialty={c.specialty?.name}
           coverUrl={c.coverUrl ?? undefined}
           cta={
-            <Link href={`/cursos/${c.slug}`}>
-              <Button size="sm">Ver curso</Button>
-            </Link>
+            c.comingSoon ? undefined : (
+              <Link href={`/cursos/${c.slug}`}>
+                <Button size="sm">Ver curso</Button>
+              </Link>
+            )
           }
         />
       ))}
