@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { formatBRL } from '@vethis/shared';
 import type { ReactNode } from 'react';
 import type { CourseSummary } from '@/lib/api';
+import { OfferLabel } from '@/components/site/offer-label';
 
 const GRADIENTS = [
   'linear-gradient(150deg,#12603f,#0a2b20)',
@@ -123,14 +123,7 @@ export function Cursos({ courses }: { courses: CourseSummary[] }) {
                     ) : null}
                     <div className="cfoot">
                       <div className="price">
-                        {c.comingSoon ? (
-                          'Em breve'
-                        ) : (
-                          <>
-                            {formatBRL(c.priceCents)}
-                            <small>/à vista</small>
-                          </>
-                        )}
+                        {c.comingSoon ? 'Em breve' : <OfferLabel priceCents={c.priceCents} />}
                       </div>
                       {c.comingSoon ? null : (
                         <div className="go">
