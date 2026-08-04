@@ -357,6 +357,7 @@ const COURSES: SeedCourse[] = [
   },
   {
     slug: 'pos-medicina-felina',
+    cover: '/cursos/pos-medicina-felina.png',
     title: 'Pós-graduação em Medicina Felina',
     subtitle: 'O gato como paciente único, do ambulatório à internação.',
     description:
@@ -385,6 +386,7 @@ const COURSES: SeedCourse[] = [
   },
   {
     slug: 'pos-emergencia-pequenos-animais',
+    cover: '/cursos/pos-emergencia-pequenos-animais.png',
     title: 'Pós-graduação em Emergência Médica de Pequenos Animais',
     subtitle: 'Do atendimento inicial à terapia intensiva.',
     description:
@@ -413,6 +415,7 @@ const COURSES: SeedCourse[] = [
   },
   {
     slug: 'farmacologia-clinica',
+    cover: '/cursos/farmacologia-clinica.png',
     title: 'Curso de Farmacologia Clínica de Pequenos Animais',
     subtitle: 'Prescrição segura e racional na rotina.',
     description:
@@ -441,6 +444,7 @@ const COURSES: SeedCourse[] = [
   },
   {
     slug: 'patologia-geral-forense',
+    cover: '/cursos/patologia-geral-forense.png',
     title: 'Curso de Patologia Geral e Forense',
     subtitle: 'Do processo patológico à perícia veterinária.',
     description:
@@ -497,6 +501,7 @@ const COURSES: SeedCourse[] = [
   },
   {
     slug: 'hematologia-transfusional',
+    cover: '/cursos/hematologia-transfusional.png',
     title: 'Curso de Hematologia e Medicina Transfusional',
     subtitle: 'Do hemograma à bolsa de sangue.',
     description:
@@ -525,6 +530,7 @@ const COURSES: SeedCourse[] = [
   },
   {
     slug: 'responsabilidade-tecnica',
+    cover: '/cursos/responsabilidade-tecnica.png',
     title: 'Curso de Responsabilidade Técnica Veterinária',
     subtitle: 'A RT na prática, sem insegurança.',
     description:
