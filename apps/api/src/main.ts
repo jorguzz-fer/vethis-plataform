@@ -18,11 +18,19 @@ async function bootstrap(): Promise<void> {
 
   // Arquivos enviados pelo admin (capas etc.), servidos em /uploads. CORP
   // cross-origin para que o <img> do site (outro domínio) consiga carregar.
-  mkdirSync(config.UPLOADS_DIR, { recursive: true });
-  app.useStaticAssets(config.UPLOADS_DIR, {
-    prefix: '/uploads/',
-    setHeaders: (res) => res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'),
-  });
+  // NÃO-FATAL: se o diretório não for gravável (volume ausente/sem permissão),
+  // apenas registra aviso — a API precisa subir mesmo sem o upload disponível.
+  try {
+    mkdirSync(config.UPLOADS_DIR, { recursive: true });
+    app.useStaticAssets(config.UPLOADS_DIR, {
+      prefix: '/uploads/',
+      setHeaders: (res) => res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'),
+    });
+  } catch (err) {
+    new Logger('Bootstrap').warn(
+      `Uploads desativados: não foi possível preparar UPLOADS_DIR="${config.UPLOADS_DIR}" (${(err as Error).message}). Configure um volume gravável para habilitar o upload de imagens.`,
+    );
+  }
 
   // Versionamento por URI: rotas ficam sob /v1/... (contrato versionado).
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
