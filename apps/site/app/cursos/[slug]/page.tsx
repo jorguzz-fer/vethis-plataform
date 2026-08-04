@@ -12,10 +12,6 @@ export const dynamic = 'force-dynamic';
 
 const INSTALLMENTS = 24;
 
-function formatDuration(seconds: number): string {
-  return `${Math.round(seconds / 60)} min`;
-}
-
 export default async function CoursePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const course = await getCourse(slug);
@@ -225,9 +221,6 @@ function Curriculum({ course, totalLessons }: { course: CourseDetail; totalLesso
                           </span>
                         ) : null}
                       </span>
-                      <span className="shrink-0 text-xs text-muted">
-                        {formatDuration(l.durationSeconds)}
-                      </span>
                     </li>
                   ))}
                 </ul>
@@ -243,7 +236,7 @@ function Curriculum({ course, totalLessons }: { course: CourseDetail; totalLesso
             {!course.comingSoon ? (
               <div className="mt-3 flex items-center justify-center gap-2 text-xs text-muted">
                 <LockIcon />
-                Pagamento seguro — Pix, cartão ou boleto
+                Pagamento seguro · Pix, cartão ou boleto
               </div>
             ) : null}
           </div>
@@ -304,7 +297,7 @@ function Faculty({ instructor }: { instructor: NonNullable<CourseDetail['instruc
         <div>
           <p className="font-semibold text-ink">{name}</p>
           <p className="mt-0.5 text-sm leading-relaxed text-muted">
-            {bio ?? 'Coordenação acadêmica — especialista com atuação clínica e docente.'}
+            {bio ?? 'Coordenação acadêmica, especialista com atuação clínica e docente.'}
           </p>
         </div>
       </div>

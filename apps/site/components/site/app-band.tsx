@@ -62,7 +62,7 @@ export function AppBand() {
           <span className="eyebrow">No seu bolso</span>
           <h2>A plantão inteira cabe no seu celular</h2>
           <p className="desc">
-            Acesse as aulas, revise protocolos entre atendimentos e acompanhe seu progresso — de
+            Acesse as aulas, revise protocolos entre atendimentos e acompanhe seu progresso, de
             qualquer celular, tablet ou computador, direto pelo navegador.
           </p>
           <ul className="feat">

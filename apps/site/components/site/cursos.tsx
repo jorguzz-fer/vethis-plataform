@@ -90,7 +90,7 @@ export function Cursos({ courses }: { courses: CourseSummary[] }) {
               color: 'var(--sage)',
             }}
           >
-            Nenhum curso disponível no momento. Volte em breve — novos cursos estão a caminho.
+            Nenhum curso disponível no momento. Volte em breve, novos cursos estão a caminho.
           </p>
         ) : (
           <div className="courses">
@@ -107,7 +107,6 @@ export function Cursos({ courses }: { courses: CourseSummary[] }) {
               const content = (
                 <>
                   <div className="cimg" style={cimgStyle}>
-                    {c.specialty ? <span className="badge">{c.specialty.name}</span> : null}
                     {c.coverUrl ? null : iconFor(c.specialty?.slug)}
                   </div>
                   <div className="cbody">

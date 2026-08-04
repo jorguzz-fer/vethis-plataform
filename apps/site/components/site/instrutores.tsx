@@ -37,7 +37,7 @@ export function Instrutores() {
             <h2>Quem ensina, opera todos os dias</h2>
           </div>
           <p className="desc">
-            Especialistas com atuação clínica e produção científica — o conhecimento vem direto da
+            Especialistas com atuação clínica e produção científica, o conhecimento vem direto da
             rotina, não só do papel.
           </p>
         </div>

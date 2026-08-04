@@ -449,7 +449,7 @@ function PaymentPanel({
         ) : (
           <p className="rounded-xl bg-paper px-4 py-3 text-sm text-muted">
             Ao confirmar, geramos um código Pix para pagamento imediato, já com{' '}
-            {PIX_DISCOUNT_PERCENT}% de desconto — a matrícula é liberada assim que o pagamento cair.
+            {PIX_DISCOUNT_PERCENT}% de desconto, a matrícula é liberada assim que o pagamento cair.
           </p>
         )}
 

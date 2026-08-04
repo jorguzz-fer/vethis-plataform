@@ -7,7 +7,7 @@ import './globals.css';
 import './prototype.css';
 
 export const metadata: Metadata = {
-  title: 'Vethis — Educação Médica Veterinária',
+  title: 'Vethis · Educação Médica Veterinária',
   description:
     'Formação médica veterinária continuada, baseada em casos reais. Cursos por especialidade.',
 };
