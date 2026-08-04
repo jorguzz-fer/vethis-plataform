@@ -937,7 +937,9 @@ section.blk {
     0 24px 50px -30px rgba(7, 42, 32, 0.5);
 }
 .course .cimg {
-  height: 150px;
+  aspect-ratio: 16 / 9;
+  background-size: cover;
+  background-position: center;
   position: relative;
   display: grid;
   place-items: center;
