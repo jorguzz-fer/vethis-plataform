@@ -41,6 +41,18 @@ COOKIE_DOMAIN=.vethis.com.br
 
 Opcionais (checkout/hardening), quando tiver: `GOOGLE_*`, `ASAAS_*`, `VIMEO_ACCESS_TOKEN`, `SENTRY_DSN`.
 
+> **Upload de imagens no admin (capas):** a API grava os arquivos enviados em
+> `UPLOADS_DIR` e os serve em `/uploads`. Como o disco do container é efêmero,
+> configure na **API-Vethis**:
+>
+> ```
+> PUBLIC_API_URL=https://api.vethis.com.br   # URL pública da API (monta a URL do arquivo)
+> UPLOADS_DIR=/data/uploads                  # pasta gravável (aponte um volume persistente)
+> ```
+>
+> E adicione um **Persistent Storage** na API-Vethis montado em `/data/uploads`
+> (Coolify → aba Storages). Sem o volume, as imagens somem no próximo deploy.
+
 > **Publicar o catálogo (primeiro deploy):** defina `SEED_ON_START=true`. O
 > entrypoint da API roda o seed idempotente (cria/atualiza o curso). As
 > migrations rodam sempre; o seed só quando esta var é `true`. Depois do

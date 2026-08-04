@@ -10,6 +10,12 @@ const EnvSchema = z
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
     API_PORT: z.coerce.number().int().positive().default(3333),
     APP_URL: z.string().url().default('http://localhost:3000'),
+    // URL pública da própria API — usada para montar as URLs de arquivos
+    // enviados (uploads), servidos pela API em /uploads.
+    PUBLIC_API_URL: z.string().url().default('http://localhost:3333'),
+    // Pasta onde os uploads do admin são gravados. Em produção, aponte para um
+    // volume persistente (o disco do container é efêmero).
+    UPLOADS_DIR: z.string().default('./uploads'),
 
     DATABASE_URL: z.string().url(),
     REDIS_URL: z.string().url().default('redis://localhost:6379'),
