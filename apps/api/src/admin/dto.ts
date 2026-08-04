@@ -234,3 +234,40 @@ export type AdminEnrollmentDto = z.infer<typeof adminEnrollmentSchema>;
 
 export const enrollUserSchema = z.object({ courseId: z.string().uuid() });
 export type EnrollUserDto = z.infer<typeof enrollUserSchema>;
+
+/* ----------------------------- Hero slides ----------------------------- */
+
+/** Botão clicável sobreposto ao slide (posição/tamanho em % da imagem). */
+export const heroHotspotInputSchema = z.object({
+  label: z.string().min(1).max(80),
+  href: z.string().min(1).max(300),
+  left: z.string().min(1).max(12),
+  top: z.string().min(1).max(12),
+  width: z.string().min(1).max(12),
+  height: z.string().min(1).max(12),
+});
+export type HeroHotspotInput = z.infer<typeof heroHotspotInputSchema>;
+
+export const createHeroSlideSchema = z.object({
+  title: z.string().min(1).max(160),
+  imageUrl: z.string().min(1).max(600),
+  alt: z.string().max(300).optional(),
+  hotspots: z.array(heroHotspotInputSchema).max(6).optional(),
+  sortOrder: z.number().int().min(0).max(999).optional(),
+  active: z.boolean().optional(),
+});
+export type CreateHeroSlideDto = z.infer<typeof createHeroSlideSchema>;
+
+export const updateHeroSlideSchema = createHeroSlideSchema.partial();
+export type UpdateHeroSlideDto = z.infer<typeof updateHeroSlideSchema>;
+
+export const adminHeroSlideSchema = z.object({
+  id: z.string().uuid(),
+  title: z.string(),
+  imageUrl: z.string(),
+  alt: z.string(),
+  hotspots: z.array(heroHotspotInputSchema),
+  sortOrder: z.number().int(),
+  active: z.boolean(),
+});
+export type AdminHeroSlideDto = z.infer<typeof adminHeroSlideSchema>;

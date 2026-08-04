@@ -33,6 +33,7 @@ import type { LeadStage } from '../db/schema/enums';
 import { AdminService } from './admin.service';
 import {
   createCourseSchema,
+  createHeroSlideSchema,
   createInstructorSchema,
   createLessonSchema,
   createModuleSchema,
@@ -40,6 +41,7 @@ import {
   enrollUserSchema,
   resetPasswordSchema,
   updateCourseSchema,
+  updateHeroSlideSchema,
   updateInstructorSchema,
   updateLessonSchema,
   updateModuleSchema,
@@ -47,8 +49,11 @@ import {
   type AdminCourseDetailDto,
   type AdminCourseDto,
   type AdminEnrollmentDto,
+  type AdminHeroSlideDto,
   type AdminUserDto,
   type CreateCourseDto,
+  type CreateHeroSlideDto,
+  type UpdateHeroSlideDto,
   type EnrollUserDto,
   type CreateInstructorDto,
   type CreateLessonDto,
@@ -179,6 +184,32 @@ export class AdminController {
     @Body(new ZodValidationPipe(updateInstructorSchema)) dto: UpdateInstructorDto,
   ): Promise<InstructorDto> {
     return this.admin.updateInstructor(id, dto);
+  }
+
+  @Get('hero-slides')
+  heroSlides(): Promise<AdminHeroSlideDto[]> {
+    return this.admin.listHeroSlides();
+  }
+
+  @Post('hero-slides')
+  createHeroSlide(
+    @Body(new ZodValidationPipe(createHeroSlideSchema)) dto: CreateHeroSlideDto,
+  ): Promise<AdminHeroSlideDto> {
+    return this.admin.createHeroSlide(dto);
+  }
+
+  @Patch('hero-slides/:id')
+  updateHeroSlide(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(updateHeroSlideSchema)) dto: UpdateHeroSlideDto,
+  ): Promise<AdminHeroSlideDto> {
+    return this.admin.updateHeroSlide(id, dto);
+  }
+
+  @Delete('hero-slides/:id')
+  @HttpCode(200)
+  deleteHeroSlide(@Param('id') id: string): Promise<{ ok: true }> {
+    return this.admin.deleteHeroSlide(id);
   }
 
   @Get('students')

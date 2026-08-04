@@ -2,6 +2,7 @@ import { ConflictException, Inject, Injectable, NotFoundException } from '@nestj
 import { and, asc, count, desc, eq, gte, isNull, max, sql } from 'drizzle-orm';
 import { DB, type Database } from '../db/client';
 import { courseModules, courses, instructors, lessons } from '../db/schema/catalog';
+import { heroSlides } from '../db/schema/hero';
 import { enrollments } from '../db/schema/enrollment';
 import { opportunities } from '../db/schema/crm';
 import { users } from '../db/schema/identity';
@@ -11,7 +12,10 @@ import type {
   AdminCourseDetailDto,
   AdminCourseDto,
   AdminEnrollmentDto,
+  AdminHeroSlideDto,
   AdminUserDto,
+  CreateHeroSlideDto,
+  UpdateHeroSlideDto,
   CreateCourseDto,
   CreateInstructorDto,
   CreateLessonDto,
@@ -39,6 +43,17 @@ function slugify(text: string): string {
     .replace(/(^-|-$)/g, '')
     .slice(0, 120);
 }
+
+/** Colunas do slide na visão do admin (reuso entre list/get). */
+const HERO_COLS = {
+  id: heroSlides.id,
+  title: heroSlides.title,
+  imageUrl: heroSlides.imageUrl,
+  alt: heroSlides.alt,
+  hotspots: heroSlides.hotspots,
+  sortOrder: heroSlides.sortOrder,
+  active: heroSlides.active,
+} as const;
 
 @Injectable()
 export class AdminService {
@@ -567,6 +582,63 @@ export class AdminService {
       .delete(enrollments)
       .where(and(eq(enrollments.userId, userId), eq(enrollments.courseId, courseId)));
     return this.listUserEnrollments(userId);
+  }
+
+  /* ----------------------------- Hero slides ----------------------------- */
+
+  async listHeroSlides(): Promise<AdminHeroSlideDto[]> {
+    const rows = await this.db
+      .select(HERO_COLS)
+      .from(heroSlides)
+      .orderBy(asc(heroSlides.sortOrder), asc(heroSlides.createdAt));
+    return rows.map((r) => ({ ...r, hotspots: r.hotspots ?? [] }));
+  }
+
+  async createHeroSlide(dto: CreateHeroSlideDto): Promise<AdminHeroSlideDto> {
+    let order = dto.sortOrder;
+    if (order === undefined) {
+      const [m] = await this.db.select({ n: max(heroSlides.sortOrder) }).from(heroSlides);
+      order = (m?.n ?? -1) + 1;
+    }
+    const [row] = await this.db
+      .insert(heroSlides)
+      .values({
+        title: dto.title,
+        imageUrl: dto.imageUrl,
+        alt: dto.alt ?? '',
+        hotspots: dto.hotspots ?? [],
+        sortOrder: order,
+        active: dto.active ?? true,
+      })
+      .returning({ id: heroSlides.id });
+    if (!row) throw new ConflictException('Falha ao criar slide');
+    return this.getHeroSlide(row.id);
+  }
+
+  async updateHeroSlide(id: string, dto: UpdateHeroSlideDto): Promise<AdminHeroSlideDto> {
+    const patch: Record<string, unknown> = { ...dto, updatedAt: new Date() };
+    const [row] = await this.db
+      .update(heroSlides)
+      .set(patch)
+      .where(eq(heroSlides.id, id))
+      .returning({ id: heroSlides.id });
+    if (!row) throw new NotFoundException('Slide não encontrado');
+    return this.getHeroSlide(row.id);
+  }
+
+  async deleteHeroSlide(id: string): Promise<{ ok: true }> {
+    const [row] = await this.db
+      .delete(heroSlides)
+      .where(eq(heroSlides.id, id))
+      .returning({ id: heroSlides.id });
+    if (!row) throw new NotFoundException('Slide não encontrado');
+    return { ok: true };
+  }
+
+  private async getHeroSlide(id: string): Promise<AdminHeroSlideDto> {
+    const [row] = await this.db.select(HERO_COLS).from(heroSlides).where(eq(heroSlides.id, id));
+    if (!row) throw new NotFoundException('Slide não encontrado');
+    return { ...row, hotspots: row.hotspots ?? [] };
   }
 
   private async getUser(id: string): Promise<AdminUserDto> {

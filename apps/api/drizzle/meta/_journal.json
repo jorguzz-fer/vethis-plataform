@@ -78,6 +78,13 @@
       "when": 1785758588127,
       "tag": "0010_zippy_la_nuit",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1785885858834,
+      "tag": "0011_hot_valkyrie",
+      "breakpoints": true
     }
   ]
 }

@@ -4,7 +4,14 @@ import { DB, type Database } from '../db/client';
 import { APP_CONFIG, type AppConfig } from '../config/configuration';
 import { resolveAssetUrl } from '../common/asset-url';
 import { courseModules, courses, instructors, lessons, specialties } from '../db/schema/catalog';
-import type { CourseDetail, CourseSummary, ListCoursesQuery, specialtySchema } from './dto';
+import { heroSlides } from '../db/schema/hero';
+import type {
+  CourseDetail,
+  CourseSummary,
+  HeroSlide,
+  ListCoursesQuery,
+  specialtySchema,
+} from './dto';
 import type { z } from 'zod';
 
 type SpecialtyDto = z.infer<typeof specialtySchema>;
@@ -27,6 +34,28 @@ export class CatalogService {
       })
       .from(specialties)
       .orderBy(asc(specialties.name));
+  }
+
+  /** Slides ativos do carrossel do Hero, na ordem de exibição. */
+  async listHeroSlides(): Promise<HeroSlide[]> {
+    const rows = await this.db
+      .select({
+        id: heroSlides.id,
+        title: heroSlides.title,
+        imageUrl: heroSlides.imageUrl,
+        alt: heroSlides.alt,
+        hotspots: heroSlides.hotspots,
+        sortOrder: heroSlides.sortOrder,
+      })
+      .from(heroSlides)
+      .where(eq(heroSlides.active, true))
+      .orderBy(asc(heroSlides.sortOrder), asc(heroSlides.createdAt));
+
+    return rows.map((r) => ({
+      ...r,
+      imageUrl: resolveAssetUrl(this.config.APP_URL, r.imageUrl) ?? r.imageUrl,
+      hotspots: r.hotspots ?? [],
+    }));
   }
 
   async listCourses(query: ListCoursesQuery): Promise<CourseSummary[]> {

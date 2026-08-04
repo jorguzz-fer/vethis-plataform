@@ -8,6 +8,7 @@ import { authUserSchema, loginSchema, publicUserSchema, registerSchema } from '.
 import {
   courseDetailSchema,
   courseSummarySchema,
+  heroSlideSchema,
   listCoursesQuerySchema,
   specialtySchema,
 } from '../catalog/dto';
@@ -44,8 +45,11 @@ import {
   adminCourseDetailSchema,
   adminCourseSchema,
   adminEnrollmentSchema,
+  adminHeroSlideSchema,
   adminUserSchema,
   createCourseSchema,
+  createHeroSlideSchema,
+  updateHeroSlideSchema,
   enrollUserSchema,
   createInstructorSchema,
   createLessonSchema,
@@ -78,6 +82,10 @@ export function buildOpenApiDocument() {
   const PublicUser = registry.register('PublicUser', publicUserSchema);
   const AuthUser = registry.register('AuthUser', authUserSchema);
   const Specialty = registry.register('Specialty', specialtySchema);
+  const HeroSlide = registry.register('HeroSlide', heroSlideSchema);
+  const AdminHeroSlide = registry.register('AdminHeroSlide', adminHeroSlideSchema);
+  const CreateHeroSlideInput = registry.register('CreateHeroSlideInput', createHeroSlideSchema);
+  const UpdateHeroSlideInput = registry.register('UpdateHeroSlideInput', updateHeroSlideSchema);
   const CourseSummary = registry.register('CourseSummary', courseSummarySchema);
   const CourseDetail = registry.register('CourseDetail', courseDetailSchema);
   const EnrolledCourse = registry.register('EnrolledCourse', enrolledCourseSchema);
@@ -183,6 +191,13 @@ export function buildOpenApiDocument() {
     tags: ['catalog'],
     summary: 'Lista especialidades',
     responses: { 200: { description: 'OK', ...json(z.array(Specialty)) } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/catalog/hero-slides',
+    tags: ['catalog'],
+    summary: 'Lista slides ativos do carrossel do Hero',
+    responses: { 200: { description: 'OK', ...json(z.array(HeroSlide)) } },
   });
   registry.registerPath({
     method: 'get',
@@ -528,6 +543,37 @@ export function buildOpenApiDocument() {
     summary: 'Atualiza um instrutor (nome/bio/avatar)',
     request: { ...idParam, body: json(UpdateInstructorInput) },
     responses: { 200: { description: 'OK', ...json(Instructor) } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/hero-slides',
+    tags: ['backoffice'],
+    summary: 'Lista slides do Hero (todos, inclusive inativos)',
+    responses: { 200: { description: 'OK', ...json(z.array(AdminHeroSlide)) } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/admin/hero-slides',
+    tags: ['backoffice'],
+    summary: 'Cria um slide do Hero',
+    request: { body: json(CreateHeroSlideInput) },
+    responses: { 201: { description: 'Criado', ...json(AdminHeroSlide) } },
+  });
+  registry.registerPath({
+    method: 'patch',
+    path: '/v1/admin/hero-slides/{id}',
+    tags: ['backoffice'],
+    summary: 'Atualiza um slide do Hero',
+    request: { ...idParam, body: json(UpdateHeroSlideInput) },
+    responses: { 200: { description: 'OK', ...json(AdminHeroSlide) } },
+  });
+  registry.registerPath({
+    method: 'delete',
+    path: '/v1/admin/hero-slides/{id}',
+    tags: ['backoffice'],
+    summary: 'Remove um slide do Hero',
+    request: { ...idParam },
+    responses: { 200: { description: 'Removido' } },
   });
   registry.registerPath({
     method: 'get',
