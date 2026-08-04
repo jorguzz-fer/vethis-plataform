@@ -7,7 +7,7 @@ export function Cta() {
       <div className="wrap cta-in">
         <h2>Comece sua próxima especialização hoje</h2>
         <p>
-          Teste gratuitamente por 7 dias. Sem cartão, sem compromisso — só conhecimento clínico de
+          Teste gratuitamente por 7 dias. Sem cartão, sem compromisso, só conhecimento clínico de
           verdade.
         </p>
         <div className="row">

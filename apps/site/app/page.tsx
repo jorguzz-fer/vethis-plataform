@@ -1,5 +1,4 @@
 import { Hero } from '@/components/site/hero';
-import { Stats } from '@/components/site/stats';
 import { Especialidades } from '@/components/site/especialidades';
 import { Cursos } from '@/components/site/cursos';
 import { AppBand } from '@/components/site/app-band';
@@ -18,7 +17,6 @@ export default async function HomePage() {
   return (
     <>
       <Hero />
-      <Stats />
       <Especialidades />
       <Cursos courses={featured} />
       <AppBand />

@@ -12,7 +12,7 @@ export function Hero() {
             <em>Seu conhecimento</em> também.
           </h1>
           <p className="hero-sub">
-            Cursos de medicina veterinária conduzidos por especialistas que operam na rotina — do
+            Cursos de medicina veterinária conduzidos por especialistas que operam na rotina, do
             diagnóstico à cirurgia. Estude no seu ritmo, com casos reais e certificado.
           </p>
           <div className="hero-cta">
@@ -129,7 +129,7 @@ export function Hero() {
                   </div>
                   <div className="continue">
                     <div className="k">Continue de onde parou</div>
-                    <div className="t">Cardiologia Clínica — Ausculta e sopros</div>
+                    <div className="t">Cardiologia Clínica · Ausculta e sopros</div>
                     <div className="pbar">
                       <i />
                     </div>

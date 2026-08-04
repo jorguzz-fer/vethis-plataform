@@ -8,10 +8,10 @@ export function Header() {
   return (
     <header className="nav">
       <div className="wrap nav-in">
-        <Link href="/#top" className="brand" aria-label="Vethis — início">
+        <Link href="/#top" className="brand" aria-label="Vethis · início">
           <img
             src="/vethis-logo.png"
-            alt="Vethis — Educação Médica Veterinária"
+            alt="Vethis · Educação Médica Veterinária"
             style={{ height: 68, width: 'auto' }}
           />
         </Link>

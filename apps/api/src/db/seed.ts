@@ -110,9 +110,9 @@ const COURSES: SeedCourse[] = [
     slug: 'pos-clinica-medica-felinos',
     title: 'Pós-graduação em Clínica Médica de Felinos',
     subtitle:
-      'Atenda gatos com mais segurança, raciocínio clínico e confiança — do ambulatório à emergência.',
+      'Atenda gatos com mais segurança, raciocínio clínico e confiança, do ambulatório à emergência.',
     description:
-      'Pós-graduação 100% online e aplicada à rotina, com 360 horas e certificação. O gato não é um cão pequeno: aqui você desenvolve o raciocínio clínico orientado por problemas e domina as principais afecções da espécie — nefrologia e urologia, doenças infecciosas (PIF, FeLV, FIV, esporotricose), cardiologia, neurologia, gastroenterologia e hepatologia, endocrinologia, oncologia, dermatologia, oftalmologia, emergência, anestesia e analgesia, comportamento, cirurgia e odontologia felina. São 80 horas de videoaulas somadas a leituras dirigidas, quatro casos clínicos por módulo (52 no total), fóruns, quizzes e projeto aplicado.',
+      'Pós-graduação 100% online e aplicada à rotina, com 360 horas e certificação. O gato não é um cão pequeno: aqui você desenvolve o raciocínio clínico orientado por problemas e domina as principais afecções da espécie: nefrologia e urologia, doenças infecciosas (PIF, FeLV, FIV, esporotricose), cardiologia, neurologia, gastroenterologia e hepatologia, endocrinologia, oncologia, dermatologia, oftalmologia, emergência, anestesia e analgesia, comportamento, cirurgia e odontologia felina. São 80 horas de videoaulas somadas a leituras dirigidas, quatro casos clínicos por módulo (52 no total), fóruns, quizzes e projeto aplicado.',
     priceCents: 693600,
     level: 'avancado',
     specialty: 'medicina-felina',
@@ -152,7 +152,7 @@ const COURSES: SeedCourse[] = [
       {
         question: 'Como funciona a metodologia?',
         answer:
-          'Modalidade EaD, com os módulos liberados progressivamente no ambiente virtual. Cada módulo reúne videoaulas, material de apoio (artigos, consensos e guidelines), quatro casos clínicos, quiz e exercícios de interpretação de exames — estudo no seu ritmo, de qualquer dispositivo.',
+          'Modalidade EaD, com os módulos liberados progressivamente no ambiente virtual. Cada módulo reúne videoaulas, material de apoio (artigos, consensos e guidelines), quatro casos clínicos, quiz e exercícios de interpretação de exames, estudo no seu ritmo, de qualquer dispositivo.',
       },
       {
         question: 'Como é a avaliação?',
@@ -167,7 +167,7 @@ const COURSES: SeedCourse[] = [
     ],
     modules: [
       {
-        title: 'Módulo 1 — Bases da Medicina Felina',
+        title: 'Módulo 1: Bases da Medicina Felina',
         lessons: [
           {
             title: 'Particularidades fisiológicas e farmacológicas do felino',
@@ -182,7 +182,7 @@ const COURSES: SeedCourse[] = [
         ],
       },
       {
-        title: 'Módulo 2 — Exames Laboratoriais e Diagnóstico por Imagem',
+        title: 'Módulo 2: Exames Laboratoriais e Diagnóstico por Imagem',
         lessons: [
           { title: 'Interpretação de exames laboratoriais', min: 39 },
           { title: 'Hematologia felina', min: 39 },
@@ -198,7 +198,7 @@ const COURSES: SeedCourse[] = [
         ],
       },
       {
-        title: 'Módulo 3 — Nefrologia e Urologia',
+        title: 'Módulo 3: Nefrologia e Urologia',
         lessons: [
           { title: 'Doença renal crônica', min: 54 },
           { title: 'Estadiamento IRIS', min: 54 },
@@ -213,7 +213,7 @@ const COURSES: SeedCourse[] = [
         ],
       },
       {
-        title: 'Módulo 4 — Doenças Infecciosas',
+        title: 'Módulo 4: Doenças Infecciosas',
         lessons: [
           { title: 'Peritonite infecciosa felina (PIF)', min: 45 },
           { title: 'Diagnóstico da PIF', min: 45 },
@@ -230,7 +230,7 @@ const COURSES: SeedCourse[] = [
         ],
       },
       {
-        title: 'Módulo 5 — Cardiologia e Neurologia',
+        title: 'Módulo 5: Cardiologia e Neurologia',
         lessons: [
           { title: 'Convulsões em gatos', min: 22 },
           { title: 'Particularidades das manifestações convulsivas felinas', min: 22 },
@@ -249,7 +249,7 @@ const COURSES: SeedCourse[] = [
         ],
       },
       {
-        title: 'Módulo 6 — Gastroenterologia e Hepatologia',
+        title: 'Módulo 6: Gastroenterologia e Hepatologia',
         lessons: [
           { title: 'Doença inflamatória intestinal', min: 68 },
           { title: 'Diferenciação entre doença inflamatória intestinal e linfoma', min: 68 },
@@ -262,7 +262,7 @@ const COURSES: SeedCourse[] = [
         ],
       },
       {
-        title: 'Módulo 7 — Endocrinologia',
+        title: 'Módulo 7: Endocrinologia',
         lessons: [
           { title: 'Diabetes mellitus', min: 40 },
           { title: 'Insulinoterapia', min: 40 },
@@ -276,7 +276,7 @@ const COURSES: SeedCourse[] = [
         ],
       },
       {
-        title: 'Módulo 8 — Oncologia',
+        title: 'Módulo 8: Oncologia',
         lessons: [
           { title: 'Linfoma alimentar', min: 30 },
           { title: 'Linfoma mediastinal', min: 30 },
@@ -293,7 +293,7 @@ const COURSES: SeedCourse[] = [
         ],
       },
       {
-        title: 'Módulo 9 — Dermatologia e Oftalmologia',
+        title: 'Módulo 9: Dermatologia e Oftalmologia',
         lessons: [
           { title: 'Síndrome atópica felina', min: 50 },
           { title: 'Complexo granuloma eosinofílico', min: 50 },
@@ -304,7 +304,7 @@ const COURSES: SeedCourse[] = [
         ],
       },
       {
-        title: 'Módulo 10 — Emergência e Intensivismo',
+        title: 'Módulo 10: Emergência e Intensivismo',
         lessons: [
           { title: 'Suporte hemodinâmico', min: 60 },
           { title: 'Obstrução uretral e desobstrução segura', min: 60 },
@@ -316,7 +316,7 @@ const COURSES: SeedCourse[] = [
         ],
       },
       {
-        title: 'Módulo 11 — Anestesia e Controle da Dor',
+        title: 'Módulo 11: Anestesia e Controle da Dor',
         lessons: [
           { title: 'Drogas seguras em felinos', min: 30 },
           { title: 'Drogas contraindicadas ou que exigem cautela', min: 30 },
@@ -329,7 +329,7 @@ const COURSES: SeedCourse[] = [
         ],
       },
       {
-        title: 'Módulo 12 — Comportamento e Bem-estar',
+        title: 'Módulo 12: Comportamento e Bem-estar',
         lessons: [
           { title: 'Tensão entre gatos', min: 36 },
           { title: 'Identificação de conflitos entre gatos', min: 36 },
@@ -339,7 +339,7 @@ const COURSES: SeedCourse[] = [
         ],
       },
       {
-        title: 'Módulo 13 — Cirurgia e Odontologia',
+        title: 'Módulo 13: Cirurgia e Odontologia',
         lessons: [
           { title: 'Técnica cirúrgica com foco em felinos', min: 30 },
           { title: 'Ovariohisterectomia', min: 30 },

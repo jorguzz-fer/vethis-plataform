@@ -8,11 +8,11 @@ export function Footer() {
       <div className="wrap">
         <div className="ft-grid">
           <div>
-            <Link href="/#top" className="brand" aria-label="Vethis — início">
+            <Link href="/#top" className="brand" aria-label="Vethis · início">
               {/* Lockup oficial invertido para branco sobre o fundo escuro do rodapé. */}
               <img
                 src="/vethis-logo.png"
-                alt="Vethis — Educação Médica Veterinária"
+                alt="Vethis · Educação Médica Veterinária"
                 style={{
                   height: 66,
                   width: 'auto',

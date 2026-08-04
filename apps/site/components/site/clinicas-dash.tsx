@@ -8,7 +8,7 @@ export function ClinicasDash() {
         <h2>Gestão de aprendizagem para a sua equipe</h2>
         <p className="lead-p">
           Matricule sua equipe, acompanhe conclusões e horas de formação e comprove a capacitação
-          continuada — tudo em um painel.
+          continuada, tudo em um painel.
         </p>
 
         <div className="browser">

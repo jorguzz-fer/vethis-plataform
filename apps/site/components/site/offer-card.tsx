@@ -78,7 +78,7 @@ export function OfferCard({
       </p>
 
       <p className="mt-5 text-xs leading-relaxed text-[#9DB0A5]">
-        No Pix à vista: <span className="font-medium text-[#EAF0EC]">{formatBRL(pixCents)}</span> —
+        No Pix à vista: <span className="font-medium text-[#EAF0EC]">{formatBRL(pixCents)}</span>,
         5% de desconto
       </p>
 
