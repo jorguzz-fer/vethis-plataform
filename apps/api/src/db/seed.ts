@@ -473,6 +473,7 @@ const COURSES: SeedCourse[] = [
   },
   {
     slug: 'pos-nefrologia',
+    cover: '/cursos/pos-nefrologia.png',
     title: 'Pós-graduação em Nefrologia de Pequenos Animais',
     subtitle: 'Do diagnóstico precoce à terapia renal substitutiva.',
     description:
