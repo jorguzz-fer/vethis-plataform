@@ -1,4 +1,4 @@
-import { Hero } from '@/components/site/hero';
+import { HeroCarousel } from '@/components/site/hero-carousel';
 import { Especialidades } from '@/components/site/especialidades';
 import { Cursos } from '@/components/site/cursos';
 import { AppBand } from '@/components/site/app-band';
@@ -16,7 +16,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <Hero />
+      <HeroCarousel />
       <Especialidades />
       <Cursos courses={featured} />
       <AppBand />

@@ -10,8 +10,8 @@ const LEVEL_LABEL: Record<string, string> = {
 
 export interface CourseCardProps {
   title: string;
-  /** Preço já formatado (ex.: "R$ 1.497,00"). */
-  priceLabel: string;
+  /** Rótulo de preço/oferta já formatado (string ou markup). */
+  priceLabel: ReactNode;
   specialty?: string;
   level?: 'iniciante' | 'intermediario' | 'avancado';
   coverUrl?: string;

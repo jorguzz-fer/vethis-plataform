@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { formatBRL } from '@vethis/shared';
 import { Button, CourseCard } from '@vethis/ui';
 import type { CourseSummary } from '@/lib/api';
+import { OfferLabel } from '@/components/site/offer-label';
 
 export function CourseGrid({ courses }: { courses: CourseSummary[] }) {
   if (courses.length === 0) {
@@ -17,7 +17,7 @@ export function CourseGrid({ courses }: { courses: CourseSummary[] }) {
         <CourseCard
           key={c.id}
           title={c.title}
-          priceLabel={c.comingSoon ? 'Em breve' : formatBRL(c.priceCents)}
+          priceLabel={c.comingSoon ? 'Em breve' : <OfferLabel priceCents={c.priceCents} />}
           specialty={c.specialty?.name}
           coverUrl={c.coverUrl ?? undefined}
           cta={
