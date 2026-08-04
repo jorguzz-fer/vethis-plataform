@@ -146,6 +146,300 @@
           "icon"
         ]
       },
+      "HeroSlide": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "alt": {
+            "type": "string"
+          },
+          "hotspots": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "href": {
+                  "type": "string"
+                },
+                "left": {
+                  "type": "string"
+                },
+                "top": {
+                  "type": "string"
+                },
+                "width": {
+                  "type": "string"
+                },
+                "height": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "href",
+                "left",
+                "top",
+                "width",
+                "height"
+              ]
+            }
+          },
+          "sortOrder": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "imageUrl",
+          "alt",
+          "hotspots",
+          "sortOrder"
+        ]
+      },
+      "AdminHeroSlide": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "alt": {
+            "type": "string"
+          },
+          "hotspots": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "href": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "left": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12
+                },
+                "top": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12
+                },
+                "width": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12
+                },
+                "height": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12
+                }
+              },
+              "required": [
+                "label",
+                "href",
+                "left",
+                "top",
+                "width",
+                "height"
+              ]
+            }
+          },
+          "sortOrder": {
+            "type": "integer"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "imageUrl",
+          "alt",
+          "hotspots",
+          "sortOrder",
+          "active"
+        ]
+      },
+      "CreateHeroSlideInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "imageUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 600
+          },
+          "alt": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "hotspots": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "href": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "left": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12
+                },
+                "top": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12
+                },
+                "width": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12
+                },
+                "height": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12
+                }
+              },
+              "required": [
+                "label",
+                "href",
+                "left",
+                "top",
+                "width",
+                "height"
+              ]
+            },
+            "maxItems": 6
+          },
+          "sortOrder": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 999
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "title",
+          "imageUrl"
+        ]
+      },
+      "UpdateHeroSlideInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "imageUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 600
+          },
+          "alt": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "hotspots": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "href": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "left": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12
+                },
+                "top": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12
+                },
+                "width": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12
+                },
+                "height": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12
+                }
+              },
+              "required": [
+                "label",
+                "href",
+                "left",
+                "top",
+                "width",
+                "height"
+              ]
+            },
+            "maxItems": 6
+          },
+          "sortOrder": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 999
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
       "CourseSummary": {
         "type": "object",
         "properties": {
@@ -2873,6 +3167,29 @@
         }
       }
     },
+    "/v1/catalog/hero-slides": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Lista slides ativos do carrossel do Hero",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HeroSlide"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/catalog/courses": {
       "get": {
         "tags": [
@@ -4024,6 +4341,116 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/v1/admin/hero-slides": {
+      "get": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Lista slides do Hero (todos, inclusive inativos)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminHeroSlide"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Cria um slide do Hero",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateHeroSlideInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminHeroSlide"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/hero-slides/{id}": {
+      "patch": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Atualiza um slide do Hero",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateHeroSlideInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminHeroSlide"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Remove um slide do Hero",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Removido"
           }
         }
       }

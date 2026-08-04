@@ -6,6 +6,7 @@
 export * from './enums';
 export * from './identity';
 export * from './catalog';
+export * from './hero';
 export * from './enrollment';
 export * from './commerce';
 export * from './crm';

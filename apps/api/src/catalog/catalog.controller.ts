@@ -5,6 +5,7 @@ import {
   listCoursesQuerySchema,
   type CourseDetail,
   type CourseSummary,
+  type HeroSlide,
   type ListCoursesQuery,
 } from './dto';
 import type { z } from 'zod';
@@ -18,6 +19,11 @@ export class CatalogController {
   @Get('specialties')
   listSpecialties(): Promise<z.infer<typeof specialtySchema>[]> {
     return this.catalog.listSpecialties();
+  }
+
+  @Get('hero-slides')
+  listHeroSlides(): Promise<HeroSlide[]> {
+    return this.catalog.listHeroSlides();
   }
 
   @Get('courses')

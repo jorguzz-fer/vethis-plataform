@@ -6,6 +6,7 @@ import { LoginPage } from './pages/login-page';
 import { DashboardPage } from './pages/dashboard-page';
 import { CoursesPage } from './pages/courses-page';
 import { CourseEditorPage } from './pages/course-editor-page';
+import { SlidesPage } from './pages/slides-page';
 import { UsersPage } from './pages/users-page';
 import { StudentsPage } from './pages/students-page';
 import { CrmPage } from './pages/crm-page';
@@ -47,6 +48,7 @@ export function App() {
         <Route path="/cursos" element={<CoursesPage />} />
         <Route path="/cursos/novo" element={<CourseEditorPage />} />
         <Route path="/cursos/:id" element={<CourseEditorPage />} />
+        <Route path="/slides" element={<SlidesPage />} />
         <Route path="/usuarios" element={<UsersPage />} />
         <Route path="/alunos" element={<StudentsPage />} />
         <Route path="/crm" element={<CrmPage />} />

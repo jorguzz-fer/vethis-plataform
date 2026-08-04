@@ -3,6 +3,7 @@ import { createVethisClient, type components } from '@vethis/api-client';
 export type CourseSummary = components['schemas']['CourseSummary'];
 export type CourseDetail = components['schemas']['CourseDetail'];
 export type Specialty = components['schemas']['Specialty'];
+export type HeroSlide = components['schemas']['HeroSlide'];
 
 const baseUrl = process.env.API_URL ?? 'http://localhost:3333';
 const api = createVethisClient({ baseUrl });
@@ -56,6 +57,20 @@ export async function getCourses(query?: {
   try {
     const { data } = await api.GET('/v1/catalog/courses', { params: { query: query ?? {} } });
     return (data ?? []).map(normalizeCourse);
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Slides do carrossel do Hero. Degradam para vazio se a API estiver fora — o
+ * componente usa slides padrão embutidos nesse caso. A imagem é relativizada
+ * se vier com host local (mesmo tratamento das capas).
+ */
+export async function getHeroSlides(): Promise<HeroSlide[]> {
+  try {
+    const { data } = await api.GET('/v1/catalog/hero-slides');
+    return (data ?? []).map((s) => ({ ...s, imageUrl: siteAsset(s.imageUrl) ?? s.imageUrl }));
   } catch {
     return [];
   }

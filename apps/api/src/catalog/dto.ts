@@ -69,3 +69,25 @@ export const courseDetailSchema = courseSummarySchema.extend({
   modules: z.array(moduleSchema),
 });
 export type CourseDetail = z.infer<typeof courseDetailSchema>;
+
+/** Botão clicável sobreposto a um slide do Hero (posição/tamanho em % da imagem). */
+export const heroHotspotSchema = z.object({
+  label: z.string(),
+  href: z.string(),
+  left: z.string(),
+  top: z.string(),
+  width: z.string(),
+  height: z.string(),
+});
+export type HeroHotspot = z.infer<typeof heroHotspotSchema>;
+
+/** Slide do carrossel do Hero na visão pública (site). */
+export const heroSlideSchema = z.object({
+  id: z.string().uuid(),
+  title: z.string(),
+  imageUrl: z.string(),
+  alt: z.string(),
+  hotspots: z.array(heroHotspotSchema),
+  sortOrder: z.number().int(),
+});
+export type HeroSlide = z.infer<typeof heroSlideSchema>;
