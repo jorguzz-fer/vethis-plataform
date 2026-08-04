@@ -118,7 +118,7 @@ const COURSES: SeedCourse[] = [
     specialty: 'medicina-felina',
     instructor: 'coordenacao-clinica-felinos',
     featuredRank: 100,
-    cover: '/cursos/pos-clinica-medica-felinos.png',
+    cover: '/cursos/pos-clinica-medica-felinos.jpg',
     workloadHours: 360,
     learningObjectives: [
       'Construir o raciocínio clínico a partir dos sinais apresentados pelo gato.',
