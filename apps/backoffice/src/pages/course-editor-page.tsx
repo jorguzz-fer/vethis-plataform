@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, Field } from '@vethis/ui';
 import {
@@ -314,12 +314,7 @@ export function CourseEditorPage() {
           />
         ) : null}
 
-        <Field
-          label="Capa (URL da imagem)"
-          value={form.coverUrl}
-          onChange={(e) => set('coverUrl', e.target.value)}
-          placeholder="https://…"
-        />
+        <CoverUploader value={form.coverUrl} onChange={(v) => set('coverUrl', v)} />
 
         <ObjectivesEditor
           items={form.learningObjectives}
@@ -495,6 +490,77 @@ function AiDraftModal({
 }
 
 /* --------------------- Objetivos de aprendizagem ------------------------- */
+
+/** Uploader da capa do curso: envia o arquivo para a API e guarda a URL. */
+function CoverUploader({ value, onChange }: { value: string; onChange: (url: string) => void }) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function onFile(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // permite reenviar o mesmo arquivo
+    if (!file) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const base = import.meta.env.VITE_API_URL ?? 'http://localhost:3333';
+      const res = await fetch(`${base}/v1/admin/uploads`, {
+        method: 'POST',
+        body: fd,
+        credentials: 'include',
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      const data = (await res.json()) as { url: string };
+      onChange(data.url);
+    } catch {
+      setError('Falha ao enviar. Use PNG, JPG ou WEBP (até 5MB) e confirme que está logado.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-sm font-medium text-ink">Capa do curso</span>
+      {value ? (
+        <img
+          src={value}
+          alt="Prévia da capa"
+          className="aspect-[16/9] w-full max-w-sm rounded-lg border border-border object-cover"
+        />
+      ) : null}
+      <div className="flex flex-wrap items-center gap-3">
+        <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium text-ink hover:bg-black/5">
+          <input
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            className="hidden"
+            onChange={(e) => void onFile(e)}
+          />
+          {busy ? 'Enviando…' : value ? 'Trocar imagem' : 'Enviar imagem'}
+        </label>
+        {value ? (
+          <button
+            type="button"
+            className="text-sm text-muted underline"
+            onClick={() => onChange('')}
+          >
+            Remover
+          </button>
+        ) : null}
+      </div>
+      <Field
+        label="Ou cole a URL da imagem"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="https://…"
+      />
+      {error ? <p className="text-sm text-error">{error}</p> : null}
+    </div>
+  );
+}
 
 function ObjectivesEditor({
   items,

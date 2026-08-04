@@ -1,18 +1,28 @@
 import 'reflect-metadata';
+import { mkdirSync } from 'node:fs';
 import { NestFactory } from '@nestjs/core';
 import { Logger, VersioningType } from '@nestjs/common';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { APP_CONFIG, type AppConfig } from './config/configuration';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule, { bufferLogs: false });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { bufferLogs: false });
   const config = app.get<AppConfig>(APP_CONFIG);
 
   // Segurança de borda (Blueprint §6).
   app.use(helmet());
   app.use(cookieParser(config.SESSION_SECRET));
+
+  // Arquivos enviados pelo admin (capas etc.), servidos em /uploads. CORP
+  // cross-origin para que o <img> do site (outro domínio) consiga carregar.
+  mkdirSync(config.UPLOADS_DIR, { recursive: true });
+  app.useStaticAssets(config.UPLOADS_DIR, {
+    prefix: '/uploads/',
+    setHeaders: (res) => res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'),
+  });
 
   // Versionamento por URI: rotas ficam sob /v1/... (contrato versionado).
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
