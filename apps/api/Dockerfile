@@ -30,11 +30,18 @@ RUN pnpm --filter @vethis/api build
 # pacote + da raiz, links do pnpm) ser idêntica à do build.
 FROM node:22-alpine AS runner
 ENV NODE_ENV=production
+# su-exec: baixa o privilégio de root para `node` no entrypoint (após ajustar a
+# permissão do volume de uploads).
+RUN apk add --no-cache su-exec
 WORKDIR /repo
 COPY --from=builder /repo ./
 WORKDIR /repo/apps/api
-USER node
+# Diretório padrão do volume de uploads; a permissão final é ajustada em runtime
+# pelo entrypoint (o volume montado pode vir como root).
+RUN mkdir -p /data/uploads
 EXPOSE 3333
-# O entrypoint aplica as migrations (dist/db/migrate.js, cwd /repo/apps/api) e
-# sobe a API. Com SEED_ON_START=true também roda o seed (idempotente).
+# O entrypoint roda como root só para garantir a permissão do diretório de
+# uploads e então baixa o privilégio para `node`: aplica as migrations
+# (dist/db/migrate.js, cwd /repo/apps/api) e sobe a API. Com SEED_ON_START=true
+# também roda o seed (idempotente).
 CMD ["sh", "docker-entrypoint.sh"]
