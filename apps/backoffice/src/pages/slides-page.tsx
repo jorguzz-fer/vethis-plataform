@@ -2,6 +2,16 @@ import { useEffect, useState, type ChangeEvent } from 'react';
 import { Button, buttonClasses } from '@vethis/ui';
 import { api, type AdminHeroSlide, type HeroHotspot } from '../api';
 
+/** Erro de upload que carrega o status HTTP para diagnóstico. */
+class UploadError extends Error {
+  constructor(
+    readonly status: number,
+    readonly detail: string,
+  ) {
+    super(detail || `HTTP ${status}`);
+  }
+}
+
 /** Envia um arquivo para a API e devolve a URL pública. */
 async function uploadImage(file: File): Promise<string> {
   const fd = new FormData();
@@ -12,9 +22,32 @@ async function uploadImage(file: File): Promise<string> {
     body: fd,
     credentials: 'include',
   });
-  if (!res.ok) throw new Error(String(res.status));
+  if (!res.ok) {
+    let detail = '';
+    try {
+      detail = ((await res.json()) as { message?: string }).message ?? '';
+    } catch {
+      /* resposta sem corpo JSON */
+    }
+    throw new UploadError(res.status, detail);
+  }
   const data = (await res.json()) as { url: string };
   return data.url;
+}
+
+/** Mensagem acionável a partir do status HTTP do upload. */
+function uploadErrorMessage(err: unknown): string {
+  if (err instanceof UploadError) {
+    if (err.status === 401 || err.status === 403)
+      return 'Sessão expirada ou sem permissão — saia e entre novamente.';
+    if (err.status === 413)
+      return 'Imagem grande demais para o servidor. Reduza o arquivo — o limite pode estar no proxy (Coolify/Caddy), não na API.';
+    if (err.status === 415) return 'Formato inválido — envie PNG, JPG ou WEBP.';
+    if (err.status >= 500)
+      return `O servidor não conseguiu salvar (HTTP ${err.status}). Verifique o volume de uploads (UPLOADS_DIR precisa ser um caminho gravável).`;
+    return `Falha ao enviar (HTTP ${err.status}). ${err.detail}`.trim();
+  }
+  return 'Falha ao enviar (sem resposta do servidor). Verifique a rede/CORS e se está logado.';
 }
 
 export function SlidesPage() {
@@ -74,8 +107,8 @@ function NewSlide({ nextOrder, onCreated }: { nextOrder: number; onCreated: () =
     setError(null);
     try {
       setImageUrl(await uploadImage(file));
-    } catch {
-      setError('Falha ao enviar. Use PNG, JPG ou WEBP (até 5MB) e confirme que está logado.');
+    } catch (err) {
+      setError(uploadErrorMessage(err));
     } finally {
       setBusy(false);
     }
@@ -173,8 +206,8 @@ function SlideCard({ slide, onChange }: { slide: AdminHeroSlide; onChange: () =>
     setError(null);
     try {
       setImageUrl(await uploadImage(file));
-    } catch {
-      setError('Falha ao enviar a imagem.');
+    } catch (err) {
+      setError(uploadErrorMessage(err));
     } finally {
       setBusy(false);
     }
