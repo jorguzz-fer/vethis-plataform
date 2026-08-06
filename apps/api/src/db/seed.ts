@@ -36,7 +36,7 @@ const INSTRUCTORS: SeedInstructor[] = [
   {
     slug: 'coordenacao-clinica-felinos',
     name: 'Dra. Patrícia Bastos',
-    bio: 'Coordenadora acadêmica da Pós-graduação em Clínica Médica de Felinos. Médica-veterinária com atuação clínica e docente em Medicina Felina, dedicada ao ensino baseado em casos reais e ao raciocínio clínico aplicado à rotina do gato.',
+    bio: "Coordenadora acadêmica da Pós-graduação em Clínica Médica de Felinos. Médica-veterinária graduada pela Universidade Paulista (1995), com especialização em Medicina Felina (Anclivepa-SP), Ultrassonografia (Echoa) e Geriatria e Neonatologia (Unyleya), além de diplomas internacionais em Medicina Felina e em Nefrologia e Urologia (2025). Atua na clínica desde 1998, é veterinária Cat Friendly (AAFP) e palestrante em universidades nacionais e internacionais. Idealizadora e responsável pelo conteúdo do Cat's Academy Pro (certificado pelo MEC), leva ao curso o ensino baseado em casos reais e no raciocínio clínico aplicado à rotina do gato.",
     photo: 'patricia.jpg',
   },
   {

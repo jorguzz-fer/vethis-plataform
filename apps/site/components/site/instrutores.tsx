@@ -13,7 +13,7 @@ const INSTRUTORES: Inst[] = [
     initial: 'P',
     name: 'Dra. Patrícia Bastos',
     role: 'Coordenação · Medicina Felina',
-    bio: 'Coordenadora acadêmica da Pós-graduação em Clínica Médica de Felinos. Médica-veterinária com atuação clínica e docente em Medicina Felina, com ensino baseado em casos reais.',
+    bio: 'Coordenadora acadêmica da Pós-graduação em Clínica Médica de Felinos. Médica-veterinária graduada em 1995, especialista em Medicina Felina, Ultrassonografia e Geriatria e Neonatologia, com diplomas internacionais em Medicina Felina e em Nefrologia e Urologia. Veterinária Cat Friendly (AAFP) e palestrante nacional e internacional.',
     gradient: 'linear-gradient(150deg,#12603f,#0a2b20)',
     photo: '/instrutores/patricia.jpg',
   },
