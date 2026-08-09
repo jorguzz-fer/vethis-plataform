@@ -8,7 +8,10 @@ import type { PaymentMethodDto } from './dto';
 /** Desconto do Pix à vista (percentual inteiro). */
 export const PIX_DISCOUNT_PERCENT = 5;
 
-/** Número máximo de parcelas oferecidas (cartão e boleto/carnê). */
+/**
+ * Teto global de parcelas (cartão e boleto/carnê). Cada curso pode oferecer
+ * menos (`courses.max_installments`), nunca mais do que isto.
+ */
 export const MAX_INSTALLMENTS = 24;
 
 /**
@@ -23,9 +26,20 @@ export function netAmountCents(method: PaymentMethodDto, priceCents: number): nu
   return priceCents;
 }
 
-/** Parcelas efetivas: Pix é sempre à vista; cartão/boleto respeitam o teto. */
-export function effectiveInstallments(method: PaymentMethodDto, requested: number): number {
+/**
+ * Parcelas efetivas: Pix é sempre à vista; cartão/boleto respeitam o teto do
+ * curso (`courseMax`, quando informado) limitado ao teto global.
+ */
+export function effectiveInstallments(
+  method: PaymentMethodDto,
+  requested: number,
+  courseMax = MAX_INSTALLMENTS,
+): number {
   if (method === 'pix') return 1;
+  const cap = Math.min(
+    Number.isFinite(courseMax) && courseMax >= 1 ? Math.trunc(courseMax) : MAX_INSTALLMENTS,
+    MAX_INSTALLMENTS,
+  );
   if (!Number.isFinite(requested) || requested < 1) return 1;
-  return Math.min(Math.trunc(requested), MAX_INSTALLMENTS);
+  return Math.min(Math.trunc(requested), cap);
 }

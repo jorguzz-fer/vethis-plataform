@@ -39,4 +39,19 @@ describe('effectiveInstallments', () => {
     expect(effectiveInstallments('boleto', 0)).toBe(1);
     expect(effectiveInstallments('card', Number.NaN)).toBe(1);
   });
+
+  it('respeita o teto do curso quando menor que o global', () => {
+    // Farmacoterapêutica: oferta de 10x, mesmo que o cliente peça 24x.
+    expect(effectiveInstallments('boleto', 24, 10)).toBe(10);
+    expect(effectiveInstallments('card', 6, 10)).toBe(6);
+  });
+
+  it('nunca ultrapassa o teto global, mesmo com teto de curso maior', () => {
+    expect(effectiveInstallments('card', 48, 48)).toBe(MAX_INSTALLMENTS);
+  });
+
+  it('cai no teto global quando o curso não define um válido', () => {
+    expect(effectiveInstallments('card', 24, 0)).toBe(MAX_INSTALLMENTS);
+    expect(effectiveInstallments('card', 24, Number.NaN)).toBe(MAX_INSTALLMENTS);
+  });
 });

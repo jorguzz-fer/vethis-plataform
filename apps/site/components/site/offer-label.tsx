@@ -1,5 +1,5 @@
 import { formatBRL } from '@vethis/shared';
-import { INSTALLMENTS, PIX_DISCOUNT_PERCENT, installmentCents } from '@/lib/pricing';
+import { PIX_DISCOUNT_PERCENT, installmentCents, installmentsFor } from '@/lib/pricing';
 
 /**
  * Rótulo de oferta dos cards (home + catálogo): parcela em destaque e a
@@ -9,16 +9,19 @@ import { INSTALLMENTS, PIX_DISCOUNT_PERCENT, installmentCents } from '@/lib/pric
  */
 export function OfferLabel({
   priceCents,
+  maxInstallments,
   className = '',
 }: {
   priceCents: number;
+  maxInstallments?: number | null;
   className?: string;
 }) {
-  const per = installmentCents(priceCents);
+  const parcels = installmentsFor(maxInstallments);
+  const per = installmentCents(priceCents, maxInstallments);
   return (
     <span className={`flex flex-col gap-0.5 font-sans leading-tight ${className}`}>
       <span className="text-[13px] font-medium">
-        {INSTALLMENTS}x de: <strong className="text-[15px] font-bold">{formatBRL(per)}</strong>
+        {parcels}x de: <strong className="text-[15px] font-bold">{formatBRL(per)}</strong>
       </span>
       <span className="text-[12px] font-normal opacity-75">
         ou {PIX_DISCOUNT_PERCENT}% de desconto à vista

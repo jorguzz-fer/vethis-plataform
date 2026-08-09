@@ -70,6 +70,7 @@ export class CatalogService {
         title: courses.title,
         subtitle: courses.subtitle,
         priceCents: courses.priceCents,
+        maxInstallments: courses.maxInstallments,
         level: courses.level,
         coverUrl: courses.coverUrl,
         comingSoon: courses.comingSoon,
@@ -98,6 +99,7 @@ export class CatalogService {
         subtitle: courses.subtitle,
         description: courses.description,
         priceCents: courses.priceCents,
+        maxInstallments: courses.maxInstallments,
         level: courses.level,
         coverUrl: courses.coverUrl,
         comingSoon: courses.comingSoon,
@@ -167,6 +169,7 @@ interface JoinedCourse {
   title: string;
   subtitle: string | null;
   priceCents: number;
+  maxInstallments: number;
   level: CourseSummary['level'];
   coverUrl: string | null;
   comingSoon: boolean;
@@ -185,6 +188,7 @@ function toSummary(c: JoinedCourse, appUrl: string): CourseSummary {
     title: c.title,
     subtitle: c.subtitle,
     priceCents: c.priceCents,
+    maxInstallments: c.maxInstallments,
     level: c.level,
     coverUrl: resolveAssetUrl(appUrl, c.coverUrl),
     comingSoon: c.comingSoon,

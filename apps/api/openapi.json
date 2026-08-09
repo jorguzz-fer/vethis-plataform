@@ -462,6 +462,10 @@
           "priceCents": {
             "type": "integer"
           },
+          "maxInstallments": {
+            "type": "integer",
+            "exclusiveMinimum": 0
+          },
           "level": {
             "type": "string",
             "enum": [
@@ -536,6 +540,7 @@
           "title",
           "subtitle",
           "priceCents",
+          "maxInstallments",
           "level",
           "comingSoon",
           "coverUrl",
@@ -564,6 +569,10 @@
           },
           "priceCents": {
             "type": "integer"
+          },
+          "maxInstallments": {
+            "type": "integer",
+            "exclusiveMinimum": 0
           },
           "level": {
             "type": "string",
@@ -730,6 +739,7 @@
           "title",
           "subtitle",
           "priceCents",
+          "maxInstallments",
           "level",
           "comingSoon",
           "coverUrl",

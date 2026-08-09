@@ -7,10 +7,9 @@ import { getCourse, getCourses, type CourseDetail, type CourseSummary } from '@/
 import { LeadFormTrigger } from '@/components/site/lead-form';
 import { OfferCard } from '@/components/site/offer-card';
 import { Credenciamento } from '@/components/site/credenciamento';
+import { installmentsFor } from '@/lib/pricing';
 
 export const dynamic = 'force-dynamic';
-
-const INSTALLMENTS = 24;
 
 export default async function CoursePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -31,7 +30,7 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
   return (
     <article className="bg-paper">
       <Hero course={course} />
-      <Conditions workloadHours={course.workloadHours} />
+      <Conditions workloadHours={course.workloadHours} maxInstallments={course.maxInstallments} />
       <section className="mx-auto max-w-[1140px] px-6">
         <Credenciamento className="rounded-2xl border border-border bg-white p-5" />
       </section>
@@ -114,11 +113,17 @@ function Pill({ children, gold }: { children: ReactNode; gold?: boolean }) {
 
 // ---------------------------------------------------------------------------
 
-function Conditions({ workloadHours }: { workloadHours: number | null }) {
+function Conditions({
+  workloadHours,
+  maxInstallments,
+}: {
+  workloadHours: number | null;
+  maxInstallments: number;
+}) {
   const items = [
     {
       title: 'Pagamento facilitado',
-      desc: `Parcele em até ${INSTALLMENTS}x ou pague à vista com condição especial.`,
+      desc: `Parcele em até ${installmentsFor(maxInstallments)}x ou pague à vista com condição especial.`,
     },
     {
       title: 'Aprendizado 100% online',
@@ -344,7 +349,8 @@ function InvestmentBand({ course }: { course: CourseDetail }) {
           <h2 className="font-serif text-3xl font-semibold text-gold-400">Garanta sua vaga</h2>
           <p className="mt-3 max-w-md text-[15px] leading-relaxed text-[#C6D3CA]">
             Matrícula aberta com condição especial por tempo limitado. Comece hoje, estude no seu
-            ritmo e emita seu certificado de 360h ao concluir.
+            ritmo e emita seu certificado
+            {course.workloadHours ? ` de ${course.workloadHours}h` : ''} ao concluir.
           </p>
         </div>
         <OfferCard course={course} comingSoon={course.comingSoon} />

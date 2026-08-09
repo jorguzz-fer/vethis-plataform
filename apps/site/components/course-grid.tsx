@@ -17,7 +17,13 @@ export function CourseGrid({ courses }: { courses: CourseSummary[] }) {
         <CourseCard
           key={c.id}
           title={c.title}
-          priceLabel={c.comingSoon ? 'Em breve' : <OfferLabel priceCents={c.priceCents} />}
+          priceLabel={
+            c.comingSoon ? (
+              'Em breve'
+            ) : (
+              <OfferLabel priceCents={c.priceCents} maxInstallments={c.maxInstallments} />
+            )
+          }
           specialty={c.specialty?.name}
           coverUrl={c.coverUrl ?? undefined}
           cta={
