@@ -2567,6 +2567,7 @@ export interface components {
             title: string;
             subtitle: string | null;
             priceCents: number;
+            maxInstallments: number;
             /** @enum {string} */
             level: "iniciante" | "intermediario" | "avancado";
             comingSoon: boolean;
@@ -2589,6 +2590,7 @@ export interface components {
             title: string;
             subtitle: string | null;
             priceCents: number;
+            maxInstallments: number;
             /** @enum {string} */
             level: "iniciante" | "intermediario" | "avancado";
             comingSoon: boolean;

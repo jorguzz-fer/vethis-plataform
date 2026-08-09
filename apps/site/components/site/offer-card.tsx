@@ -2,11 +2,7 @@ import Link from 'next/link';
 import { formatBRL } from '@vethis/shared';
 import { buttonClasses } from '@vethis/ui';
 import { LeadFormTrigger } from '@/components/site/lead-form';
-
-/** Teto de parcelas sem juros (espelha a regra da API/checkout). */
-const INSTALLMENTS = 24;
-/** Desconto do Pix à vista (espelha PIX_DISCOUNT_PERCENT do checkout). */
-const PIX_DISCOUNT_PERCENT = 5;
+import { PIX_DISCOUNT_PERCENT, installmentsFor } from '@/lib/pricing';
 
 const brl = new Intl.NumberFormat('pt-BR', {
   minimumFractionDigits: 2,
@@ -27,7 +23,7 @@ export function OfferCard({
   comingSoon = false,
   className = '',
 }: {
-  course: { slug: string; priceCents: number };
+  course: { slug: string; priceCents: number; maxInstallments?: number | null };
   comingSoon?: boolean;
   className?: string;
 }) {
@@ -54,7 +50,8 @@ export function OfferCard({
     );
   }
 
-  const perMonth = Math.ceil(course.priceCents / INSTALLMENTS);
+  const parcels = installmentsFor(course.maxInstallments);
+  const perMonth = Math.ceil(course.priceCents / parcels);
   const pixCents = Math.round((course.priceCents * (100 - PIX_DISCOUNT_PERCENT)) / 100);
 
   return (
@@ -70,7 +67,7 @@ export function OfferCard({
       </p>
 
       <p className="mt-5 text-[15px] text-[#C6D3CA]">
-        Ou até <span className="font-semibold text-white">{INSTALLMENTS}x</span> de:
+        Ou até <span className="font-semibold text-white">{parcels}x</span> de:
       </p>
       <p className="mt-1 flex items-baseline gap-1.5 font-serif text-gold-400">
         <span className="text-2xl font-semibold">R$</span>

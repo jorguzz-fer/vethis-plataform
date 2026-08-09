@@ -85,6 +85,13 @@
       "when": 1785885858834,
       "tag": "0011_hot_valkyrie",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1786307376782,
+      "tag": "0012_nosy_proteus",
+      "breakpoints": true
     }
   ]
 }

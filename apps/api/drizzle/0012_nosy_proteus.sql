@@ -1,0 +1,1 @@
+ALTER TABLE "courses" ADD COLUMN "max_installments" integer DEFAULT 24 NOT NULL;

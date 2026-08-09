@@ -16,8 +16,14 @@ import {
 
 /** Desconto do Pix à vista — espelha a regra server-authoritative da API. */
 const PIX_DISCOUNT_PERCENT = 5;
-/** Teto de parcelas oferecidas (cartão e boleto/carnê). */
+/** Teto global de parcelas (cartão e boleto/carnê); cada curso pode oferecer menos. */
 const MAX_INSTALLMENTS = 24;
+
+/** Teto de parcelas do curso, limitado ao teto global. */
+function installmentsFor(maxInstallments?: number | null): number {
+  if (!maxInstallments || maxInstallments < 1) return MAX_INSTALLMENTS;
+  return Math.min(Math.trunc(maxInstallments), MAX_INSTALLMENTS);
+}
 
 /** Valor cobrado para o meio escolhido (Pix à vista tem desconto). */
 function netPriceCents(method: PaymentMethod, priceCents: number): number {
@@ -27,9 +33,12 @@ function netPriceCents(method: PaymentMethod, priceCents: number): number {
   return priceCents;
 }
 
-/** Opções de parcelamento (sem juros) até o teto, dinheiro em centavos. */
-function installmentOptions(priceCents: number): { n: number; label: string }[] {
-  return Array.from({ length: MAX_INSTALLMENTS }, (_, i) => {
+/** Opções de parcelamento (sem juros) até o teto do curso, dinheiro em centavos. */
+function installmentOptions(
+  priceCents: number,
+  maxInstallments: number,
+): { n: number; label: string }[] {
+  return Array.from({ length: installmentsFor(maxInstallments) }, (_, i) => {
     const n = i + 1;
     return { n, label: `${n}x de ${formatBRL(Math.round(priceCents / n))}` };
   });
@@ -38,10 +47,12 @@ function installmentOptions(priceCents: number): { n: number; label: string }[] 
 /** Seletor de parcelas (sem juros), usado por cartão e boleto/carnê. */
 function InstallmentsField({
   priceCents,
+  maxInstallments,
   value,
   onChange,
 }: {
   priceCents: number;
+  maxInstallments: number;
   value: number;
   onChange: (n: number) => void;
 }) {
@@ -53,7 +64,7 @@ function InstallmentsField({
         onChange={(e) => onChange(Number(e.target.value))}
         className="rounded-[10px] border-[1.5px] border-border px-3.5 py-3 text-[15px]"
       >
-        {installmentOptions(priceCents).map((o) => (
+        {installmentOptions(priceCents, maxInstallments).map((o) => (
           <option key={o.n} value={o.n}>
             {o.label}
           </option>
@@ -398,6 +409,7 @@ function PaymentPanel({
             </div>
             <InstallmentsField
               priceCents={course.priceCents}
+              maxInstallments={course.maxInstallments}
               value={installments}
               onChange={setInstallments}
             />
@@ -437,6 +449,7 @@ function PaymentPanel({
           <>
             <InstallmentsField
               priceCents={course.priceCents}
+              maxInstallments={course.maxInstallments}
               value={installments}
               onChange={setInstallments}
             />

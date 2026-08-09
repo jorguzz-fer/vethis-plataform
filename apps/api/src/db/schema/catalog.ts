@@ -49,6 +49,10 @@ export const courses = pgTable('courses', {
   subtitle: text('subtitle'),
   description: text('description'),
   priceCents: integer('price_cents').notNull().default(0),
+  // Teto de parcelas sem juros DESTE curso (a oferta varia por produto: pós em
+  // 24x, cursos livres em menos). É o teto exibido na vitrine e o limite
+  // aplicado no checkout.
+  maxInstallments: integer('max_installments').notNull().default(24),
   level: courseLevelEnum('level').notNull().default('iniciante'),
   status: courseStatusEnum('status').notNull().default('draft'),
   // Destaque/curadoria: maior = aparece antes na home e no catálogo (empata por título).

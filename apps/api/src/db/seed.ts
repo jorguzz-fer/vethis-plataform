@@ -64,6 +64,16 @@ const INSTRUCTORS: SeedInstructor[] = [
     photo: 'carlos-nunes.webp',
   },
   {
+    slug: 'prof-luiz-henrique-guimaraes',
+    name: 'Prof. Luiz Henrique Guimarães',
+    bio: 'Coordenador acadêmico da Pós-graduação em Nefrologia e Urologia de Cães e Gatos. Responde pela integração entre os módulos, pelo alinhamento dos conteúdos, pelo acompanhamento do corpo docente e pela organização das atividades aplicadas, mantendo a coerência entre bases fisiopatológicas, métodos diagnósticos e condutas clínicas e terapêuticas do curso.',
+  },
+  {
+    slug: 'dr-filiphe-mesquita',
+    name: 'Prof. Dr. Filiphe de Paula Nunes Mesquita',
+    bio: 'Coordenador científico do curso de Farmacoterapêutica Clínica em Cães e Gatos. Médico-veterinário formado pela Universidade Federal Rural do Semi-Árido (UFERSA), especialista em Anestesiologia Veterinária pelo Instituto Qualittas, mestre em Farmacologia pelo Instituto de Ciências Biomédicas da USP e doutor em Farmacologia pela Faculdade de Ciências Médicas da Unicamp.',
+  },
+  {
     slug: 'dra-lucia-prado',
     name: 'Dra. Lúcia Prado',
     bio: 'Intensivista e docente de emergência e medicina transfusional.',
@@ -90,9 +100,12 @@ interface SeedCourse {
   subtitle: string;
   description: string;
   priceCents: number;
+  /** Teto de parcelas sem juros deste curso. Padrão 24 (teto global). */
+  maxInstallments?: number;
   level: CourseLevel;
   specialty: string;
-  instructor: string;
+  /** Coordenação. Omitido quando ainda não definida (a seção some da página). */
+  instructor?: string;
   /** Destaque: maior aparece antes na home e no catálogo. Padrão 0. */
   featuredRank?: number;
   /** Vitrine "Em breve": sem preço nem checkout. Padrão false. */
@@ -356,6 +369,761 @@ const COURSES: SeedCourse[] = [
     ],
   },
   {
+    slug: 'pos-clinica-medica-caes-gatos',
+    title: 'Pós-graduação em Clínica Médica de Cães e Gatos',
+    subtitle:
+      'Mais segurança para diagnosticar, mais clareza para decidir, mais confiança para atender.',
+    description:
+      'Pós-graduação 100% online, com 360 horas e certificação, para o médico-veterinário que quer atender com segurança desde a primeira consulta. A formação começa pela semiologia, interpretação de exames e vacinação, avança pelas doenças infecciosas e parasitárias e percorre as principais áreas da clínica: cardiologia, sistema respiratório, endocrinologia, nefrologia e urologia, dermatologia, neurologia, oncologia, gastroenterologia e hepatologia, hematologia e medicina transfusional. São 100 horas de videoaulas gravadas somadas a leituras dirigidas, quatro casos clínicos por módulo (56 no total), exercícios de interpretação de exames, quizzes, fóruns, encontros síncronos e projeto aplicado.',
+    priceCents: 928800,
+    level: 'intermediario',
+    specialty: 'clinica-medica',
+    featuredRank: 90,
+    workloadHours: 360,
+    learningObjectives: [
+      'Realizar anamnese e exame físico orientados por problemas.',
+      'Construir listas de problemas e diagnósticos diferenciais de forma organizada.',
+      'Interpretar hemograma, perfil bioquímico, eletrólitos, urinálise e relação proteína/creatinina.',
+      'Atualizar protocolos de vacinação e avaliar risco individual, falhas vacinais e eventos adversos.',
+      'Conduzir as doenças infecciosas e parasitárias mais frequentes no contexto brasileiro.',
+      'Reconhecer e manejar as principais cardiopatias de cães e gatos.',
+      'Estabilizar e investigar o paciente com tosse, taquipneia e dispneia.',
+      'Diagnosticar e acompanhar diabetes, hiperadrenocorticismo, tireoidopatias e demais endocrinopatias.',
+      'Estadiar e conduzir o paciente renal segundo os critérios IRIS.',
+      'Abordar o paciente com prurido, otite e lesões cutâneas e controlar recidivas.',
+      'Realizar o exame neurológico, neurolocalizar e conduzir as principais doenças do sistema nervoso.',
+      'Estadiar o paciente oncológico e discutir quimioterapia, cirurgia e cuidados paliativos.',
+      'Investigar vômito, diarreia, icterícia e alterações hepáticas com um plano diagnóstico organizado.',
+      'Interpretar o hemograma e indicar hemocomponentes com segurança transfusional.',
+    ],
+    faq: [
+      {
+        question: 'Para quem é esta pós-graduação?',
+        answer:
+          'Para médicos-veterinários recém-formados que precisam ganhar segurança, generalistas que desejam fortalecer a clínica médica e profissionais que querem revisar conhecimentos, atualizar protocolos e oferecer um atendimento mais completo a cães e gatos.',
+      },
+      {
+        question: 'Qual a duração e a carga horária?',
+        answer:
+          'A formação tem duração de até 12 meses e 360 horas no total: 100 horas de videoaulas gravadas somadas a 240 horas de atividades acadêmicas complementares orientadas (leitura dirigida, casos clínicos, exercícios, avaliações, fóruns, encontros síncronos e projeto final).',
+      },
+      {
+        question: 'Como funciona o pagamento?',
+        answer:
+          'Investimento de R$ 9.288,00. Você pode parcelar em até 24x de R$ 387,00 no boleto, pagar no Pix à vista com 5% de desconto (R$ 8.823,60) ou no cartão com condição especial.',
+      },
+      {
+        question: 'Como funciona a metodologia?',
+        answer:
+          'Modalidade EaD, com os módulos liberados progressivamente no ambiente virtual. Cada módulo reúne videoaulas gravadas, material de apoio selecionado pelo professor, quiz de aprendizagem e quatro casos clínicos estruturados — 56 casos ao longo do curso —, além de exercícios de interpretação de exames.',
+      },
+      {
+        question: 'Como é a avaliação?',
+        answer:
+          'A avaliação é contínua e considera os quizzes, a resolução dos casos clínicos, os exercícios de interpretação de exames, a participação nos fóruns, as avaliações periódicas e a atividade final aplicada.',
+      },
+      {
+        question: 'O curso é certificado e reconhecido?',
+        answer:
+          'Sim. Curso certificado e reconhecido pelo MEC, ofertado em parceria com a Rede de Ensino Doctum. Ao concluir, você recebe o certificado de pós-graduação de 360 horas, disponível na área do aluno.',
+      },
+    ],
+    modules: [
+      {
+        title: 'Módulo 1: Semiologia, Interpretação de Exames e Vacinação',
+        lessons: [
+          {
+            title: 'Semiologia e exame físico geral com desenvolvimento do raciocínio clínico',
+            min: 52,
+            free: true,
+          },
+          {
+            title:
+              'Construção de suspeitas diagnósticas, diagnósticos diferenciais e priorização de condutas',
+            min: 52,
+          },
+          { title: 'Interpretação do hemograma completo', min: 52 },
+          { title: 'Perfil bioquímico, eletrólitos e glicemia aplicados ao caso clínico', min: 51 },
+          {
+            title: 'Urinálise, relação proteína/creatinina urinária, cultura e antibiograma',
+            min: 51,
+          },
+          { title: 'Medicina preventiva e acompanhamento por faixa etária', min: 51 },
+          {
+            title:
+              'Vacinação de cães e gatos: protocolos, avaliação de risco, falhas vacinais e eventos adversos',
+            min: 51,
+          },
+        ],
+      },
+      {
+        title: 'Módulo 2: Doenças Infecciosas e Parasitárias',
+        lessons: [
+          { title: 'Cinomose e parvovirose', min: 33 },
+          { title: 'Leptospirose e principais zoonoses infecciosas', min: 33 },
+          { title: 'Complexo respiratório infeccioso canino e felino', min: 33 },
+          { title: 'Erliquiose, anaplasmose, babesiose e micoplasmose hemotrópica', min: 33 },
+          { title: 'Leishmaniose visceral canina', min: 33 },
+          { title: 'FeLV e FIV', min: 33 },
+          { title: 'Peritonite infecciosa felina', min: 33 },
+          { title: 'Toxoplasmose', min: 33 },
+          { title: 'Esporotricose e outras micoses relevantes', min: 32 },
+          { title: 'Ectoparasitoses e controle integrado de pulgas, carrapatos e ácaros', min: 32 },
+          { title: 'Uso racional de antimicrobianos e antiparasitários', min: 32 },
+        ],
+      },
+      {
+        title: 'Módulo 3: Cardiologia',
+        lessons: [
+          { title: 'Fisiologia cardiovascular aplicada', min: 30 },
+          { title: 'Semiologia cardiovascular e interpretação de sopros', min: 30 },
+          { title: 'Eletrocardiograma: fundamentos e interpretação clínica', min: 30 },
+          { title: 'Doença valvar degenerativa mitral', min: 30 },
+          { title: 'Cardiomiopatia dilatada', min: 30 },
+          { title: 'Insuficiência cardíaca congestiva', min: 30 },
+          { title: 'Cardiomiopatia hipertrófica felina', min: 30 },
+          { title: 'Edema pulmonar cardiogênico', min: 30 },
+          { title: 'Hipertensão arterial e pulmonar', min: 30 },
+          { title: 'Tromboembolismo arterial', min: 30 },
+          { title: 'Arritmias e síncope', min: 30 },
+          { title: 'Radiografia, ecocardiografia e biomarcadores cardíacos', min: 30 },
+        ],
+      },
+      {
+        title: 'Módulo 4: Sistema Respiratório',
+        lessons: [
+          { title: 'Abordagem da tosse e da dispneia', min: 30 },
+          { title: 'Síndrome braquicefálica', min: 30 },
+          { title: 'Colapso de traqueia e paralisia laríngea', min: 30 },
+          { title: 'Bronquite crônica e asma felina', min: 30 },
+          { title: 'Pneumonias e doenças infecciosas', min: 30 },
+          { title: 'Edema pulmonar cardiogênico e não cardiogênico', min: 30 },
+          { title: 'Efusão pleural e pneumotórax', min: 30 },
+          { title: 'Neoplasias respiratórias', min: 30 },
+          { title: 'Radiografia torácica e TFAST', min: 30 },
+          { title: 'Gasometria, oximetria e capnografia', min: 30 },
+          { title: 'Broncoscopia e lavados respiratórios', min: 30 },
+          { title: 'Oxigenioterapia, nebulização e toracocentese', min: 30 },
+        ],
+      },
+      {
+        title: 'Módulo 5: Endocrinologia',
+        lessons: [
+          {
+            title: 'Diabetes mellitus em cães e gatos, insulinoterapia e monitoramento contínuo',
+            min: 66,
+          },
+          { title: 'Cetoacidose diabética', min: 66 },
+          { title: 'Hiperadrenocorticismo', min: 66 },
+          { title: 'Hipoadrenocorticismo e crise addisoniana', min: 66 },
+          { title: 'Hipotireoidismo canino', min: 66 },
+          { title: 'Hipertireoidismo felino', min: 65 },
+          { title: 'Insulinoma', min: 65 },
+          { title: 'Hiperaldosteronismo', min: 65 },
+          { title: 'Distúrbios do cálcio', min: 65 },
+          { title: 'Testes hormonais e interpretação crítica', min: 65 },
+          { title: 'Emergências endócrinas', min: 65 },
+        ],
+      },
+      {
+        title: 'Módulo 6: Nefrologia e Urologia',
+        lessons: [
+          { title: 'Fisiologia renal aplicada', min: 60 },
+          { title: 'Avaliação laboratorial da função renal e urinária', min: 60 },
+          { title: 'Hemogasometria e equilíbrio ácido-base', min: 60 },
+          { title: 'Doença renal crônica e estadiamento IRIS', min: 60 },
+          { title: 'Injúria renal aguda', min: 60 },
+          { title: 'Proteinúria e glomerulopatias', min: 60 },
+          { title: 'Pielonefrite e infecção urinária', min: 60 },
+          { title: 'Distúrbios eletrolíticos e acidobásicos', min: 60 },
+          { title: 'Urolitíase e ureterolitíase', min: 60 },
+          { title: 'Cistites e doença do trato urinário inferior', min: 60 },
+          { title: 'Obstrução ureteral e uretral', min: 60 },
+          { title: 'Incontinência urinária e prostatopatias', min: 60 },
+        ],
+      },
+      {
+        title: 'Módulo 7: Dermatologia',
+        lessons: [
+          { title: 'Fisiologia dermatológica e padrões lesionais', min: 60 },
+          { title: 'Dermatite atópica', min: 60 },
+          { title: 'Alergia alimentar', min: 60 },
+          { title: 'DAPP e ectoparasitoses', min: 60 },
+          { title: 'Piodermites e malasseziose', min: 60 },
+          { title: 'Dermatofitose', min: 60 },
+          { title: 'Demodicidose e escabiose', min: 60 },
+          { title: 'Otite externa e média', min: 60 },
+          { title: 'Doenças autoimunes e imunomediadas', min: 60 },
+          { title: 'Alopecias endócrinas', min: 60 },
+          { title: 'Citologia, raspado, tricograma e biópsia', min: 60 },
+          { title: 'Terapêutica dermatológica e controle de recidivas', min: 60 },
+        ],
+      },
+      {
+        title: 'Módulo 8: Neurologia',
+        lessons: [
+          { title: 'Exame neurológico e neurolocalização', min: 40 },
+          { title: 'Convulsões e epilepsia', min: 40 },
+          { title: 'Status epilepticus', min: 40 },
+          { title: 'Doença do disco intervertebral', min: 40 },
+          { title: 'Síndrome vestibular central e periférica', min: 40 },
+          { title: 'Meningoencefalites', min: 40 },
+          { title: 'Neuropatias e doenças neuromusculares', min: 40 },
+          { title: 'Mielopatias e doenças degenerativas', min: 40 },
+          { title: 'Trauma cranioencefálico e medular', min: 40 },
+          { title: 'Análise do líquido cerebrospinal', min: 40 },
+          { title: 'Tomografia e ressonância magnética', min: 40 },
+          { title: 'Dor neuropática e monitoramento neurológico', min: 40 },
+        ],
+      },
+      {
+        title: 'Módulo 9: Oncologia',
+        lessons: [
+          { title: 'Princípios do diagnóstico e estadiamento oncológico', min: 40 },
+          { title: 'Citologia, histopatologia e imuno-histoquímica', min: 40 },
+          { title: 'Linfoma', min: 40 },
+          { title: 'Mastocitoma', min: 40 },
+          { title: 'Neoplasias mamárias', min: 40 },
+          { title: 'Hemangiossarcoma', min: 40 },
+          { title: 'Osteossarcoma', min: 40 },
+          { title: 'Carcinoma de células escamosas', min: 40 },
+          { title: 'Melanoma e tumores de cavidade oral', min: 40 },
+          { title: 'Princípios de quimioterapia', min: 40 },
+          { title: 'Cirurgia oncológica e margens', min: 40 },
+          { title: 'Cuidados paliativos, dor e qualidade de vida', min: 40 },
+        ],
+      },
+      {
+        title: 'Módulo 10: Gastroenterologia e Hepatologia',
+        lessons: [
+          { title: 'Fisiologia dos sistemas gastroentérico, hepático e pancreático', min: 60 },
+          { title: 'Abordagem do vômito e da diarreia', min: 60 },
+          { title: 'Regurgitação, disfagia e doenças esofágicas', min: 60 },
+          { title: 'Gastrites e úlceras', min: 60 },
+          { title: 'Enteropatias crônicas e doença inflamatória intestinal', min: 60 },
+          { title: 'Pancreatite', min: 60 },
+          { title: 'Insuficiência pancreática exócrina', min: 60 },
+          { title: 'Giardíase, verminoses e protozooses intestinais', min: 60 },
+          { title: 'Constipação e megacólon', min: 60 },
+          { title: 'Obstruções e corpos estranhos', min: 60 },
+          { title: 'Hepatites e colangites', min: 60 },
+          { title: 'Lipidose hepática', min: 60 },
+        ],
+      },
+      {
+        title: 'Módulo 11: Hematologia e Medicina Transfusional',
+        lessons: [
+          { title: 'Interpretação do hemograma', min: 60 },
+          { title: 'Anemias regenerativas e não regenerativas', min: 60 },
+          { title: 'Anemia hemolítica imunomediada', min: 60 },
+          { title: 'Hemoparasitoses', min: 60 },
+          { title: 'Trombocitopenias', min: 60 },
+          { title: 'Coagulopatias e coagulação intravascular disseminada', min: 60 },
+          { title: 'Leucocitose e leucopenia', min: 60 },
+          { title: 'Neoplasias hematopoiéticas', min: 60 },
+          {
+            title: 'Avaliação de medula óssea: indicações, coleta e interpretação inicial',
+            min: 60,
+          },
+          { title: 'Tipagem e prova de compatibilidade', min: 60 },
+          { title: 'Indicação de sangue e hemocomponentes', min: 60 },
+          { title: 'Reações transfusionais e hemovigilância', min: 60 },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'pos-nefrologia-urologia',
+    cover: '/cursos/pos-nefrologia.png',
+    title: 'Pós-graduação em Nefrologia e Urologia de Cães e Gatos',
+    subtitle:
+      'Da fisiopatologia renal à tomada de decisão clínica, à cirurgia e às terapias renais substitutivas.',
+    description:
+      'Pós-graduação 100% online, com 360 horas e certificação, para quem quer investigar e conduzir o paciente renal e urinário com segurança. O curso parte das bases anatômicas, fisiológicas e fisiopatológicas do sistema urinário e avança para urinálise e biomarcadores, diagnóstico por imagem, hemogasometria e eletrólitos, injúria renal aguda, doença renal crônica, infecções urinárias, urolitíases, hipertensão, proteinúria e glomerulopatias, doenças do trato urinário inferior, cirurgia e técnicas dialíticas. São 80 horas de videoaulas gravadas somadas a leituras dirigidas, quatro casos clínicos por módulo (48 no total), exercícios de interpretação de exames, quizzes, fóruns, encontros síncronos e projeto aplicado.',
+    priceCents: 928800,
+    level: 'avancado',
+    specialty: 'nefrologia',
+    instructor: 'prof-luiz-henrique-guimaraes',
+    featuredRank: 80,
+    workloadHours: 360,
+    learningObjectives: [
+      'Compreender a anatomia, a fisiologia e a fisiopatogenia renal aplicadas à clínica.',
+      'Interpretar urinálise, densidade urinária, sedimento, proteinúria, creatinina, SDMA e biomarcadores.',
+      'Diferenciar azotemia pré-renal, renal e pós-renal e organizar a investigação diagnóstica.',
+      'Reconhecer os achados de ultrassonografia, radiografia e tomografia do trato urinário.',
+      'Interpretar hemogasometria, distúrbios ácido-base e alterações eletrolíticas.',
+      'Estadiar e acompanhar injúria renal aguda e doença renal crônica conforme os critérios IRIS.',
+      'Planejar fluidoterapia e monitorar balanço hídrico, débito urinário e sobrecarga de volume.',
+      'Investigar e tratar infecções urinárias com uso racional de antimicrobianos e stewardship.',
+      'Diagnosticar, tratar e prevenir a recidiva das principais urolitíases.',
+      'Mensurar e interpretar pressão arterial e proteinúria e abordar as glomerulopatias.',
+      'Conduzir cistite idiopática, obstrução uretral e demais doenças do trato urinário inferior.',
+      'Compreender as indicações de cirurgia, stent ureteral, bypass ureteral subcutâneo e terapias dialíticas.',
+    ],
+    faq: [
+      {
+        question: 'Para quem é esta pós-graduação?',
+        answer:
+          'Para médicos-veterinários que atendem cães e gatos na rotina clínica, atuam em hospitais, internação, emergência, terapia intensiva, laboratório, imagem ou cirurgia, ou desejam construir uma atuação especializada em Nefrologia e Urologia Veterinária.',
+      },
+      {
+        question: 'Qual a duração e a carga horária?',
+        answer:
+          'A formação tem duração de até 12 meses e 360 horas no total: 80 horas de videoaulas gravadas somadas a 280 horas de atividades acadêmicas complementares orientadas (leitura dirigida, casos clínicos, exercícios, avaliações, fóruns, encontros síncronos e projeto final).',
+      },
+      {
+        question: 'Como funciona o pagamento?',
+        answer:
+          'Investimento de R$ 9.288,00. Você pode parcelar em até 24x de R$ 387,00 no boleto, pagar no Pix à vista com 5% de desconto (R$ 8.823,60) ou no cartão com condição especial.',
+      },
+      {
+        question: 'Como funciona a metodologia?',
+        answer:
+          'Modalidade EaD, com os módulos liberados progressivamente no ambiente virtual. Cada módulo reúne videoaulas gravadas, material de apoio selecionado pelo professor e quatro casos clínicos estruturados — 48 casos ao longo do curso —, além de exercícios de urinálise, proteinúria, hemogasometria, eletrólitos, imagem, balanço hídrico e prescrição.',
+      },
+      {
+        question: 'Como é a avaliação?',
+        answer:
+          'A avaliação é contínua e considera os quizzes de cada módulo, a resolução dos casos clínicos, os exercícios de interpretação de exames, a participação nos fóruns, as avaliações periódicas e a atividade final aplicada.',
+      },
+      {
+        question: 'O curso é certificado e reconhecido?',
+        answer:
+          'Sim. Curso certificado e reconhecido pelo MEC, ofertado em parceria com a Rede de Ensino Doctum. Ao concluir, você recebe o certificado de pós-graduação de 360 horas, disponível na área do aluno.',
+      },
+    ],
+    modules: [
+      {
+        title: 'Módulo 1: Anatomia, Fisiologia e Fisiopatogenia Renal',
+        lessons: [
+          {
+            title: 'Anatomia macroscópica e microscópica do sistema urinário',
+            min: 36,
+            free: true,
+          },
+          { title: 'Estrutura e função do néfron', min: 36 },
+          { title: 'Hemodinâmica renal e taxa de filtração glomerular', min: 36 },
+          { title: 'Mecanismos de concentração e diluição da urina', min: 36 },
+          { title: 'Regulação de sódio, água, potássio, fósforo e cálcio', min: 36 },
+          { title: 'Sistema renina-angiotensina-aldosterona', min: 36 },
+          { title: 'Funções endócrinas dos rins', min: 36 },
+          { title: 'Mecanismos de lesão glomerular, tubular e intersticial', min: 36 },
+          { title: 'Fibrose e progressão da doença renal', min: 36 },
+          { title: 'Relação entre fisiopatologia e manifestações clínicas', min: 36 },
+        ],
+      },
+      {
+        title: 'Módulo 2: Diagnóstico Laboratorial em Nefrologia',
+        lessons: [
+          { title: 'Métodos de coleta urinária e qualidade da amostra', min: 39 },
+          { title: 'Urinálise física, química e microscópica', min: 39 },
+          { title: 'Densidade urinária e capacidade de concentração', min: 38 },
+          { title: 'Interpretação do sedimento urinário', min: 38 },
+          { title: 'Ureia, creatinina e SDMA', min: 38 },
+          { title: 'Biomarcadores de função e de lesão renal', min: 38 },
+          { title: 'Relação proteína:creatinina urinária', min: 38 },
+          { title: 'Albuminúria e proteinúria persistente', min: 38 },
+          { title: 'Urocultura, antibiograma e contaminação da amostra', min: 38 },
+          { title: 'Avaliação seriada e tendências laboratoriais', min: 38 },
+          { title: 'Diferenciação entre azotemia pré-renal, renal e pós-renal', min: 38 },
+        ],
+      },
+      {
+        title: 'Módulo 3: Diagnóstico por Imagem Aplicado à Nefrologia e Urologia',
+        lessons: [
+          { title: 'Anatomia ultrassonográfica normal dos rins e trato urinário', min: 44 },
+          { title: 'Alterações de ecogenicidade, arquitetura e dimensões renais', min: 44 },
+          { title: 'Pieloectasia, hidronefrose e hidroureter', min: 44 },
+          { title: 'Ureterólitos e obstruções', min: 44 },
+          { title: 'Avaliação ultrassonográfica da bexiga e uretra', min: 44 },
+          { title: 'Urolitíases radiopacas e radiolucentes', min: 44 },
+          { title: 'Radiografia simples e estudos contrastados', min: 44 },
+          { title: 'Tomografia computadorizada aplicada ao trato urinário', min: 43 },
+          { title: 'Massas renais e vesicais', min: 43 },
+          { title: 'Planejamento de procedimentos guiados por imagem', min: 43 },
+          { title: 'Integração entre imagem, laboratório e clínica', min: 43 },
+        ],
+      },
+      {
+        title: 'Módulo 4: Hemogasometria, Equilíbrio Ácido-Base e Distúrbios Eletrolíticos',
+        lessons: [
+          { title: 'Coleta e interpretação da hemogasometria', min: 36 },
+          { title: 'pH, bicarbonato, pressão de dióxido de carbono e excesso de bases', min: 36 },
+          { title: 'Acidose e alcalose metabólicas', min: 36 },
+          { title: 'Distúrbios respiratórios e alterações mistas', min: 36 },
+          { title: 'Ânion gap e lactato', min: 36 },
+          { title: 'Hipercalemia e hipocalemia', min: 36 },
+          { title: 'Distúrbios de sódio e cloro', min: 36 },
+          { title: 'Alterações de cálcio, fósforo e magnésio', min: 36 },
+          { title: 'Cálculo e planejamento da correção eletrolítica', min: 36 },
+          { title: 'Monitoramento e prevenção de correções excessivamente rápidas', min: 36 },
+        ],
+      },
+      {
+        title: 'Módulo 5: Injúria Renal Aguda Aplicada à Rotina Clínica',
+        lessons: [
+          { title: 'Definição e classificação da injúria renal aguda', min: 40 },
+          { title: 'Classificação IRIS da IRA', min: 40 },
+          { title: 'Fatores de risco e diagnóstico precoce', min: 40 },
+          { title: 'Causas pré-renais, renais e pós-renais', min: 40 },
+          { title: 'Nefrotoxinas e prevenção de lesão renal', min: 40 },
+          { title: 'Fluidoterapia individualizada', min: 40 },
+          { title: 'Monitoramento do débito urinário', min: 40 },
+          { title: 'Oligúria, anúria e sobrecarga de volume', min: 40 },
+          { title: 'Uso racional de diuréticos', min: 40 },
+          { title: 'Nutrição e suporte do paciente crítico', min: 40 },
+          { title: 'Critérios de encaminhamento para diálise', min: 40 },
+          { title: 'Prognóstico e acompanhamento pós-alta', min: 40 },
+        ],
+      },
+      {
+        title: 'Módulo 6: Doença Renal Crônica Aplicada à Rotina Clínica',
+        lessons: [
+          { title: 'Definição e diagnóstico da doença renal crônica', min: 42 },
+          { title: 'Estadiamento IRIS', min: 42 },
+          { title: 'Subestadiamento por proteinúria e pressão arterial', min: 42 },
+          { title: 'Avaliação de progressão e estabilidade', min: 42 },
+          { title: 'Manejo nutricional e ingestão hídrica', min: 42 },
+          { title: 'Controle de hiperfosfatemia', min: 42 },
+          { title: 'Hipocalemia e acidose metabólica', min: 42 },
+          { title: 'Anemia da doença renal crônica', min: 41 },
+          { title: 'Distúrbio mineral e ósseo renal', min: 41 },
+          { title: 'Controle de náusea, vômitos e inapetência', min: 41 },
+          { title: 'Fluidoterapia domiciliar quando indicada', min: 41 },
+          { title: 'Monitoramento longitudinal e qualidade de vida', min: 41 },
+          { title: 'Comunicação de prognóstico e cuidados paliativos', min: 41 },
+        ],
+      },
+      {
+        title: 'Módulo 7: Infecções do Trato Urinário em Cães e Gatos',
+        lessons: [
+          { title: 'Bacteriúria subclínica', min: 30 },
+          { title: 'Cistite bacteriana esporádica', min: 30 },
+          { title: 'Infecções recorrentes e complicadas', min: 30 },
+          { title: 'Pielonefrite', min: 30 },
+          { title: 'Prostatite bacteriana', min: 30 },
+          { title: 'Métodos de coleta para urocultura', min: 30 },
+          { title: 'Interpretação de contagem bacteriana e antibiograma', min: 30 },
+          { title: 'Seleção e duração da terapia antimicrobiana', min: 30 },
+          { title: 'Recidiva, reinfecção e persistência', min: 30 },
+          { title: 'Fatores predisponentes anatômicos e sistêmicos', min: 30 },
+          { title: 'Resistência antimicrobiana e stewardship', min: 30 },
+          { title: 'Monitoramento e prevenção de recorrências', min: 30 },
+        ],
+      },
+      {
+        title: 'Módulo 8: Urolitíase: Diagnóstico, Tratamento e Prevenção de Recidivas',
+        lessons: [
+          { title: 'Formação e classificação dos urólitos', min: 35 },
+          { title: 'Estruvita em cães e gatos', min: 35 },
+          { title: 'Oxalato de cálcio', min: 35 },
+          { title: 'Urato e cistina', min: 35 },
+          { title: 'Diagnóstico por urinálise e imagem', min: 35 },
+          { title: 'Dissolução médica e critérios de indicação', min: 35 },
+          { title: 'Remoção minimamente invasiva e cirúrgica', min: 35 },
+          { title: 'Análise quantitativa dos urólitos', min: 35 },
+          { title: 'Manejo nutricional e ingestão hídrica', min: 35 },
+          { title: 'Controle de infecção associada', min: 35 },
+          { title: 'Monitoramento pós-tratamento', min: 35 },
+          { title: 'Prevenção de recidivas', min: 35 },
+        ],
+      },
+      {
+        title: 'Módulo 9: Intervenções Cirúrgicas em Nefrologia e Urologia',
+        lessons: [
+          { title: 'Planejamento pré-operatório do paciente renal e urinário', min: 39 },
+          { title: 'Nefrectomia e preservação da função contralateral', min: 39 },
+          { title: 'Nefrotomia e pielotomia', min: 38 },
+          { title: 'Ureterotomia e reimplante ureteral', min: 38 },
+          { title: 'Stent ureteral e bypass ureteral subcutâneo', min: 38 },
+          { title: 'Cistotomia', min: 38 },
+          { title: 'Uretrostomias e procedimentos uretrais', min: 38 },
+          { title: 'Correção de anomalias e traumas urinários', min: 38 },
+          { title: 'Cuidados anestésicos e analgesia', min: 38 },
+          { title: 'Monitoramento pós-operatório', min: 38 },
+          { title: 'Extravasamento urinário, obstrução e infecção como complicações', min: 38 },
+        ],
+      },
+      {
+        title: 'Módulo 10: Hipertensão Arterial, Proteinúria e Glomerulopatias',
+        lessons: [
+          { title: 'Fisiopatologia da hipertensão arterial sistêmica', min: 35 },
+          { title: 'Técnicas de mensuração da pressão arterial', min: 35 },
+          { title: 'Classificação de risco e lesão em órgãos-alvo', min: 35 },
+          { title: 'Hipertensão associada à doença renal', min: 35 },
+          { title: 'Proteinúria fisiológica e patológica', min: 35 },
+          { title: 'Relação proteína:creatinina urinária', min: 35 },
+          { title: 'Proteinúria glomerular e não glomerular', min: 35 },
+          { title: 'Glomerulopatias imunomediadas e secundárias', min: 35 },
+          { title: 'Investigação etiológica', min: 35 },
+          { title: 'Terapias antiproteinúricas', min: 35 },
+          { title: 'Bloqueio do sistema renina-angiotensina-aldosterona', min: 35 },
+          { title: 'Monitoramento e prognóstico', min: 35 },
+        ],
+      },
+      {
+        title: 'Módulo 11: Doenças do Trato Urinário Inferior',
+        lessons: [
+          { title: 'Doença do trato urinário inferior felino', min: 25 },
+          { title: 'Cistite idiopática felina', min: 25 },
+          { title: 'Obstrução uretral e estabilização inicial', min: 25 },
+          { title: 'Cateterização e cuidados pós-desobstrução', min: 25 },
+          { title: 'Diurese pós-obstrutiva', min: 25 },
+          { title: 'Tampões e estenoses uretrais', min: 25 },
+          { title: 'Manejo ambiental multimodal', min: 25 },
+          { title: 'Cistites não infecciosas em cães', min: 25 },
+          { title: 'Incontinência urinária', min: 25 },
+          { title: 'Neoplasias vesicais e uretrais', min: 25 },
+          { title: 'Recorrência e prevenção', min: 25 },
+          { title: 'Indicações de encaminhamento cirúrgico', min: 25 },
+        ],
+      },
+      {
+        title: 'Módulo 12: Terapias Renais Substitutivas e Técnicas Dialíticas',
+        lessons: [
+          { title: 'Princípios físicos da diálise', min: 20 },
+          { title: 'Indicações e contraindicações', min: 20 },
+          { title: 'Hemodiálise intermitente', min: 20 },
+          { title: 'Terapia renal substitutiva contínua', min: 20 },
+          { title: 'Diálise peritoneal', min: 20 },
+          { title: 'Hemoperfusão e remoção de toxinas', min: 20 },
+          { title: 'Acesso vascular', min: 20 },
+          { title: 'Anticoagulação', min: 20 },
+          { title: 'Prescrição e monitoramento dialítico', min: 20 },
+          { title: 'Complicações intradialíticas', min: 20 },
+          { title: 'Seleção de pacientes e prognóstico', min: 20 },
+          { title: 'Integração com serviços de referência', min: 20 },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'farmacoterapeutica-clinica',
+    cover: '/cursos/farmacologia-clinica.png',
+    title: 'Farmacoterapêutica Clínica em Cães e Gatos',
+    subtitle: 'Da escolha do fármaco à prescrição segura na rotina clínica.',
+    description:
+      'Curso de formação continuada, 100% online, com 26 horas de aulas gravadas e orientação eminentemente clínica. Parte dos fundamentos indispensáveis de farmacocinética e farmacodinâmica e concentra a maior carga na aplicação prática: seleção do fármaco, indicação e contraindicação, ajuste de dose, interações, monitoramento, segurança terapêutica e prescrição. O programa é organizado por situações clínicas e sistemas, com atenção às diferenças entre cães e gatos, ao uso racional de antimicrobianos, à farmacoterapia dermatológica, aos pacientes renais, hepáticos e geriátricos e aos erros de medicação mais frequentes.',
+    priceCents: 130000,
+    maxInstallments: 10,
+    level: 'intermediario',
+    specialty: 'farmacologia',
+    instructor: 'dr-filiphe-mesquita',
+    featuredRank: 70,
+    workloadHours: 26,
+    learningObjectives: [
+      'Revisar os princípios de farmacocinética e farmacodinâmica realmente aplicáveis à rotina.',
+      'Compreender as particularidades farmacológicas de cães e gatos, com ênfase no metabolismo felino.',
+      'Selecionar fármacos por indicação clínica, mecanismo de ação, contraindicações e interações.',
+      'Aplicar farmacoterapia racional às afecções neurológicas, dolorosas, cardiovasculares, renais, respiratórias, gastrointestinais e dermatológicas.',
+      'Utilizar antimicrobianos com critério, relacionando escolha empírica, cultura, antibiograma, resistência e descalonamento.',
+      'Reconhecer as particularidades terapêuticas de filhotes, geriátricos, gestantes, nefropatas, hepatopatas e pacientes críticos.',
+      'Realizar cálculos de dose, concentração, diluição e infusão contínua (CRI) com segurança.',
+      'Elaborar prescrições adequadas e reconhecer erros de medicação e situações de risco iatrogênico.',
+      'Definir parâmetros clínicos e laboratoriais de monitoramento terapêutico.',
+    ],
+    faq: [
+      {
+        question: 'Para quem é este curso?',
+        answer:
+          'Para médicos-veterinários que atuam ou pretendem atuar na clínica de cães e gatos, profissionais de pronto atendimento, internação e especialidades clínicas, e estudantes de Medicina Veterinária em fase final de graduação.',
+      },
+      {
+        question: 'Qual a carga horária?',
+        answer:
+          'São 26 horas de videoaulas gravadas, distribuídas em 9 módulos de curta duração. Apostila digital, quadros-resumo, tabelas de cálculo, quizzes, casos clínicos comentados e modelos de prescrição acompanham o curso sem ampliar a carga de aulas gravadas.',
+      },
+      {
+        question: 'Como funciona o pagamento?',
+        answer:
+          'Investimento de R$ 1.300,00. Você pode parcelar em até 10x de R$ 130,00 ou pagar no Pix à vista com 5% de desconto (R$ 1.235,00).',
+      },
+      {
+        question: 'Como funciona a metodologia?',
+        answer:
+          'Curso EaD com videoaulas gravadas em módulos curtos e foco em decisão terapêutica. As aulas trazem discussão de casos, algoritmos, tabelas comparativas de classes farmacológicas, resolução de cálculos e análise de prescrições.',
+      },
+      {
+        question: 'Como é a avaliação?',
+        answer:
+          'Por quizzes ao final dos módulos e uma avaliação final objetiva sobre tomada de decisão farmacoterapêutica, cálculo de doses, interpretação de interações e segurança na prescrição.',
+      },
+      {
+        question: 'Quem coordena o curso?',
+        answer:
+          'A coordenação científica é do Prof. Dr. Filiphe de Paula Nunes Mesquita, mestre em Farmacologia pelo ICB-USP e doutor em Farmacologia pela FCM-Unicamp, com docência complementada por professores convidados conforme a necessidade do programa.',
+      },
+    ],
+    modules: [
+      {
+        title: 'Módulo 1: Bases Práticas da Farmacoterapêutica Clínica',
+        lessons: [
+          {
+            title:
+              'Farmacocinética aplicada: absorção, biodisponibilidade, distribuição, metabolismo e excreção',
+            min: 22,
+            free: true,
+          },
+          {
+            title:
+              'Farmacodinâmica aplicada à escolha terapêutica: receptores, agonismo, antagonismo, potência e eficácia',
+            min: 22,
+          },
+          { title: 'Meia-vida, intervalo entre doses e estado de equilíbrio', min: 22 },
+          { title: 'Vias de administração e impacto clínico', min: 21 },
+          { title: 'Particularidades metabólicas dos felinos', min: 21 },
+          { title: 'Fatores que modificam a resposta aos fármacos', min: 21 },
+          { title: 'Princípios de ajuste de dose em disfunção renal e hepática', min: 21 },
+        ],
+      },
+      {
+        title: 'Módulo 2: Analgesia, Inflamação e Farmacologia Neurológica',
+        lessons: [
+          {
+            title: 'AINEs: indicações, contraindicações, eventos adversos e monitoramento',
+            min: 27,
+          },
+          { title: 'Glicocorticoides: potência, equivalência, uso racional e desmame', min: 27 },
+          { title: 'Opioides e analgesia multimodal', min: 26 },
+          { title: 'Dipirona e outros analgésicos de uso clínico', min: 26 },
+          { title: 'Gabapentina e pregabalina', min: 26 },
+          { title: 'Anticonvulsivantes: fenobarbital, levetiracetam e benzodiazepínicos', min: 26 },
+          { title: 'Sedativos de rotina e cuidados na associação de fármacos', min: 26 },
+          { title: 'Combinações de risco e interações relevantes', min: 26 },
+        ],
+      },
+      {
+        title: 'Módulo 3: Farmacoterapêutica Cardiovascular, Renal e Respiratória',
+        lessons: [
+          {
+            title:
+              'Inotrópicos positivos, vasodilatadores e moduladores do sistema renina-angiotensina-aldosterona',
+            min: 27,
+          },
+          {
+            title: 'Diuréticos: furosemida, espironolactona e princípios de uso racional',
+            min: 27,
+          },
+          { title: 'Amlodipino e terapêutica da hipertensão', min: 26 },
+          { title: 'Antiarrítmicos mais utilizados na rotina', min: 26 },
+          { title: 'Ajustes farmacológicos no paciente renal', min: 26 },
+          {
+            title: 'Broncodilatadores, corticoides inalatórios, antitussígenos e mucolíticos',
+            min: 26,
+          },
+          { title: 'Nebulização e vias inalatórias', min: 26 },
+          {
+            title: 'Monitoramento renal, eletrolítico e cardiovascular relacionado ao tratamento',
+            min: 26,
+          },
+        ],
+      },
+      {
+        title: 'Módulo 4: Farmacoterapêutica Gastrointestinal e Hepatobiliar',
+        lessons: [
+          { title: 'Antieméticos: maropitant, ondansetrona e metoclopramida', min: 23 },
+          { title: 'Procinéticos e moduladores da motilidade gastrointestinal', min: 23 },
+          {
+            title: 'Inibidores de bomba de prótons, antagonistas H2 e protetores de mucosa',
+            min: 23,
+          },
+          { title: 'Laxativos, moduladores de fezes e terapêutica da constipação', min: 23 },
+          { title: 'Uso racional de fármacos na diarreia', min: 22 },
+          { title: 'Hepatoprotetores e agentes empregados em doenças hepatobiliares', min: 22 },
+          { title: 'Ácido ursodesoxicólico e S-adenosilmetionina', min: 22 },
+          {
+            title: 'Escolha terapêutica baseada em sinais clínicos e mecanismo fisiopatológico',
+            min: 22,
+          },
+        ],
+      },
+      {
+        title: 'Módulo 5: Antimicrobianos e Uso Racional',
+        lessons: [
+          { title: 'Princípios de antibioticoterapia e seleção racional', min: 27 },
+          { title: 'Quando o antibiótico está e quando não está indicado', min: 27 },
+          { title: 'Escolha empírica versus cultura e antibiograma', min: 27 },
+          { title: 'Penicilinas, cefalosporinas e tetraciclinas', min: 27 },
+          {
+            title: 'Fluoroquinolonas, macrolídeos, sulfonamidas, nitroimidazóis e aminoglicosídeos',
+            min: 27,
+          },
+          { title: 'Resistência antimicrobiana, descalonamento e duração do tratamento', min: 27 },
+          { title: 'Associações antimicrobianas: quando usar e quando evitar', min: 26 },
+          { title: 'Impacto renal e hepático de classes selecionadas', min: 26 },
+          { title: 'Particularidades da antibioticoterapia em gatos', min: 26 },
+        ],
+      },
+      {
+        title: 'Módulo 6: Farmacoterapêutica Dermatológica Básica',
+        lessons: [
+          { title: 'Controle do prurido e da inflamação cutânea', min: 21 },
+          { title: 'Oclacitinib, lokivetmab, ciclosporina e glicocorticoides', min: 21 },
+          { title: 'Anti-histamínicos: indicações e limitações', min: 21 },
+          { title: 'Antimicrobianos em piodermites e princípios de uso racional', min: 21 },
+          { title: 'Terapia tópica: clorexidina, peróxido de benzoíla e outros agentes', min: 21 },
+          {
+            title: 'Antifúngicos tópicos e sistêmicos: itraconazol, cetoconazol e terbinafina',
+            min: 21,
+          },
+          { title: 'Terapêutica básica das otites', min: 21 },
+          { title: 'Isoxazolinas e controle de ectoparasitas', min: 21 },
+          { title: 'Manejo farmacológico das dermatopatias alérgicas', min: 21 },
+          { title: 'Terapia de suporte da barreira cutânea', min: 21 },
+        ],
+      },
+      {
+        title: 'Módulo 7: Antiparasitários e Farmacoterapia de Doenças Infecciosas Frequentes',
+        lessons: [
+          { title: 'Endoparasiticidas e ectoparasiticidas mais utilizados', min: 20 },
+          { title: 'Isoxazolinas, lactonas macrocíclicas, benzimidazóis e praziquantel', min: 20 },
+          { title: 'Princípios farmacoterapêuticos nas hemoparasitoses', min: 20 },
+          {
+            title: 'Uso de doxiciclina e imidocarb: indicações, cautelas e monitoramento',
+            min: 20,
+          },
+          { title: 'Princípios terapêuticos aplicados à leishmaniose', min: 20 },
+          { title: 'Giardíase e outras parasitoses de ocorrência frequente', min: 20 },
+        ],
+      },
+      {
+        title: 'Módulo 8: Pacientes Especiais, Interações e Monitoramento Terapêutico',
+        lessons: [
+          { title: 'Farmacoterapia em filhotes e animais geriátricos', min: 19 },
+          { title: 'Cuidados em gestantes e lactantes', min: 19 },
+          { title: 'Ajustes em nefropatas e hepatopatas', min: 19 },
+          { title: 'Paciente crítico e alterações farmacocinéticas relevantes', min: 19 },
+          { title: 'Interações medicamentosas clinicamente importantes', min: 19 },
+          { title: 'Monitoramento terapêutico: o que acompanhar e quando reavaliar', min: 19 },
+          {
+            title:
+              'Monitoramento de AINEs, anticonvulsivantes, diuréticos, moduladores cardiovasculares e antimicrobianos',
+            min: 18,
+          },
+          { title: 'Polifarmácia e prevenção de duplicidade terapêutica', min: 18 },
+        ],
+      },
+      {
+        title: 'Módulo 9: Prescrição, Cálculo de Doses e Prevenção de Iatrogenias',
+        lessons: [
+          { title: 'Princípios de prescrição veterinária e organização do receituário', min: 9 },
+          { title: 'Cálculo de dose em mg/kg e conversão para volume', min: 9 },
+          {
+            title: 'Cálculo a partir de concentrações em mg/mL, porcentagem e outras apresentações',
+            min: 9,
+          },
+          { title: 'Diluições e transformação de unidades', min: 9 },
+          { title: 'Taxa de infusão contínua (CRI)', min: 9 },
+          { title: 'Conferência de cálculos e prevenção de erros de dez vezes', min: 9 },
+          { title: 'Erros comuns de dose, via, frequência e concentração', min: 9 },
+          { title: 'Duplicidade de princípios ativos e associações inadequadas', min: 9 },
+          { title: 'Situações clássicas de toxicidade e iatrogenia em cães e gatos', min: 9 },
+          { title: 'Discussão final de casos clínicos e prescrições', min: 9 },
+        ],
+      },
+    ],
+  },
+  {
     slug: 'pos-medicina-felina',
     cover: '/cursos/pos-medicina-felina.png',
     title: 'Pós-graduação em Medicina Felina',
@@ -414,35 +1182,6 @@ const COURSES: SeedCourse[] = [
     ],
   },
   {
-    slug: 'farmacologia-clinica',
-    cover: '/cursos/farmacologia-clinica.png',
-    title: 'Curso de Farmacologia Clínica de Pequenos Animais',
-    subtitle: 'Prescrição segura e racional na rotina.',
-    description:
-      'Bases da farmacologia aplicada à clínica: farmacocinética, principais classes, interações e prescrição racional.',
-    priceCents: 119700,
-    level: 'intermediario',
-    specialty: 'farmacologia',
-    instructor: 'dr-carlos-nunes',
-    comingSoon: true,
-    modules: [
-      {
-        title: 'Fundamentos',
-        lessons: [
-          { title: 'Farmacocinética e farmacodinâmica', min: 14, free: true },
-          { title: 'Cálculo de doses e vias de administração', min: 16 },
-        ],
-      },
-      {
-        title: 'Terapêutica aplicada',
-        lessons: [
-          { title: 'Antimicrobianos: uso racional', min: 20 },
-          { title: 'Analgesia e anti-inflamatórios', min: 18 },
-        ],
-      },
-    ],
-  },
-  {
     slug: 'patologia-geral-forense',
     cover: '/cursos/patologia-geral-forense.png',
     title: 'Curso de Patologia Geral e Forense',
@@ -467,35 +1206,6 @@ const COURSES: SeedCourse[] = [
         lessons: [
           { title: 'Necropsia pericial e coleta de amostras', min: 22 },
           { title: 'Estimativa de causa e cronotanatognose', min: 19 },
-        ],
-      },
-    ],
-  },
-  {
-    slug: 'pos-nefrologia',
-    cover: '/cursos/pos-nefrologia.png',
-    title: 'Pós-graduação em Nefrologia de Pequenos Animais',
-    subtitle: 'Do diagnóstico precoce à terapia renal substitutiva.',
-    description:
-      'Formação em nefrologia e urologia: injúria renal aguda e crônica, proteinúria, distúrbios hidroeletrolíticos e diálise.',
-    priceCents: 239700,
-    level: 'avancado',
-    specialty: 'nefrologia',
-    instructor: 'dr-ricardo-mendes',
-    comingSoon: true,
-    modules: [
-      {
-        title: 'Avaliação renal',
-        lessons: [
-          { title: 'Marcadores e estadiamento IRIS', min: 16, free: true },
-          { title: 'Proteinúria e hipertensão', min: 20 },
-        ],
-      },
-      {
-        title: 'Manejo',
-        lessons: [
-          { title: 'Injúria renal aguda', min: 22 },
-          { title: 'Terapia renal substitutiva', min: 24 },
         ],
       },
     ],
@@ -607,12 +1317,13 @@ async function main(): Promise<void> {
       subtitle: c.subtitle,
       description: c.description,
       priceCents: c.priceCents,
+      maxInstallments: c.maxInstallments ?? 24,
       level: c.level,
       status: 'published' as const,
       featuredRank: c.featuredRank ?? 0,
       comingSoon: c.comingSoon ?? false,
       specialtyId: specialtyId.get(c.specialty) ?? null,
-      instructorId: instructorId.get(c.instructor) ?? null,
+      instructorId: (c.instructor ? instructorId.get(c.instructor) : undefined) ?? null,
       coverUrl: c.cover ? `${config.APP_URL}${c.cover}` : null,
       workloadHours: c.workloadHours ?? null,
       learningObjectives: c.learningObjectives ?? [],

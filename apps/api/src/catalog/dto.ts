@@ -38,6 +38,8 @@ export const courseSummarySchema = z.object({
   title: z.string(),
   subtitle: z.string().nullable(),
   priceCents: z.number().int(),
+  /** Teto de parcelas sem juros deste curso (varia por produto). */
+  maxInstallments: z.number().int().positive(),
   level: z.enum(['iniciante', 'intermediario', 'avancado']),
   comingSoon: z.boolean(),
   coverUrl: z.string().nullable(),

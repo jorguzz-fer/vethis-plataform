@@ -45,6 +45,7 @@ export class CheckoutService {
         title: courses.title,
         coverUrl: courses.coverUrl,
         priceCents: courses.priceCents,
+        maxInstallments: courses.maxInstallments,
       })
       .from(courses)
       .where(
@@ -66,7 +67,11 @@ export class CheckoutService {
 
     // Regra comercial (server-authoritative): Pix à vista tem desconto; cartão e
     // boleto/carnê pagam o preço cheio parcelável (até o teto).
-    const installments = effectiveInstallments(dto.method, dto.installments);
+    const installments = effectiveInstallments(
+      dto.method,
+      dto.installments,
+      course.maxInstallments,
+    );
     const amountCents = netAmountCents(dto.method, course.priceCents);
 
     const [order] = await this.db
