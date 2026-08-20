@@ -1,5 +1,5 @@
 import { hash } from '@node-rs/argon2';
-import { and, eq, isNull, notInArray } from 'drizzle-orm';
+import { and, eq, inArray, isNull, notInArray } from 'drizzle-orm';
 import { loadConfig, type AppConfig } from '../config/configuration';
 import { createDb } from './client';
 import { courseModules, courses, instructors, lessons, specialties } from './schema/catalog';
@@ -102,10 +102,290 @@ interface SeedCourse {
   learningObjectives?: string[];
   faq?: SeedFaqItem[];
   modules: SeedModule[];
+  /**
+   * Preserva capa e instrutor já existentes no banco (não sobrescreve em re-seed).
+   * Para cursos cujo comercial/coordenação é gerido no backoffice.
+   */
+  preserveCoverInstructor?: boolean;
+  /**
+   * Recria os módulos/aulas a partir do seed a cada re-seed (em vez de só popular
+   * quando o curso ainda não tem módulos). Use para manter a grade sincronizada.
+   */
+  replaceModules?: boolean;
 }
 
 /** Catálogo Vethis — cursos publicados com módulos e aulas. */
 const COURSES: SeedCourse[] = [
+  {
+    slug: 'pos-clinica-medica-caes-gatos',
+    title: 'Pós-graduação em Clínica Médica de Cães e Gatos',
+    subtitle:
+      'Mais segurança para diagnosticar, mais clareza para decidir, mais confiança para atender.',
+    description:
+      'A Pós-graduação em Clínica Médica de Cães e Gatos foi criada para o médico-veterinário que deseja atender com mais segurança desde a primeira consulta. A formação começa pela semiologia, interpretação de exames e vacinação, avança pelas doenças infecciosas e parasitárias e percorre as principais áreas da clínica médica, sempre com foco no que realmente aparece na rotina: cardiologia e sistema respiratório, endocrinologia, nefrologia e urologia, dermatologia, neurologia, oncologia, gastroenterologia e hepatologia, hematologia e medicina transfusional e nutrição clínica. Mais do que apresentar doenças, o curso desenvolve o raciocínio clínico: o aluno aprende a construir listas de problemas, interpretar exames, estabelecer diagnósticos diferenciais, elaborar planos terapêuticos e monitorar a evolução dos pacientes. São 360 horas, com duração de até 12 meses, na modalidade EaD, combinando videoaulas gravadas, leitura dirigida, casos clínicos, exercícios de interpretação de exames, quizzes, fóruns, encontros síncronos e projeto aplicado.',
+    priceCents: 928800,
+    level: 'avancado',
+    specialty: 'clinica-medica',
+    // Instrutor/coordenação e capa são geridos no backoffice: preservados no re-seed.
+    instructor: 'coordenacao-clinica-felinos',
+    preserveCoverInstructor: true,
+    replaceModules: true,
+    workloadHours: 360,
+    learningObjectives: [
+      'Realizar anamnese e exame físico orientados por problemas.',
+      'Construir listas de problemas e diagnósticos diferenciais de forma organizada.',
+      'Interpretar exames laboratoriais, radiográficos, ultrassonográficos e cardiológicos.',
+      'Reconhecer as principais doenças de cada sistema e suas apresentações clínicas.',
+      'Planejar condutas terapêuticas individualizadas e monitorar respostas ao tratamento.',
+      'Reconhecer situações de urgência, instabilidade e necessidade de encaminhamento.',
+      'Aplicar protocolos atualizados, considerando riscos, prognóstico e qualidade de vida.',
+    ],
+    faq: [
+      {
+        question: 'Para quem é esta pós-graduação?',
+        answer:
+          'Para médicos-veterinários recém-formados ou com experiência que atuam, ou pretendem atuar, em clínicas, hospitais, internação, emergência, terapia intensiva e atendimento de cães e gatos, incluindo quem deseja revisar conhecimentos e atualizar protocolos.',
+      },
+      {
+        question: 'Qual a duração e a carga horária?',
+        answer:
+          'A formação tem duração máxima de 12 meses e 360 horas no total: 120 horas de videoaulas gravadas somadas a atividades acadêmicas complementares orientadas (leitura dirigida, casos clínicos, exercícios, fóruns, encontros síncronos e projeto aplicado).',
+      },
+      {
+        question: 'Como funciona a metodologia?',
+        answer:
+          'Modalidade EaD, com liberação progressiva dos módulos no ambiente virtual. Cada módulo reúne videoaulas, material de apoio (artigos, consensos e guidelines), quatro casos clínicos, quiz e exercícios de interpretação de exames, no seu ritmo e de qualquer dispositivo.',
+      },
+      {
+        question: 'Como é a avaliação?',
+        answer:
+          'A avaliação é contínua e considera o desempenho nos quizzes, a resolução dos casos clínicos, a interpretação de exames, a participação nos fóruns, avaliações periódicas e a atividade final aplicada.',
+      },
+      {
+        question: 'Quais áreas o curso cobre?',
+        answer:
+          'Semiologia e interpretação de exames, vacinação, doenças infecciosas e parasitárias, cardiologia e sistema respiratório, endocrinologia, nefrologia e urologia, dermatologia, neurologia, oncologia, gastroenterologia e hepatologia, hematologia e medicina transfusional e nutrição clínica.',
+      },
+    ],
+    modules: [
+      {
+        title: 'Módulo 1: Semiologia, Interpretação de Exames e Vacinação',
+        lessons: [
+          {
+            title: 'Semiologia e exame físico geral com desenvolvimento do raciocínio clínico',
+            min: 15,
+          },
+          {
+            title:
+              'Construção de suspeitas diagnósticas, diagnósticos diferenciais e priorização de condutas',
+            min: 15,
+          },
+          { title: 'Interpretação do hemograma completo', min: 15 },
+          { title: 'Perfil bioquímico, eletrólitos e glicemia aplicados ao caso clínico', min: 15 },
+          {
+            title: 'Urinálise, relação proteína/creatinina urinária, cultura e antibiograma',
+            min: 15,
+          },
+          { title: 'Medicina preventiva e acompanhamento por faixa etária', min: 15 },
+          {
+            title:
+              'Vacinação de cães e gatos: protocolos, avaliação de risco, falhas vacinais e eventos adversos',
+            min: 15,
+          },
+        ],
+      },
+      {
+        title: 'Módulo 2: Doenças Infecciosas e Parasitárias',
+        lessons: [
+          { title: 'Cinomose e parvovirose', min: 15 },
+          { title: 'Leptospirose e principais zoonoses infecciosas', min: 15 },
+          { title: 'Complexo respiratório infeccioso canino e felino', min: 15 },
+          { title: 'Erliquiose, anaplasmose, babesiose e micoplasmose hemotrópica', min: 15 },
+          { title: 'Leishmaniose visceral canina', min: 15 },
+          { title: 'FeLV e FIV', min: 15 },
+          { title: 'Peritonite infecciosa felina', min: 15 },
+          { title: 'Toxoplasmose', min: 15 },
+          { title: 'Esporotricose e outras micoses relevantes', min: 15 },
+          { title: 'Ectoparasitoses e controle integrado de pulgas, carrapatos e ácaros', min: 15 },
+          { title: 'Uso racional de antimicrobianos e antiparasitários', min: 15 },
+        ],
+      },
+      {
+        title: 'Módulo 3: Cardiologia e Sistema Respiratório',
+        lessons: [
+          { title: 'Fisiologia cardiovascular aplicada', min: 15 },
+          { title: 'Semiologia cardiovascular e interpretação de sopros', min: 15 },
+          { title: 'Eletrocardiograma: fundamentos e interpretação clínica', min: 15 },
+          { title: 'Doença valvar degenerativa mitral', min: 15 },
+          { title: 'Cardiomiopatia dilatada', min: 15 },
+          { title: 'Insuficiência cardíaca congestiva', min: 15 },
+          { title: 'Cardiomiopatia hipertrófica felina', min: 15 },
+          { title: 'Hipertensão arterial e pulmonar', min: 15 },
+          { title: 'Tromboembolismo arterial', min: 15 },
+          { title: 'Arritmias e síncope', min: 15 },
+          { title: 'Abordagem da tosse e da dispneia', min: 15 },
+          { title: 'Síndrome braquicefálica', min: 15 },
+          { title: 'Colapso de traqueia e paralisia laríngea', min: 15 },
+          { title: 'Bronquite crônica e asma felina', min: 15 },
+          { title: 'Pneumonias e doenças infecciosas respiratórias', min: 15 },
+          { title: 'Edema pulmonar cardiogênico e não cardiogênico', min: 15 },
+          { title: 'Efusão pleural e pneumotórax', min: 15 },
+          { title: 'Neoplasias respiratórias', min: 15 },
+          {
+            title: 'Radiografia torácica, ecocardiografia, biomarcadores cardíacos e TFAST',
+            min: 15,
+          },
+          { title: 'Gasometria, oximetria e capnografia', min: 15 },
+          {
+            title:
+              'Broncoscopia, lavados respiratórios, oxigenioterapia, nebulização e toracocentese',
+            min: 15,
+          },
+        ],
+      },
+      {
+        title: 'Módulo 4: Endocrinologia',
+        lessons: [
+          {
+            title: 'Diabetes mellitus em cães e gatos, insulinoterapia e monitoramento contínuo',
+            min: 15,
+          },
+          { title: 'Cetoacidose diabética', min: 15 },
+          { title: 'Hiperadrenocorticismo', min: 15 },
+          { title: 'Hipoadrenocorticismo e crise addisoniana', min: 15 },
+          { title: 'Hipotireoidismo canino', min: 15 },
+          { title: 'Hipertireoidismo felino', min: 15 },
+          { title: 'Insulinoma', min: 15 },
+          { title: 'Hiperaldosteronismo', min: 15 },
+          { title: 'Distúrbios do cálcio', min: 15 },
+          { title: 'Testes hormonais e interpretação crítica', min: 15 },
+          { title: 'Emergências endócrinas', min: 15 },
+        ],
+      },
+      {
+        title: 'Módulo 5: Nefrologia e Urologia',
+        lessons: [
+          { title: 'Fisiologia renal aplicada', min: 15 },
+          { title: 'Avaliação laboratorial da função renal e urinária', min: 15 },
+          { title: 'Hemogasometria e equilíbrio ácido-base', min: 15 },
+          { title: 'Doença renal crônica e estadiamento IRIS', min: 15 },
+          { title: 'Injúria renal aguda', min: 15 },
+          { title: 'Proteinúria e glomerulopatias', min: 15 },
+          { title: 'Pielonefrite e infecção urinária', min: 15 },
+          { title: 'Distúrbios eletrolíticos e acidobásicos', min: 15 },
+          { title: 'Urolitíase e ureterolitíase', min: 15 },
+          { title: 'Cistites e doença do trato urinário inferior', min: 15 },
+          { title: 'Obstrução ureteral e uretral', min: 15 },
+          { title: 'Incontinência urinária e prostatopatias', min: 15 },
+        ],
+      },
+      {
+        title: 'Módulo 6: Dermatologia',
+        lessons: [
+          { title: 'Fisiologia dermatológica e padrões lesionais', min: 15 },
+          { title: 'Dermatite atópica', min: 15 },
+          { title: 'Alergia alimentar', min: 15 },
+          { title: 'DAPP e ectoparasitoses', min: 15 },
+          { title: 'Piodermites e malasseziose', min: 15 },
+          { title: 'Dermatofitose', min: 15 },
+          { title: 'Demodicidose e escabiose', min: 15 },
+          { title: 'Otite externa e média', min: 15 },
+          { title: 'Doenças autoimunes e imunomediadas', min: 15 },
+          { title: 'Alopecias endócrinas', min: 15 },
+          { title: 'Citologia, raspado, tricograma e biópsia', min: 15 },
+          { title: 'Terapêutica dermatológica integrada e controle de recidivas', min: 15 },
+        ],
+      },
+      {
+        title: 'Módulo 7: Neurologia',
+        lessons: [
+          { title: 'Exame neurológico e neurolocalização', min: 15 },
+          { title: 'Convulsões e epilepsia', min: 15 },
+          { title: 'Status epilepticus', min: 15 },
+          { title: 'Doença do disco intervertebral', min: 15 },
+          { title: 'Síndrome vestibular central e periférica', min: 15 },
+          { title: 'Meningoencefalites', min: 15 },
+          { title: 'Neuropatias e doenças neuromusculares', min: 15 },
+          { title: 'Mielopatias e doenças degenerativas', min: 15 },
+          { title: 'Trauma cranioencefálico e medular', min: 15 },
+          { title: 'Análise do líquido cerebrospinal', min: 15 },
+          { title: 'Tomografia e ressonância magnética', min: 15 },
+          { title: 'Dor neuropática e monitoramento neurológico', min: 15 },
+        ],
+      },
+      {
+        title: 'Módulo 8: Oncologia',
+        lessons: [
+          { title: 'Princípios do diagnóstico e estadiamento oncológico', min: 15 },
+          { title: 'Citologia, histopatologia e imunohistoquímica', min: 15 },
+          { title: 'Linfoma', min: 15 },
+          { title: 'Mastocitoma', min: 15 },
+          { title: 'Neoplasias mamárias', min: 15 },
+          { title: 'Hemangiossarcoma', min: 15 },
+          { title: 'Osteossarcoma', min: 15 },
+          { title: 'Carcinoma de células escamosas', min: 15 },
+          { title: 'Melanoma e tumores de cavidade oral', min: 15 },
+          { title: 'Princípios de quimioterapia', min: 15 },
+          { title: 'Cirurgia oncológica e margens', min: 15 },
+          { title: 'Cuidados paliativos, dor e qualidade de vida', min: 15 },
+        ],
+      },
+      {
+        title: 'Módulo 9: Gastroenterologia e Hepatologia',
+        lessons: [
+          { title: 'Fisiologia do sistema gastroentérico, hepático e pancreático', min: 15 },
+          { title: 'Abordagem do vômito e da diarreia', min: 15 },
+          { title: 'Regurgitação, disfagia e doenças esofágicas', min: 15 },
+          { title: 'Gastrites e úlceras', min: 15 },
+          { title: 'Enteropatias crônicas e doença inflamatória intestinal', min: 15 },
+          { title: 'Pancreatite', min: 15 },
+          { title: 'Insuficiência pancreática exócrina', min: 15 },
+          { title: 'Constipação e megacólon', min: 15 },
+          { title: 'Obstruções e corpos estranhos', min: 15 },
+          { title: 'Hepatites e colangites', min: 15 },
+          { title: 'Lipidose hepática', min: 15 },
+          { title: 'Shunt portossistêmico', min: 15 },
+          { title: 'Doenças da vesícula biliar e suporte nutricional', min: 15 },
+        ],
+      },
+      {
+        title: 'Módulo 10: Hematologia e Medicina Transfusional',
+        lessons: [
+          { title: 'Interpretação do hemograma', min: 15 },
+          { title: 'Anemias regenerativas e não regenerativas', min: 15 },
+          { title: 'Anemia hemolítica imunomediada', min: 15 },
+          { title: 'Hemoparasitoses', min: 15 },
+          { title: 'Trombocitopenias', min: 15 },
+          { title: 'Coagulopatias e coagulação intravascular disseminada', min: 15 },
+          { title: 'Leucocitose e leucopenia', min: 15 },
+          { title: 'Neoplasias hematopoiéticas', min: 15 },
+          {
+            title: 'Avaliação de medula óssea: indicações, coleta e interpretação inicial',
+            min: 15,
+          },
+          { title: 'Tipagem e prova de compatibilidade', min: 15 },
+          { title: 'Indicação de sangue e hemocomponentes', min: 15 },
+          { title: 'Reações transfusionais e hemovigilância', min: 15 },
+        ],
+      },
+      {
+        title: 'Módulo 11: Nutrição Clínica de Cães e Gatos',
+        lessons: [
+          {
+            title: 'Avaliação nutricional, escore de condição corporal e escore de massa muscular',
+            min: 15,
+          },
+          { title: 'Necessidades energéticas e cálculo de requerimentos', min: 15 },
+          { title: 'Nutrição de filhotes, adultos e pacientes idosos', min: 15 },
+          { title: 'Nutrição do paciente hospitalizado e suporte enteral', min: 15 },
+          { title: 'Dietas terapêuticas nas doenças gastrointestinais', min: 15 },
+          { title: 'Manejo nutricional das doenças renais e urinárias', min: 15 },
+          { title: 'Nutrição aplicada às principais endocrinopatias', min: 15 },
+          { title: 'Indicação, monitoramento e ajuste de dietas terapêuticas', min: 15 },
+        ],
+      },
+    ],
+  },
   {
     slug: 'pos-clinica-medica-felinos',
     title: 'Pós-graduação em Clínica Médica de Felinos',
@@ -618,21 +898,40 @@ async function main(): Promise<void> {
       learningObjectives: c.learningObjectives ?? [],
       faq: c.faq ?? [],
     };
+    // Em re-seed, opcionalmente preserva capa/instrutor já definidos no admin
+    // (não sobrescreve esses campos; os demais continuam sincronizados pelo seed).
+    const setScalars: Partial<typeof scalars> = { ...scalars };
+    if (c.preserveCoverInstructor) {
+      delete setScalars.coverUrl;
+      delete setScalars.instructorId;
+    }
     const [course] = await db
       .insert(courses)
       .values({ slug: c.slug, publishedAt: new Date(), ...scalars })
-      .onConflictDoUpdate({ target: courses.slug, set: scalars })
+      .onConflictDoUpdate({ target: courses.slug, set: setScalars })
       .returning({ id: courses.id });
     if (!course) continue;
 
-    // Só popula módulos/aulas quando o curso ainda não tem nenhum (evita duplicar
-    // em re-seed — o upsert acima sempre retorna a linha, criada ou atualizada).
+    // Módulos/aulas: por padrão só popula quando o curso ainda não tem nenhum
+    // (evita duplicar em re-seed). Com `replaceModules`, recria a grade a partir
+    // do seed — apaga os módulos/aulas atuais e insere os do seed.
     const [hasModule] = await db
       .select({ id: courseModules.id })
       .from(courseModules)
       .where(eq(courseModules.courseId, course.id))
       .limit(1);
-    if (hasModule) continue;
+    if (hasModule && !c.replaceModules) continue;
+    if (hasModule && c.replaceModules) {
+      const existing = await db
+        .select({ id: courseModules.id })
+        .from(courseModules)
+        .where(eq(courseModules.courseId, course.id));
+      const ids = existing.map((m) => m.id);
+      if (ids.length) {
+        await db.delete(lessons).where(inArray(lessons.moduleId, ids));
+        await db.delete(courseModules).where(eq(courseModules.courseId, course.id));
+      }
+    }
     let mPos = 0;
     for (const m of c.modules) {
       mPos += 1;
