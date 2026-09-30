@@ -49,6 +49,7 @@ export function CourseEditorPage() {
     specialtyId: '',
     instructorId: '',
     workloadHours: '',
+    featuredRank: '0',
     learningObjectives: [] as string[],
     faq: [] as FaqItem[],
   });
@@ -81,6 +82,7 @@ export function CourseEditorPage() {
           specialtyId: data.specialtyId ?? '',
           instructorId: data.instructorId ?? '',
           workloadHours: data.workloadHours != null ? String(data.workloadHours) : '',
+          featuredRank: String(data.featuredRank ?? 0),
           learningObjectives: data.learningObjectives ?? [],
           faq: data.faq ?? [],
         });
@@ -108,6 +110,7 @@ export function CourseEditorPage() {
       specialtyId: form.specialtyId || null,
       instructorId: form.instructorId || null,
       workloadHours: workload ? Math.max(0, Math.round(Number(workload) || 0)) : null,
+      featuredRank: Math.min(1000, Math.max(0, Math.round(Number(form.featuredRank) || 0))),
       learningObjectives: form.learningObjectives.map((s) => s.trim()).filter(Boolean),
       faq: form.faq
         .map((f) => ({ question: f.question.trim(), answer: f.answer.trim() }))
@@ -265,6 +268,20 @@ export function CourseEditorPage() {
               ))}
             </select>
           </label>
+        </div>
+
+        <div>
+          <Field
+            label="Ordem de destaque"
+            inputMode="numeric"
+            value={form.featuredRank}
+            onChange={(e) => set('featuredRank', e.target.value)}
+            placeholder="ex.: 100"
+          />
+          <p className="mt-1 text-xs text-muted">
+            Define a ordem na home e no catálogo: quanto maior o número, mais no topo. Empate é
+            resolvido por ordem alfabética. Use 0 para deixar por último.
+          </p>
         </div>
 
         <div className="grid grid-cols-2 gap-4">

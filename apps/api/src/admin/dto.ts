@@ -37,6 +37,7 @@ export const adminCourseSchema = z.object({
   status: z.enum(statusValues),
   level: z.enum(levelValues),
   priceCents: z.number().int(),
+  featuredRank: z.number().int(),
   createdAt: z.string(),
 });
 export type AdminCourseDto = z.infer<typeof adminCourseSchema>;
@@ -57,6 +58,8 @@ const courseFieldsSchema = z.object({
   priceCents: z.number().int().nonnegative().default(0),
   level: z.enum(levelValues).default('iniciante'),
   status: z.enum(statusValues).default('draft'),
+  /** Ordem de destaque: maior aparece antes na home e no catálogo. Padrão 0. */
+  featuredRank: z.number().int().min(0).max(1000).default(0),
   coverUrl: z.string().url().max(1000).nullable().optional(),
   specialtyId: z.string().uuid().nullable().optional(),
   instructorId: z.string().uuid().nullable().optional(),
@@ -82,6 +85,7 @@ export const updateCourseSchema = z
     priceCents: z.number().int().nonnegative().optional(),
     level: z.enum(levelValues).optional(),
     status: z.enum(statusValues).optional(),
+    featuredRank: z.number().int().min(0).max(1000).optional(),
     coverUrl: z.string().url().max(1000).nullable().optional(),
     specialtyId: z.string().uuid().nullable().optional(),
     instructorId: z.string().uuid().nullable().optional(),
@@ -121,6 +125,7 @@ export const adminCourseDetailSchema = z.object({
   priceCents: z.number().int(),
   level: z.enum(levelValues),
   status: z.enum(statusValues),
+  featuredRank: z.number().int(),
   coverUrl: z.string().nullable(),
   specialtyId: z.string().uuid().nullable(),
   instructorId: z.string().uuid().nullable(),
