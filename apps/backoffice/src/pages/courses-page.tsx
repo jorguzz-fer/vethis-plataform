@@ -51,6 +51,7 @@ export function CoursesPage() {
             <thead className="bg-green-50 text-green-800">
               <tr>
                 <th className="px-4 py-3 font-semibold">Título</th>
+                <th className="px-4 py-3 font-semibold">Ordem</th>
                 <th className="px-4 py-3 font-semibold">Nível</th>
                 <th className="px-4 py-3 font-semibold">Preço</th>
                 <th className="px-4 py-3 font-semibold">Status</th>
@@ -65,6 +66,7 @@ export function CoursesPage() {
                       {c.title}
                     </Link>
                   </td>
+                  <td className="px-4 py-3 tabular-nums text-muted">{c.featuredRank}</td>
                   <td className="px-4 py-3 text-muted">{c.level}</td>
                   <td className="px-4 py-3">{formatBRL(c.priceCents)}</td>
                   <td className="px-4 py-3">

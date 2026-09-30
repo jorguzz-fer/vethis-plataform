@@ -2156,6 +2156,9 @@
           "priceCents": {
             "type": "integer"
           },
+          "featuredRank": {
+            "type": "integer"
+          },
           "createdAt": {
             "type": "string"
           }
@@ -2167,6 +2170,7 @@
           "status",
           "level",
           "priceCents",
+          "featuredRank",
           "createdAt"
         ]
       },
@@ -2212,6 +2216,9 @@
               "draft",
               "published"
             ]
+          },
+          "featuredRank": {
+            "type": "integer"
           },
           "coverUrl": {
             "type": [
@@ -2339,6 +2346,7 @@
           "priceCents",
           "level",
           "status",
+          "featuredRank",
           "coverUrl",
           "specialtyId",
           "instructorId",
@@ -2397,6 +2405,12 @@
               "published"
             ],
             "default": "draft"
+          },
+          "featuredRank": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000,
+            "default": 0
           },
           "coverUrl": {
             "type": [
@@ -2969,6 +2983,11 @@
               "draft",
               "published"
             ]
+          },
+          "featuredRank": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
           },
           "coverUrl": {
             "type": [

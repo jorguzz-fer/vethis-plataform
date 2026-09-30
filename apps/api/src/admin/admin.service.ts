@@ -185,11 +185,12 @@ export class AdminService {
         status: courses.status,
         level: courses.level,
         priceCents: courses.priceCents,
+        featuredRank: courses.featuredRank,
         createdAt: courses.createdAt,
       })
       .from(courses)
       .where(isNull(courses.deletedAt))
-      .orderBy(desc(courses.createdAt));
+      .orderBy(desc(courses.featuredRank), asc(courses.title));
     return rows.map((c) => ({ ...c, createdAt: c.createdAt.toISOString() }));
   }
 
@@ -203,6 +204,7 @@ export class AdminService {
       status: courses.status,
       level: courses.level,
       priceCents: courses.priceCents,
+      featuredRank: courses.featuredRank,
       createdAt: courses.createdAt,
     });
     if (!row) throw new NotFoundException('Curso não encontrado');
@@ -273,6 +275,7 @@ export class AdminService {
       priceCents: c.priceCents,
       level: c.level,
       status: c.status,
+      featuredRank: c.featuredRank,
       coverUrl: c.coverUrl,
       specialtyId: c.specialtyId,
       instructorId: c.instructorId,
@@ -295,6 +298,7 @@ export class AdminService {
         priceCents: dto.priceCents,
         level: dto.level,
         status: dto.status,
+        featuredRank: dto.featuredRank ?? 0,
         coverUrl: dto.coverUrl ?? null,
         specialtyId: dto.specialtyId ?? null,
         instructorId: dto.instructorId ?? null,

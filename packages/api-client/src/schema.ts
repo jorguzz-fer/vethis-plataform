@@ -2969,6 +2969,7 @@ export interface components {
             /** @enum {string} */
             level: "iniciante" | "intermediario" | "avancado";
             priceCents: number;
+            featuredRank: number;
             createdAt: string;
         };
         AdminCourseDetail: {
@@ -2983,6 +2984,7 @@ export interface components {
             level: "iniciante" | "intermediario" | "avancado";
             /** @enum {string} */
             status: "draft" | "published";
+            featuredRank: number;
             coverUrl: string | null;
             /** Format: uuid */
             specialtyId: string | null;
@@ -3027,6 +3029,8 @@ export interface components {
              * @enum {string}
              */
             status: "draft" | "published";
+            /** @default 0 */
+            featuredRank: number;
             /** Format: uri */
             coverUrl?: string | null;
             /** Format: uuid */
@@ -3164,6 +3168,7 @@ export interface components {
             level?: "iniciante" | "intermediario" | "avancado";
             /** @enum {string} */
             status?: "draft" | "published";
+            featuredRank?: number;
             /** Format: uri */
             coverUrl?: string | null;
             /** Format: uuid */
