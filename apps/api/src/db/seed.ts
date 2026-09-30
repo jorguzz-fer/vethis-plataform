@@ -74,6 +74,16 @@ const INSTRUCTORS: SeedInstructor[] = [
     bio: 'Coordenador científico do curso de Farmacoterapêutica Clínica em Cães e Gatos. Médico-veterinário formado pela Universidade Federal Rural do Semi-Árido (UFERSA), especialista em Anestesiologia Veterinária pelo Instituto Qualittas, mestre em Farmacologia pelo Instituto de Ciências Biomédicas da USP e doutor em Farmacologia pela Faculdade de Ciências Médicas da Unicamp.',
   },
   {
+    slug: 'dra-cintia-ghorayeb',
+    name: 'Dra. Cintia Ghorayeb',
+    bio: 'Coordenadora da Pós-graduação em Clínica Médica de Cães e Gatos. Responde pela integração entre os módulos, pelo alinhamento dos conteúdos ao raciocínio clínico orientado por problemas e pelo acompanhamento do corpo docente e dos encontros síncronos quinzenais do curso.',
+  },
+  {
+    slug: 'coordenacao-mielograma',
+    name: 'Dr. Márcio Moreira e Dra. Roberta Ruiz',
+    bio: 'Coordenação da Formação em Mielograma e Hematopatologia Medular em Cães e Gatos. Dr. Márcio Moreira responde pela trilha teórico-prática de leitura do mielograma, da citomorfologia medular ao diagnóstico hematopatológico avançado. Dra. Roberta Ruiz é especialista em Patologia e Medicina Veterinária Legal, mestre em Biociências e doutoranda em Patologia pela USP, e preside a Comissão de Responsabilidade Técnica do CRMV-SP.',
+  },
+  {
     slug: 'dra-lucia-prado',
     name: 'Dra. Lúcia Prado',
     bio: 'Intensivista e docente de emergência e medicina transfusional.',
@@ -120,6 +130,8 @@ interface SeedCourse {
    * Para cursos cujo comercial/coordenação é gerido no backoffice.
    */
   preserveCoverInstructor?: boolean;
+  /** Preserva só a capa já existente no banco (a coordenação vem do seed). */
+  preserveCover?: boolean;
   /**
    * Recria os módulos/aulas a partir do seed a cada re-seed (em vez de só popular
    * quando o curso ainda não tem módulos). Use para manter a grade sincronizada.
@@ -135,14 +147,17 @@ const COURSES: SeedCourse[] = [
     subtitle:
       'Mais segurança para diagnosticar, mais clareza para decidir, mais confiança para atender.',
     description:
-      'A Pós-graduação em Clínica Médica de Cães e Gatos foi criada para o médico-veterinário que deseja atender com mais segurança desde a primeira consulta. A formação começa pela semiologia, interpretação de exames e vacinação, avança pelas doenças infecciosas e parasitárias e percorre as principais áreas da clínica médica, sempre com foco no que realmente aparece na rotina: cardiologia e sistema respiratório, endocrinologia, nefrologia e urologia, dermatologia, neurologia, oncologia, gastroenterologia e hepatologia, hematologia e medicina transfusional e nutrição clínica. Mais do que apresentar doenças, o curso desenvolve o raciocínio clínico: o aluno aprende a construir listas de problemas, interpretar exames, estabelecer diagnósticos diferenciais, elaborar planos terapêuticos e monitorar a evolução dos pacientes. São 360 horas, com duração de até 12 meses, na modalidade EaD, combinando videoaulas gravadas, leitura dirigida, casos clínicos, exercícios de interpretação de exames, quizzes, fóruns, encontros síncronos e projeto aplicado.',
-    priceCents: 928800,
+      'A Pós-graduação em Clínica Médica de Cães e Gatos foi criada para o médico-veterinário que deseja atender com mais segurança desde a primeira consulta. A formação começa pela semiologia, interpretação de exames e vacinação, avança pelas doenças infecciosas e parasitárias e percorre as principais áreas da clínica médica, sempre com foco no que realmente aparece na rotina: cardiologia e sistema respiratório, endocrinologia, nefrologia e urologia, dermatologia, neurologia, oncologia, gastroenterologia e hepatologia, hematologia e medicina transfusional e nutrição clínica. Mais do que apresentar doenças, o curso desenvolve o raciocínio clínico: o aluno aprende a construir listas de problemas, interpretar exames, estabelecer diagnósticos diferenciais, elaborar planos terapêuticos e monitorar a evolução dos pacientes. São 360 horas, com duração de até 12 meses, na modalidade EaD, combinando videoaulas gravadas, leitura dirigida, casos clínicos, exercícios de interpretação de exames, quizzes, fóruns, encontros síncronos quinzenais e projeto aplicado.',
+    // R$ 15.000,00 em até 10x de R$ 1.500,00.
+    priceCents: 1500000,
+    maxInstallments: 10,
     level: 'avancado',
     specialty: 'clinica-medica',
-    // Instrutor/coordenação e capa são geridos no backoffice: preservados no re-seed.
-    instructor: 'coordenacao-clinica-felinos',
-    preserveCoverInstructor: true,
+    instructor: 'dra-cintia-ghorayeb',
+    // Capa é gerida no backoffice: preservada no re-seed (a coordenação vem do seed).
+    preserveCover: true,
     replaceModules: true,
+    featuredRank: 90,
     workloadHours: 360,
     learningObjectives: [
       'Realizar anamnese e exame físico orientados por problemas.',
@@ -165,9 +180,14 @@ const COURSES: SeedCourse[] = [
           'A formação tem duração máxima de 12 meses e 360 horas no total: 120 horas de videoaulas gravadas somadas a atividades acadêmicas complementares orientadas (leitura dirigida, casos clínicos, exercícios, fóruns, encontros síncronos e projeto aplicado).',
       },
       {
+        question: 'Como funciona o pagamento?',
+        answer:
+          'Investimento de R$ 15.000,00. Você pode parcelar em até 10x de R$ 1.500,00 no cartão ou no boleto, ou pagar no Pix à vista com 5% de desconto (R$ 14.250,00).',
+      },
+      {
         question: 'Como funciona a metodologia?',
         answer:
-          'Modalidade EaD, com liberação progressiva dos módulos no ambiente virtual. Cada módulo reúne videoaulas, material de apoio (artigos, consensos e guidelines), quatro casos clínicos, quiz e exercícios de interpretação de exames, no seu ritmo e de qualquer dispositivo.',
+          'Modalidade EaD, com liberação progressiva dos módulos no ambiente virtual e encontros síncronos quinzenais. Cada módulo reúne videoaulas, material de apoio (artigos, consensos e guidelines), quatro casos clínicos, quiz e exercícios de interpretação de exames, no seu ritmo e de qualquer dispositivo.',
       },
       {
         question: 'Como é a avaliação?',
@@ -644,270 +664,6 @@ const COURSES: SeedCourse[] = [
           { title: 'Estomatite crônica', min: 30 },
           { title: 'Extrações dentárias', min: 30 },
           { title: 'Neoplasias da cavidade oral', min: 30 },
-        ],
-      },
-    ],
-  },
-  {
-    slug: 'pos-clinica-medica-caes-gatos',
-    title: 'Pós-graduação em Clínica Médica de Cães e Gatos',
-    subtitle:
-      'Mais segurança para diagnosticar, mais clareza para decidir, mais confiança para atender.',
-    description:
-      'Pós-graduação 100% online, com 360 horas e certificação, para o médico-veterinário que quer atender com segurança desde a primeira consulta. A formação começa pela semiologia, interpretação de exames e vacinação, avança pelas doenças infecciosas e parasitárias e percorre as principais áreas da clínica: cardiologia, sistema respiratório, endocrinologia, nefrologia e urologia, dermatologia, neurologia, oncologia, gastroenterologia e hepatologia, hematologia e medicina transfusional. São 100 horas de videoaulas gravadas somadas a leituras dirigidas, quatro casos clínicos por módulo (56 no total), exercícios de interpretação de exames, quizzes, fóruns, encontros síncronos e projeto aplicado.',
-    priceCents: 928800,
-    level: 'intermediario',
-    specialty: 'clinica-medica',
-    featuredRank: 90,
-    workloadHours: 360,
-    learningObjectives: [
-      'Realizar anamnese e exame físico orientados por problemas.',
-      'Construir listas de problemas e diagnósticos diferenciais de forma organizada.',
-      'Interpretar hemograma, perfil bioquímico, eletrólitos, urinálise e relação proteína/creatinina.',
-      'Atualizar protocolos de vacinação e avaliar risco individual, falhas vacinais e eventos adversos.',
-      'Conduzir as doenças infecciosas e parasitárias mais frequentes no contexto brasileiro.',
-      'Reconhecer e manejar as principais cardiopatias de cães e gatos.',
-      'Estabilizar e investigar o paciente com tosse, taquipneia e dispneia.',
-      'Diagnosticar e acompanhar diabetes, hiperadrenocorticismo, tireoidopatias e demais endocrinopatias.',
-      'Estadiar e conduzir o paciente renal segundo os critérios IRIS.',
-      'Abordar o paciente com prurido, otite e lesões cutâneas e controlar recidivas.',
-      'Realizar o exame neurológico, neurolocalizar e conduzir as principais doenças do sistema nervoso.',
-      'Estadiar o paciente oncológico e discutir quimioterapia, cirurgia e cuidados paliativos.',
-      'Investigar vômito, diarreia, icterícia e alterações hepáticas com um plano diagnóstico organizado.',
-      'Interpretar o hemograma e indicar hemocomponentes com segurança transfusional.',
-    ],
-    faq: [
-      {
-        question: 'Para quem é esta pós-graduação?',
-        answer:
-          'Para médicos-veterinários recém-formados que precisam ganhar segurança, generalistas que desejam fortalecer a clínica médica e profissionais que querem revisar conhecimentos, atualizar protocolos e oferecer um atendimento mais completo a cães e gatos.',
-      },
-      {
-        question: 'Qual a duração e a carga horária?',
-        answer:
-          'A formação tem duração de até 12 meses e 360 horas no total: 100 horas de videoaulas gravadas somadas a 240 horas de atividades acadêmicas complementares orientadas (leitura dirigida, casos clínicos, exercícios, avaliações, fóruns, encontros síncronos e projeto final).',
-      },
-      {
-        question: 'Como funciona o pagamento?',
-        answer:
-          'Investimento de R$ 9.288,00. Você pode parcelar em até 24x de R$ 387,00 no boleto, pagar no Pix à vista com 5% de desconto (R$ 8.823,60) ou no cartão com condição especial.',
-      },
-      {
-        question: 'Como funciona a metodologia?',
-        answer:
-          'Modalidade EaD, com os módulos liberados progressivamente no ambiente virtual. Cada módulo reúne videoaulas gravadas, material de apoio selecionado pelo professor, quiz de aprendizagem e quatro casos clínicos estruturados — 56 casos ao longo do curso —, além de exercícios de interpretação de exames.',
-      },
-      {
-        question: 'Como é a avaliação?',
-        answer:
-          'A avaliação é contínua e considera os quizzes, a resolução dos casos clínicos, os exercícios de interpretação de exames, a participação nos fóruns, as avaliações periódicas e a atividade final aplicada.',
-      },
-      {
-        question: 'O curso é certificado e reconhecido?',
-        answer:
-          'Sim. Curso certificado e reconhecido pelo MEC, ofertado em parceria com a Rede de Ensino Doctum. Ao concluir, você recebe o certificado de pós-graduação de 360 horas, disponível na área do aluno.',
-      },
-    ],
-    modules: [
-      {
-        title: 'Módulo 1: Semiologia, Interpretação de Exames e Vacinação',
-        lessons: [
-          {
-            title: 'Semiologia e exame físico geral com desenvolvimento do raciocínio clínico',
-            min: 52,
-            free: true,
-          },
-          {
-            title:
-              'Construção de suspeitas diagnósticas, diagnósticos diferenciais e priorização de condutas',
-            min: 52,
-          },
-          { title: 'Interpretação do hemograma completo', min: 52 },
-          { title: 'Perfil bioquímico, eletrólitos e glicemia aplicados ao caso clínico', min: 51 },
-          {
-            title: 'Urinálise, relação proteína/creatinina urinária, cultura e antibiograma',
-            min: 51,
-          },
-          { title: 'Medicina preventiva e acompanhamento por faixa etária', min: 51 },
-          {
-            title:
-              'Vacinação de cães e gatos: protocolos, avaliação de risco, falhas vacinais e eventos adversos',
-            min: 51,
-          },
-        ],
-      },
-      {
-        title: 'Módulo 2: Doenças Infecciosas e Parasitárias',
-        lessons: [
-          { title: 'Cinomose e parvovirose', min: 33 },
-          { title: 'Leptospirose e principais zoonoses infecciosas', min: 33 },
-          { title: 'Complexo respiratório infeccioso canino e felino', min: 33 },
-          { title: 'Erliquiose, anaplasmose, babesiose e micoplasmose hemotrópica', min: 33 },
-          { title: 'Leishmaniose visceral canina', min: 33 },
-          { title: 'FeLV e FIV', min: 33 },
-          { title: 'Peritonite infecciosa felina', min: 33 },
-          { title: 'Toxoplasmose', min: 33 },
-          { title: 'Esporotricose e outras micoses relevantes', min: 32 },
-          { title: 'Ectoparasitoses e controle integrado de pulgas, carrapatos e ácaros', min: 32 },
-          { title: 'Uso racional de antimicrobianos e antiparasitários', min: 32 },
-        ],
-      },
-      {
-        title: 'Módulo 3: Cardiologia',
-        lessons: [
-          { title: 'Fisiologia cardiovascular aplicada', min: 30 },
-          { title: 'Semiologia cardiovascular e interpretação de sopros', min: 30 },
-          { title: 'Eletrocardiograma: fundamentos e interpretação clínica', min: 30 },
-          { title: 'Doença valvar degenerativa mitral', min: 30 },
-          { title: 'Cardiomiopatia dilatada', min: 30 },
-          { title: 'Insuficiência cardíaca congestiva', min: 30 },
-          { title: 'Cardiomiopatia hipertrófica felina', min: 30 },
-          { title: 'Edema pulmonar cardiogênico', min: 30 },
-          { title: 'Hipertensão arterial e pulmonar', min: 30 },
-          { title: 'Tromboembolismo arterial', min: 30 },
-          { title: 'Arritmias e síncope', min: 30 },
-          { title: 'Radiografia, ecocardiografia e biomarcadores cardíacos', min: 30 },
-        ],
-      },
-      {
-        title: 'Módulo 4: Sistema Respiratório',
-        lessons: [
-          { title: 'Abordagem da tosse e da dispneia', min: 30 },
-          { title: 'Síndrome braquicefálica', min: 30 },
-          { title: 'Colapso de traqueia e paralisia laríngea', min: 30 },
-          { title: 'Bronquite crônica e asma felina', min: 30 },
-          { title: 'Pneumonias e doenças infecciosas', min: 30 },
-          { title: 'Edema pulmonar cardiogênico e não cardiogênico', min: 30 },
-          { title: 'Efusão pleural e pneumotórax', min: 30 },
-          { title: 'Neoplasias respiratórias', min: 30 },
-          { title: 'Radiografia torácica e TFAST', min: 30 },
-          { title: 'Gasometria, oximetria e capnografia', min: 30 },
-          { title: 'Broncoscopia e lavados respiratórios', min: 30 },
-          { title: 'Oxigenioterapia, nebulização e toracocentese', min: 30 },
-        ],
-      },
-      {
-        title: 'Módulo 5: Endocrinologia',
-        lessons: [
-          {
-            title: 'Diabetes mellitus em cães e gatos, insulinoterapia e monitoramento contínuo',
-            min: 66,
-          },
-          { title: 'Cetoacidose diabética', min: 66 },
-          { title: 'Hiperadrenocorticismo', min: 66 },
-          { title: 'Hipoadrenocorticismo e crise addisoniana', min: 66 },
-          { title: 'Hipotireoidismo canino', min: 66 },
-          { title: 'Hipertireoidismo felino', min: 65 },
-          { title: 'Insulinoma', min: 65 },
-          { title: 'Hiperaldosteronismo', min: 65 },
-          { title: 'Distúrbios do cálcio', min: 65 },
-          { title: 'Testes hormonais e interpretação crítica', min: 65 },
-          { title: 'Emergências endócrinas', min: 65 },
-        ],
-      },
-      {
-        title: 'Módulo 6: Nefrologia e Urologia',
-        lessons: [
-          { title: 'Fisiologia renal aplicada', min: 60 },
-          { title: 'Avaliação laboratorial da função renal e urinária', min: 60 },
-          { title: 'Hemogasometria e equilíbrio ácido-base', min: 60 },
-          { title: 'Doença renal crônica e estadiamento IRIS', min: 60 },
-          { title: 'Injúria renal aguda', min: 60 },
-          { title: 'Proteinúria e glomerulopatias', min: 60 },
-          { title: 'Pielonefrite e infecção urinária', min: 60 },
-          { title: 'Distúrbios eletrolíticos e acidobásicos', min: 60 },
-          { title: 'Urolitíase e ureterolitíase', min: 60 },
-          { title: 'Cistites e doença do trato urinário inferior', min: 60 },
-          { title: 'Obstrução ureteral e uretral', min: 60 },
-          { title: 'Incontinência urinária e prostatopatias', min: 60 },
-        ],
-      },
-      {
-        title: 'Módulo 7: Dermatologia',
-        lessons: [
-          { title: 'Fisiologia dermatológica e padrões lesionais', min: 60 },
-          { title: 'Dermatite atópica', min: 60 },
-          { title: 'Alergia alimentar', min: 60 },
-          { title: 'DAPP e ectoparasitoses', min: 60 },
-          { title: 'Piodermites e malasseziose', min: 60 },
-          { title: 'Dermatofitose', min: 60 },
-          { title: 'Demodicidose e escabiose', min: 60 },
-          { title: 'Otite externa e média', min: 60 },
-          { title: 'Doenças autoimunes e imunomediadas', min: 60 },
-          { title: 'Alopecias endócrinas', min: 60 },
-          { title: 'Citologia, raspado, tricograma e biópsia', min: 60 },
-          { title: 'Terapêutica dermatológica e controle de recidivas', min: 60 },
-        ],
-      },
-      {
-        title: 'Módulo 8: Neurologia',
-        lessons: [
-          { title: 'Exame neurológico e neurolocalização', min: 40 },
-          { title: 'Convulsões e epilepsia', min: 40 },
-          { title: 'Status epilepticus', min: 40 },
-          { title: 'Doença do disco intervertebral', min: 40 },
-          { title: 'Síndrome vestibular central e periférica', min: 40 },
-          { title: 'Meningoencefalites', min: 40 },
-          { title: 'Neuropatias e doenças neuromusculares', min: 40 },
-          { title: 'Mielopatias e doenças degenerativas', min: 40 },
-          { title: 'Trauma cranioencefálico e medular', min: 40 },
-          { title: 'Análise do líquido cerebrospinal', min: 40 },
-          { title: 'Tomografia e ressonância magnética', min: 40 },
-          { title: 'Dor neuropática e monitoramento neurológico', min: 40 },
-        ],
-      },
-      {
-        title: 'Módulo 9: Oncologia',
-        lessons: [
-          { title: 'Princípios do diagnóstico e estadiamento oncológico', min: 40 },
-          { title: 'Citologia, histopatologia e imuno-histoquímica', min: 40 },
-          { title: 'Linfoma', min: 40 },
-          { title: 'Mastocitoma', min: 40 },
-          { title: 'Neoplasias mamárias', min: 40 },
-          { title: 'Hemangiossarcoma', min: 40 },
-          { title: 'Osteossarcoma', min: 40 },
-          { title: 'Carcinoma de células escamosas', min: 40 },
-          { title: 'Melanoma e tumores de cavidade oral', min: 40 },
-          { title: 'Princípios de quimioterapia', min: 40 },
-          { title: 'Cirurgia oncológica e margens', min: 40 },
-          { title: 'Cuidados paliativos, dor e qualidade de vida', min: 40 },
-        ],
-      },
-      {
-        title: 'Módulo 10: Gastroenterologia e Hepatologia',
-        lessons: [
-          { title: 'Fisiologia dos sistemas gastroentérico, hepático e pancreático', min: 60 },
-          { title: 'Abordagem do vômito e da diarreia', min: 60 },
-          { title: 'Regurgitação, disfagia e doenças esofágicas', min: 60 },
-          { title: 'Gastrites e úlceras', min: 60 },
-          { title: 'Enteropatias crônicas e doença inflamatória intestinal', min: 60 },
-          { title: 'Pancreatite', min: 60 },
-          { title: 'Insuficiência pancreática exócrina', min: 60 },
-          { title: 'Giardíase, verminoses e protozooses intestinais', min: 60 },
-          { title: 'Constipação e megacólon', min: 60 },
-          { title: 'Obstruções e corpos estranhos', min: 60 },
-          { title: 'Hepatites e colangites', min: 60 },
-          { title: 'Lipidose hepática', min: 60 },
-        ],
-      },
-      {
-        title: 'Módulo 11: Hematologia e Medicina Transfusional',
-        lessons: [
-          { title: 'Interpretação do hemograma', min: 60 },
-          { title: 'Anemias regenerativas e não regenerativas', min: 60 },
-          { title: 'Anemia hemolítica imunomediada', min: 60 },
-          { title: 'Hemoparasitoses', min: 60 },
-          { title: 'Trombocitopenias', min: 60 },
-          { title: 'Coagulopatias e coagulação intravascular disseminada', min: 60 },
-          { title: 'Leucocitose e leucopenia', min: 60 },
-          { title: 'Neoplasias hematopoiéticas', min: 60 },
-          {
-            title: 'Avaliação de medula óssea: indicações, coleta e interpretação inicial',
-            min: 60,
-          },
-          { title: 'Tipagem e prova de compatibilidade', min: 60 },
-          { title: 'Indicação de sangue e hemocomponentes', min: 60 },
-          { title: 'Reações transfusionais e hemovigilância', min: 60 },
         ],
       },
     ],
@@ -1404,6 +1160,110 @@ const COURSES: SeedCourse[] = [
     ],
   },
   {
+    slug: 'formacao-mielograma-hematopatologia-medular',
+    title: 'Formação em Mielograma e Hematopatologia Medular em Cães e Gatos',
+    subtitle:
+      'Do reconhecimento celular ao diagnóstico hematopatológico avançado, com leitura orientada de lâminas e casos.',
+    description:
+      'Formação em Mielograma e Hematopatologia Medular em Cães e Gatos: uma trilha teórico-prática em três níveis, com 51 horas no total, que vai do reconhecimento celular ao diagnóstico hematopatológico avançado. O percurso é organizado por etapas: o módulo introdutório de citomorfologia medular e leitura inicial do mielograma; o nível intermediário, que aprofunda a interpretação hematopatológica e os distúrbios da hematopoiese; e o módulo avançado, que aborda hematopatologia neoplásica, leucemias, síndromes mielodisplásicas e introdução à biópsia de medula. No primeiro nível, o aluno aprende a reconhecer as principais populações celulares, organizar as sequências de maturação, avaliar qualidade e representatividade da amostra, realizar contagem diferencial orientada, compreender a relação mieloide:eritroide e distinguir medula normal, reacional ou claramente anormal. A metodologia combina teoria, leitura orientada de lâminas e discussão de casos, com foco em coleta, preparo, artefatos, armadilhas citológicas e um algoritmo básico de leitura. Indicada para médicos-veterinários, residentes, pós-graduandos e patologistas clínicos que desejam iniciar ou consolidar a leitura do mielograma com segurança e método.',
+    // R$ 15.000,00 em até 10x de R$ 1.500,00.
+    priceCents: 1500000,
+    maxInstallments: 10,
+    level: 'intermediario',
+    specialty: 'hematologia',
+    instructor: 'coordenacao-mielograma',
+    featuredRank: 60,
+    workloadHours: 51,
+    learningObjectives: [
+      'Reconhecer as principais populações celulares da medula óssea e organizar as sequências de maturação.',
+      'Avaliar a qualidade e a representatividade da amostra e identificar artefatos e armadilhas citológicas.',
+      'Realizar a contagem diferencial orientada e interpretar a relação mieloide:eritroide.',
+      'Distinguir medula normal, reacional ou claramente anormal com um algoritmo básico de leitura.',
+      'Interpretar os principais distúrbios da hematopoiese à luz do hemograma e do quadro clínico.',
+      'Reconhecer padrões de hematopatologia neoplásica, leucemias e síndromes mielodisplásicas.',
+      'Compreender as indicações e a leitura inicial da biópsia de medula óssea.',
+    ],
+    faq: [
+      {
+        question: 'Para quem é esta formação?',
+        answer:
+          'Para médicos-veterinários, residentes, pós-graduandos e patologistas clínicos que desejam iniciar ou consolidar a leitura do mielograma com segurança e método.',
+      },
+      {
+        question: 'Como o curso é organizado?',
+        answer:
+          'Em três níveis: o módulo introdutório de citomorfologia medular e leitura inicial do mielograma; o nível intermediário, que aprofunda a interpretação hematopatológica e os distúrbios da hematopoiese; e o módulo avançado, que aborda hematopatologia neoplásica, leucemias, síndromes mielodisplásicas e introdução à biópsia de medula.',
+      },
+      {
+        question: 'Qual a carga horária?',
+        answer: 'A formação tem 51 horas no total, distribuídas entre os três níveis da trilha.',
+      },
+      {
+        question: 'Como funciona o pagamento?',
+        answer:
+          'Investimento de R$ 15.000,00. Você pode parcelar em até 10x de R$ 1.500,00 no cartão ou no boleto, ou pagar no Pix à vista com 5% de desconto (R$ 14.250,00).',
+      },
+      {
+        question: 'Como funciona a metodologia?',
+        answer:
+          'A metodologia combina teoria, leitura orientada de lâminas e discussão de casos, com foco em coleta, preparo, artefatos, armadilhas citológicas e um algoritmo básico de leitura.',
+      },
+    ],
+    modules: [
+      {
+        title: 'Nível 1: Citomorfologia Medular e Leitura Inicial do Mielograma',
+        lessons: [
+          { title: 'Indicações do mielograma e integração com o hemograma', min: 120, free: true },
+          { title: 'Coleta e preparo da amostra de medula óssea', min: 120 },
+          { title: 'Artefatos e armadilhas citológicas', min: 90 },
+          { title: 'Qualidade e representatividade da amostra', min: 90 },
+          { title: 'Reconhecimento das principais populações celulares', min: 120 },
+          {
+            title: 'Sequências de maturação das linhagens eritroide, mieloide e megacariocítica',
+            min: 120,
+          },
+          { title: 'Contagem diferencial orientada', min: 90 },
+          { title: 'Relação mieloide:eritroide e sua interpretação', min: 90 },
+          { title: 'Medula normal, reacional ou claramente anormal', min: 90 },
+          { title: 'Algoritmo básico de leitura do mielograma', min: 90 },
+          { title: 'Leitura orientada de lâminas e discussão de casos — nível 1', min: 120 },
+        ],
+      },
+      {
+        title: 'Nível 2: Interpretação Hematopatológica e Distúrbios da Hematopoiese',
+        lessons: [
+          { title: 'Interpretação hematopatológica integrada ao quadro clínico', min: 120 },
+          { title: 'Hipoplasia e aplasia medular', min: 120 },
+          { title: 'Hiperplasia eritroide, mieloide e megacariocítica', min: 120 },
+          { title: 'Diseritropoiese, disgranulopoiese e dismegacariocitopoiese', min: 120 },
+          { title: 'Medula na anemia não regenerativa e nas citopenias imunomediadas', min: 120 },
+          { title: 'Medula nas doenças infecciosas e inflamatórias', min: 120 },
+          { title: 'Mielofibrose, mielonecrose e outras alterações do estroma', min: 120 },
+          { title: 'Leitura orientada de lâminas e discussão de casos — nível 2', min: 120 },
+        ],
+      },
+      {
+        title: 'Nível 3: Hematopatologia Neoplásica, Leucemias e Biópsia de Medula',
+        lessons: [
+          { title: 'Hematopatologia neoplásica: princípios e classificação', min: 120 },
+          { title: 'Leucemias agudas', min: 120 },
+          { title: 'Leucemias crônicas e neoplasias mieloproliferativas', min: 120 },
+          { title: 'Síndromes mielodisplásicas', min: 120 },
+          {
+            title: 'Infiltração medular por linfoma, mieloma múltiplo e neoplasias metastáticas',
+            min: 120,
+          },
+          { title: 'Exames complementares: citoquímica, imunofenotipagem e PARR', min: 120 },
+          {
+            title: 'Introdução à biópsia de medula óssea: indicações, coleta e leitura inicial',
+            min: 120,
+          },
+          { title: 'Leitura orientada de lâminas e discussão de casos — nível 3', min: 120 },
+        ],
+      },
+    ],
+  },
+  {
     slug: 'pos-medicina-felina',
     cover: '/cursos/pos-medicina-felina.png',
     title: 'Pós-graduação em Medicina Felina',
@@ -1612,8 +1472,10 @@ async function main(): Promise<void> {
     // Em re-seed, opcionalmente preserva capa/instrutor já definidos no admin
     // (não sobrescreve esses campos; os demais continuam sincronizados pelo seed).
     const setScalars: Partial<typeof scalars> = { ...scalars };
-    if (c.preserveCoverInstructor) {
+    if (c.preserveCoverInstructor || c.preserveCover) {
       delete setScalars.coverUrl;
+    }
+    if (c.preserveCoverInstructor) {
       delete setScalars.instructorId;
     }
     const [course] = await db
