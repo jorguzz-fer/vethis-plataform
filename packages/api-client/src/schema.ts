@@ -1353,6 +1353,46 @@ export interface paths {
         };
         trace?: never;
     };
+    "/v1/admin/courses/reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reordena o catálogo (define a ordem de exibição) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["ReorderCoursesInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCourse"][];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/admin/courses/{id}/modules": {
         parameters: {
             query?: never;
@@ -3043,6 +3083,9 @@ export interface components {
                 question: string;
                 answer: string;
             }[];
+        };
+        ReorderCoursesInput: {
+            ids: string[];
         };
         CreateModuleInput: {
             title: string;

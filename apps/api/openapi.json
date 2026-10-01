@@ -2479,6 +2479,23 @@
           "title"
         ]
       },
+      "ReorderCoursesInput": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "minItems": 1,
+            "maxItems": 500
+          }
+        },
+        "required": [
+          "ids"
+        ]
+      },
       "CreateModuleInput": {
         "type": "object",
         "properties": {
@@ -4069,6 +4086,38 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/admin/courses/reorder": {
+      "post": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Reordena o catálogo (define a ordem de exibição)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReorderCoursesInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminCourse"
+                  }
+                }
+              }
+            }
           }
         }
       }

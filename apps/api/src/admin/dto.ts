@@ -96,6 +96,12 @@ export const updateCourseSchema = z
   .refine((v) => Object.keys(v).length > 0, { message: 'Nada para atualizar' });
 export type UpdateCourseDto = z.infer<typeof updateCourseSchema>;
 
+/** Reordenação do catálogo: ids na ordem desejada (primeiro = topo). */
+export const reorderCoursesSchema = z.object({
+  ids: z.array(z.string().uuid()).min(1).max(500),
+});
+export type ReorderCoursesDto = z.infer<typeof reorderCoursesSchema>;
+
 /** Aula na visão do admin (inclui vimeo_video_id). */
 export const adminLessonSchema = z.object({
   id: z.string().uuid(),
