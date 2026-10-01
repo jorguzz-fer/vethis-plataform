@@ -3,13 +3,48 @@ import type { ReactNode } from 'react';
 import { Header } from '@/components/site/header';
 import { Footer } from '@/components/site/footer';
 import { AttributionTracker } from '@/components/site/attribution-tracker';
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import './globals.css';
 import './prototype.css';
 
+const TITLE_DEFAULT = 'Vethis · Educação Médica Veterinária';
+
 export const metadata: Metadata = {
-  title: 'Vethis · Educação Médica Veterinária',
-  description:
-    'Formação médica veterinária continuada, baseada em casos reais. Cursos por especialidade.',
+  metadataBase: new URL(SITE_URL),
+  title: { default: TITLE_DEFAULT, template: '%s · Vethis' },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    'educação médica veterinária',
+    'cursos de veterinária',
+    'pós-graduação veterinária',
+    'medicina veterinária',
+    'clínica médica de cães e gatos',
+    'medicina felina',
+    'cursos online veterinária',
+  ],
+  authors: [{ name: SITE_NAME }],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
+  },
+  icons: { icon: '/vethis-mark.png', shortcut: '/vethis-mark.png', apple: '/vethis-mark.png' },
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    locale: 'pt_BR',
+    url: SITE_URL,
+    title: TITLE_DEFAULT,
+    description: SITE_DESCRIPTION,
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1920, height: 832, alt: SITE_NAME }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE_DEFAULT,
+    description: SITE_DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
+  },
 };
 
 // Aplica o tema (claro/escuro) por `data-theme` antes da pintura, replicando o
