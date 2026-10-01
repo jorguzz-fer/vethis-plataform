@@ -211,6 +211,23 @@ export class AdminService {
     return { ...row, createdAt: row.createdAt.toISOString() };
   }
 
+  /**
+   * Reordena o catálogo: atribui featuredRank decrescente na ordem recebida
+   * (primeiro id = maior rank = topo). Mantém a ordenação estável e sem empates.
+   */
+  async reorderCourses(ids: string[]): Promise<AdminCourseDto[]> {
+    const total = ids.length;
+    await this.db.transaction(async (tx) => {
+      for (let i = 0; i < ids.length; i += 1) {
+        await tx
+          .update(courses)
+          .set({ featuredRank: total - i, updatedAt: new Date() })
+          .where(and(eq(courses.id, ids[i]!), isNull(courses.deletedAt)));
+      }
+    });
+    return this.listCourses();
+  }
+
   async listStudents(): Promise<StudentDto[]> {
     const rows = await this.db
       .select({

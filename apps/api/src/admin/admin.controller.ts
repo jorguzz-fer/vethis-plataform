@@ -33,6 +33,7 @@ import type { LeadStage } from '../db/schema/enums';
 import { AdminService } from './admin.service';
 import {
   createCourseSchema,
+  reorderCoursesSchema,
   createHeroSlideSchema,
   createInstructorSchema,
   createLessonSchema,
@@ -52,6 +53,7 @@ import {
   type AdminHeroSlideDto,
   type AdminUserDto,
   type CreateCourseDto,
+  type ReorderCoursesDto,
   type CreateHeroSlideDto,
   type UpdateHeroSlideDto,
   type EnrollUserDto,
@@ -101,6 +103,14 @@ export class AdminController {
     @Body(new ZodValidationPipe(createCourseSchema)) dto: CreateCourseDto,
   ): Promise<AdminCourseDetailDto> {
     return this.admin.createCourse(dto);
+  }
+
+  @Post('courses/reorder')
+  @HttpCode(200)
+  reorderCourses(
+    @Body(new ZodValidationPipe(reorderCoursesSchema)) dto: ReorderCoursesDto,
+  ): Promise<AdminCourseDto[]> {
+    return this.admin.reorderCourses(dto.ids);
   }
 
   @Get('courses/:id')

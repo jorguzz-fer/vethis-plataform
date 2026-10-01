@@ -48,6 +48,7 @@ import {
   adminHeroSlideSchema,
   adminUserSchema,
   createCourseSchema,
+  reorderCoursesSchema,
   createHeroSlideSchema,
   updateHeroSlideSchema,
   enrollUserSchema,
@@ -128,6 +129,7 @@ export function buildOpenApiDocument() {
   const AdminCourse = registry.register('AdminCourse', adminCourseSchema);
   const AdminCourseDetail = registry.register('AdminCourseDetail', adminCourseDetailSchema);
   const CreateCourseInput = registry.register('CreateCourseInput', createCourseSchema);
+  const ReorderCoursesInput = registry.register('ReorderCoursesInput', reorderCoursesSchema);
   const CreateModuleInput = registry.register('CreateModuleInput', createModuleSchema);
   const UpdateModuleInput = registry.register('UpdateModuleInput', updateModuleSchema);
   const CreateLessonInput = registry.register('CreateLessonInput', createLessonSchema);
@@ -456,6 +458,14 @@ export function buildOpenApiDocument() {
     summary: 'Cria um curso',
     request: { body: json(CreateCourseInput) },
     responses: { 201: { description: 'Criado', ...json(AdminCourseDetail) } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/admin/courses/reorder',
+    tags: ['backoffice'],
+    summary: 'Reordena o catálogo (define a ordem de exibição)',
+    request: { body: json(ReorderCoursesInput) },
+    responses: { 200: { description: 'OK', ...json(z.array(AdminCourse)) } },
   });
   registry.registerPath({
     method: 'get',
