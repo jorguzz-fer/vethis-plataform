@@ -95,6 +95,8 @@ interface SeedLesson {
   title: string;
   min: number;
   free?: boolean;
+  /** ID do vídeo no Vimeo (opcional). Sem ele, o player mostra "Vídeo em breve". */
+  vimeo?: string;
 }
 interface SeedModule {
   title: string;
@@ -207,11 +209,14 @@ const COURSES: SeedCourse[] = [
           {
             title: 'Semiologia e exame físico geral com desenvolvimento do raciocínio clínico',
             min: 15,
+            free: true,
+            vimeo: '76979871',
           },
           {
             title:
               'Construção de suspeitas diagnósticas, diagnósticos diferenciais e priorização de condutas',
             min: 15,
+            vimeo: '76979871',
           },
           { title: 'Interpretação do hemograma completo', min: 15 },
           { title: 'Perfil bioquímico, eletrólitos e glicemia aplicados ao caso clínico', min: 15 },
@@ -1522,6 +1527,7 @@ async function main(): Promise<void> {
           durationSeconds: l.min * 60,
           position: lPos,
           isFree: l.free ?? false,
+          vimeoVideoId: l.vimeo ?? null,
         });
       }
     }
@@ -1567,6 +1573,21 @@ async function main(): Promise<void> {
       .values({ userId: studentRow.id, courseId: firstCourse.id, status: 'active' })
       .onConflictDoNothing({ target: [enrollments.userId, enrollments.courseId] });
     console.log('Aluno demo: aluno@vethis.dev / aluno12345 (matriculado).');
+  }
+
+  // Matrícula do proprietário para validar a área do aluno. Só matricula se a
+  // conta já existir (não cria conta nem define senha no repo). Registre o
+  // e-mail no app do aluno antes de rodar o seed, se ainda não tiver conta.
+  const ownerEmail = 'fer.jorge@gmail.com';
+  const [ownerRow] = await db.select().from(users).where(eq(users.email, ownerEmail)).limit(1);
+  if (ownerRow && firstCourse) {
+    await db
+      .insert(enrollments)
+      .values({ userId: ownerRow.id, courseId: firstCourse.id, status: 'active' })
+      .onConflictDoNothing({ target: [enrollments.userId, enrollments.courseId] });
+    console.log(`Matriculado ${ownerEmail} no curso de teste.`);
+  } else if (!ownerRow) {
+    console.log(`Conta ${ownerEmail} ainda não existe — registre no app do aluno e rode de novo.`);
   }
 
   // Usuário staff para o backoffice.
