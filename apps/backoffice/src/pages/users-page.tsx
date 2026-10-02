@@ -156,6 +156,22 @@ export function UsersPage() {
   );
 }
 
+/** Mensagem específica a partir do status/corpo do erro da API. */
+function createUserErrorMessage(err: unknown, status?: number): string {
+  const body = err as { message?: string | string[] } | undefined;
+  const detail = Array.isArray(body?.message) ? body?.message.join('; ') : body?.message;
+  if (status === 409) return 'Este e-mail já está cadastrado.';
+  if (status === 400)
+    return detail
+      ? `Dados inválidos: ${detail}`
+      : 'Dados inválidos — confira o e-mail, o nome e uma senha de ao menos 8 caracteres.';
+  if (status === 401 || status === 403)
+    return 'Sessão expirada ou sem permissão — saia e entre novamente.';
+  if (status && status >= 500) return `O servidor não conseguiu criar (HTTP ${status}).`;
+  if (detail) return `Não foi possível criar: ${detail}`;
+  return 'Não foi possível criar (sem resposta do servidor). Verifique a rede e se está logado.';
+}
+
 function CreateUser({ onCreated }: { onCreated: () => void }) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -169,13 +185,16 @@ function CreateUser({ onCreated }: { onCreated: () => void }) {
     setBusy(true);
     setError(null);
     try {
-      const { error: err } = await api.POST('/v1/admin/users', {
+      const { error: err, response } = await api.POST('/v1/admin/users', {
         body: { email, name: name || null, role, password },
       });
-      if (err) throw new Error();
+      if (err) {
+        setError(createUserErrorMessage(err, response?.status));
+        return;
+      }
       onCreated();
     } catch {
-      setError('Não foi possível criar. O e-mail já pode estar em uso.');
+      setError(createUserErrorMessage(undefined, undefined));
     } finally {
       setBusy(false);
     }

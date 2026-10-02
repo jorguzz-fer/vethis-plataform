@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { formatBRL } from '@vethis/shared';
 import { buttonClasses } from '@vethis/ui';
@@ -7,9 +8,44 @@ import { getCourse, getCourses, type CourseDetail, type CourseSummary } from '@/
 import { LeadFormTrigger } from '@/components/site/lead-form';
 import { OfferCard } from '@/components/site/offer-card';
 import { Credenciamento } from '@/components/site/credenciamento';
+import { JsonLd } from '@/components/site/json-ld';
+import {
+  absoluteUrl,
+  breadcrumbLd,
+  courseLd,
+  DEFAULT_OG_IMAGE,
+  faqPageLd,
+  metaDescription,
+} from '@/lib/seo';
 import { installmentsFor } from '@/lib/pricing';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const course = await getCourse(slug);
+  if (!course) return { title: 'Curso não encontrado', robots: { index: false, follow: false } };
+  const path = `/cursos/${slug}`;
+  const description = metaDescription(course.subtitle ?? course.description);
+  const image = course.coverUrl ? absoluteUrl(course.coverUrl) : DEFAULT_OG_IMAGE;
+  return {
+    title: course.title,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      type: 'website',
+      url: absoluteUrl(path),
+      title: course.title,
+      description,
+      images: [{ url: image }],
+    },
+    twitter: { card: 'summary_large_image', title: course.title, description, images: [image] },
+  };
+}
 
 export default async function CoursePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -26,9 +62,19 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
 
   const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
   const objectives = course.learningObjectives ?? [];
+  const faqLd = faqPageLd(course.faq ?? []);
 
   return (
     <article className="bg-paper">
+      <JsonLd data={courseLd(course)} />
+      <JsonLd
+        data={breadcrumbLd([
+          { name: 'Início', path: '/' },
+          { name: 'Cursos', path: '/cursos' },
+          { name: course.title, path: `/cursos/${course.slug}` },
+        ])}
+      />
+      {faqLd ? <JsonLd data={faqLd} /> : null}
       <Hero course={course} />
       <Conditions workloadHours={course.workloadHours} maxInstallments={course.maxInstallments} />
       <section className="mx-auto max-w-[1140px] px-6">
