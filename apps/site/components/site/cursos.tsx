@@ -123,14 +123,7 @@ export function Cursos({ courses }: { courses: CourseSummary[] }) {
                     ) : null}
                     <div className="cfoot">
                       <div className="price">
-                        {c.comingSoon ? (
-                          'Em breve'
-                        ) : (
-                          <OfferLabel
-                            priceCents={c.priceCents}
-                            maxInstallments={c.maxInstallments}
-                          />
-                        )}
+                        {c.comingSoon ? 'Em breve' : <OfferLabel course={c} />}
                       </div>
                       {c.comingSoon ? null : (
                         <div className="go">

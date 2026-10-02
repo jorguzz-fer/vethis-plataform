@@ -3,7 +3,15 @@ import { and, asc, desc, eq, isNull } from 'drizzle-orm';
 import { DB, type Database } from '../db/client';
 import { APP_CONFIG, type AppConfig } from '../config/configuration';
 import { resolveAssetUrl } from '../common/asset-url';
-import { courseModules, courses, instructors, lessons, specialties } from '../db/schema/catalog';
+import {
+  courseModules,
+  courses,
+  instructors,
+  lessons,
+  specialties,
+  type InstallmentPlan,
+} from '../db/schema/catalog';
+import { courseMaxInstallments, normalizePlans } from '../checkout/pricing';
 import { heroSlides } from '../db/schema/hero';
 import type {
   CourseDetail,
@@ -71,6 +79,7 @@ export class CatalogService {
         subtitle: courses.subtitle,
         priceCents: courses.priceCents,
         maxInstallments: courses.maxInstallments,
+        installmentPlans: courses.installmentPlans,
         level: courses.level,
         coverUrl: courses.coverUrl,
         comingSoon: courses.comingSoon,
@@ -100,6 +109,7 @@ export class CatalogService {
         description: courses.description,
         priceCents: courses.priceCents,
         maxInstallments: courses.maxInstallments,
+        installmentPlans: courses.installmentPlans,
         level: courses.level,
         coverUrl: courses.coverUrl,
         comingSoon: courses.comingSoon,
@@ -170,6 +180,7 @@ interface JoinedCourse {
   subtitle: string | null;
   priceCents: number;
   maxInstallments: number;
+  installmentPlans: InstallmentPlan[];
   level: CourseSummary['level'];
   coverUrl: string | null;
   comingSoon: boolean;
@@ -188,7 +199,8 @@ function toSummary(c: JoinedCourse, appUrl: string): CourseSummary {
     title: c.title,
     subtitle: c.subtitle,
     priceCents: c.priceCents,
-    maxInstallments: c.maxInstallments,
+    maxInstallments: courseMaxInstallments(c.maxInstallments, c.installmentPlans),
+    installmentPlans: normalizePlans(c.installmentPlans),
     level: c.level,
     coverUrl: resolveAssetUrl(appUrl, c.coverUrl),
     comingSoon: c.comingSoon,

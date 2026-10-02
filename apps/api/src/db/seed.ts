@@ -114,6 +114,11 @@ interface SeedCourse {
   priceCents: number;
   /** Teto de parcelas sem juros deste curso. Padrão 24 (teto global). */
   maxInstallments?: number;
+  /**
+   * Planos com total próprio (ex.: 12x de 725 ou 24x de 577). Quando presentes,
+   * `priceCents` é o total do menor plano (base do Pix à vista com desconto).
+   */
+  installmentPlans?: { installments: number; installmentCents: number }[];
   level: CourseLevel;
   specialty: string;
   /** Coordenação. Omitido quando ainda não definida (a seção some da página). */
@@ -150,9 +155,9 @@ const COURSES: SeedCourse[] = [
       'Mais segurança para diagnosticar, mais clareza para decidir, mais confiança para atender.',
     description:
       'A Pós-graduação em Clínica Médica de Cães e Gatos foi criada para o médico-veterinário que deseja atender com mais segurança desde a primeira consulta. A formação começa pela semiologia, interpretação de exames e vacinação, avança pelas doenças infecciosas e parasitárias e percorre as principais áreas da clínica médica, sempre com foco no que realmente aparece na rotina: cardiologia e sistema respiratório, endocrinologia, nefrologia e urologia, dermatologia, neurologia, oncologia, gastroenterologia e hepatologia, hematologia e medicina transfusional e nutrição clínica. Mais do que apresentar doenças, o curso desenvolve o raciocínio clínico: o aluno aprende a construir listas de problemas, interpretar exames, estabelecer diagnósticos diferenciais, elaborar planos terapêuticos e monitorar a evolução dos pacientes. São 360 horas, com duração de até 12 meses, na modalidade EaD, combinando videoaulas gravadas, leitura dirigida, casos clínicos, exercícios de interpretação de exames, quizzes, fóruns, encontros síncronos quinzenais e projeto aplicado.',
-    // R$ 15.000,00 em até 10x de R$ 1.500,00.
-    priceCents: 1500000,
-    maxInstallments: 10,
+    // Oferta: 24x de R$ 1.277,00 (boleto ou cartão).
+    priceCents: 3064800,
+    maxInstallments: 24,
     level: 'avancado',
     specialty: 'clinica-medica',
     instructor: 'dra-cintia-ghorayeb',
@@ -431,7 +436,12 @@ const COURSES: SeedCourse[] = [
       'Atenda gatos com mais segurança, raciocínio clínico e confiança, do ambulatório à emergência.',
     description:
       'Pós-graduação 100% online e aplicada à rotina, com 360 horas e certificação. O gato não é um cão pequeno: aqui você desenvolve o raciocínio clínico orientado por problemas e domina as principais afecções da espécie: nefrologia e urologia, doenças infecciosas (PIF, FeLV, FIV, esporotricose), cardiologia, neurologia, gastroenterologia e hepatologia, endocrinologia, oncologia, dermatologia, oftalmologia, emergência, anestesia e analgesia, comportamento, cirurgia e odontologia felina. São 80 horas de videoaulas somadas a leituras dirigidas, quatro casos clínicos por módulo (52 no total), fóruns, quizzes e projeto aplicado.',
-    priceCents: 693600,
+    // Oferta: 12x de R$ 725,00 ou 24x de R$ 577,00 (boleto ou cartão).
+    priceCents: 870000,
+    installmentPlans: [
+      { installments: 12, installmentCents: 72500 },
+      { installments: 24, installmentCents: 57700 },
+    ],
     level: 'avancado',
     specialty: 'medicina-felina',
     instructor: 'coordenacao-clinica-felinos',
@@ -681,7 +691,12 @@ const COURSES: SeedCourse[] = [
       'Da fisiopatologia renal à tomada de decisão clínica, à cirurgia e às terapias renais substitutivas.',
     description:
       'Pós-graduação 100% online, com 360 horas e certificação, para quem quer investigar e conduzir o paciente renal e urinário com segurança. O curso parte das bases anatômicas, fisiológicas e fisiopatológicas do sistema urinário e avança para urinálise e biomarcadores, diagnóstico por imagem, hemogasometria e eletrólitos, injúria renal aguda, doença renal crônica, infecções urinárias, urolitíases, hipertensão, proteinúria e glomerulopatias, doenças do trato urinário inferior, cirurgia e técnicas dialíticas. São 80 horas de videoaulas gravadas somadas a leituras dirigidas, quatro casos clínicos por módulo (48 no total), exercícios de interpretação de exames, quizzes, fóruns, encontros síncronos e projeto aplicado.',
-    priceCents: 928800,
+    // Oferta: 12x de R$ 725,00 ou 24x de R$ 577,00 (boleto ou cartão).
+    priceCents: 870000,
+    installmentPlans: [
+      { installments: 12, installmentCents: 72500 },
+      { installments: 24, installmentCents: 57700 },
+    ],
     level: 'avancado',
     specialty: 'nefrologia',
     instructor: 'prof-luiz-henrique-guimaraes',
@@ -945,7 +960,8 @@ const COURSES: SeedCourse[] = [
     subtitle: 'Da escolha do fármaco à prescrição segura na rotina clínica.',
     description:
       'Curso de formação continuada, 100% online, com 26 horas de aulas gravadas e orientação eminentemente clínica. Parte dos fundamentos indispensáveis de farmacocinética e farmacodinâmica e concentra a maior carga na aplicação prática: seleção do fármaco, indicação e contraindicação, ajuste de dose, interações, monitoramento, segurança terapêutica e prescrição. O programa é organizado por situações clínicas e sistemas, com atenção às diferenças entre cães e gatos, ao uso racional de antimicrobianos, à farmacoterapia dermatológica, aos pacientes renais, hepáticos e geriátricos e aos erros de medicação mais frequentes.',
-    priceCents: 130000,
+    // Oferta: 10x de R$ 187,00 (boleto ou cartão).
+    priceCents: 187000,
     maxInstallments: 10,
     level: 'intermediario',
     specialty: 'farmacologia',
@@ -1171,9 +1187,12 @@ const COURSES: SeedCourse[] = [
       'Do reconhecimento celular ao diagnóstico hematopatológico avançado, com leitura orientada de lâminas e casos.',
     description:
       'Formação em Mielograma e Hematopatologia Medular em Cães e Gatos: uma trilha teórico-prática em três níveis, com 51 horas no total, que vai do reconhecimento celular ao diagnóstico hematopatológico avançado. O percurso é organizado por etapas: o módulo introdutório de citomorfologia medular e leitura inicial do mielograma; o nível intermediário, que aprofunda a interpretação hematopatológica e os distúrbios da hematopoiese; e o módulo avançado, que aborda hematopatologia neoplásica, leucemias, síndromes mielodisplásicas e introdução à biópsia de medula. No primeiro nível, o aluno aprende a reconhecer as principais populações celulares, organizar as sequências de maturação, avaliar qualidade e representatividade da amostra, realizar contagem diferencial orientada, compreender a relação mieloide:eritroide e distinguir medula normal, reacional ou claramente anormal. A metodologia combina teoria, leitura orientada de lâminas e discussão de casos, com foco em coleta, preparo, artefatos, armadilhas citológicas e um algoritmo básico de leitura. Indicada para médicos-veterinários, residentes, pós-graduandos e patologistas clínicos que desejam iniciar ou consolidar a leitura do mielograma com segurança e método.',
-    // R$ 15.000,00 em até 10x de R$ 1.500,00.
-    priceCents: 1500000,
-    maxInstallments: 10,
+    // Oferta (completo): 10x de R$ 1.125,00 ou 24x de R$ 625,00 (boleto ou cartão).
+    priceCents: 1125000,
+    installmentPlans: [
+      { installments: 10, installmentCents: 112500 },
+      { installments: 24, installmentCents: 62500 },
+    ],
     level: 'intermediario',
     specialty: 'hematologia',
     instructor: 'coordenacao-mielograma',
@@ -1463,6 +1482,7 @@ async function main(): Promise<void> {
       description: c.description,
       priceCents: c.priceCents,
       maxInstallments: c.maxInstallments ?? 24,
+      installmentPlans: c.installmentPlans ?? [],
       level: c.level,
       status: 'published' as const,
       featuredRank: c.featuredRank ?? 0,
