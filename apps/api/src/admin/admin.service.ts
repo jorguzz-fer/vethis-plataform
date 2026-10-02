@@ -506,12 +506,36 @@ export class AdminService {
   async createUser(dto: CreateUserDto): Promise<AdminUserDto> {
     const email = dto.email.toLowerCase();
     const [existing] = await this.db
-      .select({ id: users.id })
+      .select({ id: users.id, deletedAt: users.deletedAt })
       .from(users)
       .where(eq(users.email, email))
       .limit(1);
-    if (existing) throw new ConflictException('E-mail já cadastrado');
+    // E-mail de uma conta ATIVA → conflito. Se a conta estiver desativada
+    // (soft-delete), "criar" com o mesmo e-mail reativa a conta.
+    if (existing && !existing.deletedAt) throw new ConflictException('E-mail já cadastrado');
     const passwordHash = await this.passwords.hash(dto.password);
+
+    if (existing) {
+      const [row] = await this.db
+        .update(users)
+        .set({
+          deletedAt: null,
+          name: dto.name ?? null,
+          role: dto.role,
+          passwordHash,
+          updatedAt: new Date(),
+        })
+        .where(eq(users.id, existing.id))
+        .returning({
+          id: users.id,
+          email: users.email,
+          name: users.name,
+          role: users.role,
+          createdAt: users.createdAt,
+        });
+      return { ...row!, enrollments: 0, createdAt: row!.createdAt.toISOString() };
+    }
+
     const [row] = await this.db
       .insert(users)
       .values({ email, name: dto.name ?? null, role: dto.role, passwordHash })
