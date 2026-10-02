@@ -179,16 +179,33 @@ function CreateUser({ onCreated }: { onCreated: () => void }) {
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // E-mail já pertence a um aluno (que não aparece nesta lista) → oferece promoção.
+  const [student, setStudent] = useState<AdminUser | null>(null);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
     setBusy(true);
     setError(null);
+    setStudent(null);
     try {
       const { error: err, response } = await api.POST('/v1/admin/users', {
         body: { email, name: name || null, role, password },
       });
       if (err) {
+        if (response?.status === 409) {
+          const { data } = await api.GET('/v1/admin/users');
+          const found = (data ?? []).find(
+            (u) => u.email.toLowerCase() === email.trim().toLowerCase(),
+          );
+          if (found?.role === 'aluno') {
+            setStudent(found);
+            setError(
+              `Este e-mail já está cadastrado como aluno (${found.name ?? found.email}). ` +
+                `Você pode promovê-lo a ${ROLE_LABEL[role]} — ele mantém a senha e as matrículas atuais.`,
+            );
+            return;
+          }
+        }
         setError(createUserErrorMessage(err, response?.status));
         return;
       }
@@ -198,6 +215,21 @@ function CreateUser({ onCreated }: { onCreated: () => void }) {
     } finally {
       setBusy(false);
     }
+  }
+
+  async function promote() {
+    if (!student) return;
+    setBusy(true);
+    const { response } = await api.PATCH('/v1/admin/users/{id}', {
+      params: { path: { id: student.id } },
+      body: { role },
+    });
+    setBusy(false);
+    if (!response.ok) {
+      setError(createUserErrorMessage(undefined, response.status));
+      return;
+    }
+    onCreated();
   }
 
   return (
@@ -236,10 +268,16 @@ function CreateUser({ onCreated }: { onCreated: () => void }) {
         required
       />
       {error ? <p className="text-sm text-error sm:col-span-2">{error}</p> : null}
-      <div className="sm:col-span-2">
-        <Button type="submit" disabled={busy}>
-          {busy ? 'Criando…' : 'Criar usuário'}
-        </Button>
+      <div className="flex gap-2 sm:col-span-2">
+        {student ? (
+          <Button type="button" disabled={busy} onClick={() => void promote()}>
+            {busy ? 'Promovendo…' : `Promover a ${ROLE_LABEL[role]}`}
+          </Button>
+        ) : (
+          <Button type="submit" disabled={busy}>
+            {busy ? 'Criando…' : 'Criar usuário'}
+          </Button>
+        )}
       </div>
     </form>
   );
