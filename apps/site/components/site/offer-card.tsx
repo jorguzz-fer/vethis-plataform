@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { formatBRL } from '@vethis/shared';
 import { buttonClasses } from '@vethis/ui';
 import { LeadFormTrigger } from '@/components/site/lead-form';
-import { PIX_DISCOUNT_PERCENT, installmentsFor } from '@/lib/pricing';
+import { PIX_DISCOUNT_PERCENT, offerPlans, pixAmountCents, type Priced } from '@/lib/pricing';
 
 const brl = new Intl.NumberFormat('pt-BR', {
   minimumFractionDigits: 2,
@@ -23,7 +23,7 @@ export function OfferCard({
   comingSoon = false,
   className = '',
 }: {
-  course: { slug: string; priceCents: number; maxInstallments?: number | null };
+  course: Priced & { slug: string };
   comingSoon?: boolean;
   className?: string;
 }) {
@@ -50,9 +50,11 @@ export function OfferCard({
     );
   }
 
-  const parcels = installmentsFor(course.maxInstallments);
-  const perMonth = Math.ceil(course.priceCents / parcels);
-  const pixCents = Math.round((course.priceCents * (100 - PIX_DISCOUNT_PERCENT)) / 100);
+  // Destaque no plano mais longo (menor parcela); os demais aparecem abaixo.
+  const plans = offerPlans(course);
+  const top = plans[plans.length - 1]!;
+  const others = plans.slice(0, -1);
+  const pixCents = pixAmountCents(course.priceCents);
 
   return (
     <div className={`${CARD_CLASS} ${className}`}>
@@ -67,16 +69,25 @@ export function OfferCard({
       </p>
 
       <p className="mt-5 text-[15px] text-[#C6D3CA]">
-        Ou até <span className="font-semibold text-white">{parcels}x</span> de:
+        Ou até <span className="font-semibold text-white">{top.installments}x</span> de:
       </p>
       <p className="mt-1 flex items-baseline gap-1.5 font-serif text-gold-400">
         <span className="text-2xl font-semibold">R$</span>
-        <span className="text-6xl font-bold leading-none">{brl.format(perMonth / 100)}</span>
+        <span className="text-6xl font-bold leading-none">
+          {brl.format(top.installmentCents / 100)}
+        </span>
       </p>
+      {others.map((p) => (
+        <p key={p.installments} className="mt-2 text-[15px] text-[#C6D3CA]">
+          ou <span className="font-semibold text-white">{p.installments}x</span> de{' '}
+          <span className="font-semibold text-white">{formatBRL(p.installmentCents)}</span>
+        </p>
+      ))}
+      <p className="mt-2 text-xs text-[#9DB0A5]">No boleto ou cartão.</p>
 
       <p className="mt-5 text-xs leading-relaxed text-[#9DB0A5]">
-        No Pix à vista: <span className="font-medium text-[#EAF0EC]">{formatBRL(pixCents)}</span>,
-        5% de desconto
+        No Pix à vista: <span className="font-medium text-[#EAF0EC]">{formatBRL(pixCents)}</span>,{' '}
+        {PIX_DISCOUNT_PERCENT}% de desconto
       </p>
 
       <Link

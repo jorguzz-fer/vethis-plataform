@@ -12,6 +12,8 @@ import {
 type Level = AdminCourseDetail['level'];
 type Status = AdminCourseDetail['status'];
 type FaqItem = AdminCourseDetail['faq'][number];
+/** Linha do editor de planos (texto livre; convertido ao salvar). */
+type PlanRow = { installments: string; value: string };
 
 const LEVELS: { value: Level; label: string }[] = [
   { value: 'iniciante', label: 'Iniciante' },
@@ -43,6 +45,8 @@ export function CourseEditorPage() {
     subtitle: '',
     description: '',
     price: '0,00',
+    maxInstallments: '24',
+    plans: [] as PlanRow[],
     level: 'iniciante' as Level,
     status: 'draft' as Status,
     coverUrl: '',
@@ -76,6 +80,11 @@ export function CourseEditorPage() {
           subtitle: data.subtitle ?? '',
           description: data.description ?? '',
           price: centsToReal(data.priceCents),
+          maxInstallments: String(data.maxInstallments ?? 24),
+          plans: (data.installmentPlans ?? []).map((p) => ({
+            installments: String(p.installments),
+            value: centsToReal(p.installmentCents),
+          })),
           level: data.level,
           status: data.status,
           coverUrl: data.coverUrl ?? '',
@@ -104,6 +113,13 @@ export function CourseEditorPage() {
       subtitle: form.subtitle || null,
       description: form.description || null,
       priceCents: realToCents(form.price),
+      maxInstallments: Math.min(24, Math.max(1, Math.round(Number(form.maxInstallments) || 24))),
+      installmentPlans: form.plans
+        .map((p) => ({
+          installments: Math.round(Number(p.installments) || 0),
+          installmentCents: realToCents(p.value),
+        }))
+        .filter((p) => p.installments >= 1 && p.installments <= 24 && p.installmentCents > 0),
       level: form.level,
       status: form.status,
       coverUrl: form.coverUrl || null,
@@ -268,6 +284,75 @@ export function CourseEditorPage() {
               ))}
             </select>
           </label>
+        </div>
+
+        <div className="rounded-lg border border-border p-4">
+          <p className="text-sm font-semibold text-ink">Parcelamento</p>
+          <p className="mt-1 text-xs text-muted">
+            Sem planos: o preço é dividido sem juros até o teto abaixo. Com planos (ex.: 12x de
+            725,00 e 24x de 577,00), cada plano tem o próprio total e o preço acima deve ser o total
+            do menor plano. O Pix à vista dá 5% de desconto sobre o preço.
+          </p>
+          <div className="mt-3 grid grid-cols-3 gap-4">
+            <Field
+              label="Parcelas máx. (sem planos)"
+              inputMode="numeric"
+              value={form.maxInstallments}
+              onChange={(e) => set('maxInstallments', e.target.value)}
+            />
+          </div>
+          {form.plans.map((p, i) => (
+            <div key={i} className="mt-3 grid grid-cols-3 items-end gap-4">
+              <Field
+                label="Parcelas"
+                inputMode="numeric"
+                value={p.installments}
+                onChange={(e) =>
+                  set(
+                    'plans',
+                    form.plans.map((x, j) =>
+                      j === i ? { ...x, installments: e.target.value } : x,
+                    ),
+                  )
+                }
+                placeholder="ex.: 12"
+              />
+              <Field
+                label="Valor da parcela (R$)"
+                inputMode="decimal"
+                value={p.value}
+                onChange={(e) =>
+                  set(
+                    'plans',
+                    form.plans.map((x, j) => (j === i ? { ...x, value: e.target.value } : x)),
+                  )
+                }
+                placeholder="ex.: 725,00"
+              />
+              <Button
+                type="button"
+                variant="text"
+                size="sm"
+                onClick={() =>
+                  set(
+                    'plans',
+                    form.plans.filter((_, j) => j !== i),
+                  )
+                }
+              >
+                Remover
+              </Button>
+            </div>
+          ))}
+          <Button
+            type="button"
+            variant="soft"
+            size="sm"
+            className="mt-3"
+            onClick={() => set('plans', [...form.plans, { installments: '', value: '' }])}
+          >
+            + Plano
+          </Button>
         </div>
 
         <div>

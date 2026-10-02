@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { courseFaqItemSchema } from '../catalog/dto';
+import { courseFaqItemSchema, installmentPlanSchema } from '../catalog/dto';
 
 const levelValues = ['iniciante', 'intermediario', 'avancado'] as const;
 const statusValues = ['draft', 'published'] as const;
@@ -56,6 +56,10 @@ const courseFieldsSchema = z.object({
   subtitle: z.string().max(300).nullable().optional(),
   description: z.string().max(8000).nullable().optional(),
   priceCents: z.number().int().nonnegative().default(0),
+  /** Teto de parcelas sem juros (usado quando não há planos). */
+  maxInstallments: z.number().int().min(1).max(24).default(24),
+  /** Planos com total próprio (ex.: 12x de 725 e 24x de 577). Vazio = preço único. */
+  installmentPlans: z.array(installmentPlanSchema).max(6).optional(),
   level: z.enum(levelValues).default('iniciante'),
   status: z.enum(statusValues).default('draft'),
   /** Ordem de destaque: maior aparece antes na home e no catálogo. Padrão 0. */
@@ -83,6 +87,8 @@ export const updateCourseSchema = z
     subtitle: z.string().max(300).nullable().optional(),
     description: z.string().max(8000).nullable().optional(),
     priceCents: z.number().int().nonnegative().optional(),
+    maxInstallments: z.number().int().min(1).max(24).optional(),
+    installmentPlans: z.array(installmentPlanSchema).max(6).optional(),
     level: z.enum(levelValues).optional(),
     status: z.enum(statusValues).optional(),
     featuredRank: z.number().int().min(0).max(1000).optional(),
@@ -129,6 +135,8 @@ export const adminCourseDetailSchema = z.object({
   subtitle: z.string().nullable(),
   description: z.string().nullable(),
   priceCents: z.number().int(),
+  maxInstallments: z.number().int(),
+  installmentPlans: z.array(installmentPlanSchema),
   level: z.enum(levelValues),
   status: z.enum(statusValues),
   featuredRank: z.number().int(),

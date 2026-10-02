@@ -32,6 +32,13 @@ export const courseFaqItemSchema = z.object({
 });
 export type CourseFaqItem = z.infer<typeof courseFaqItemSchema>;
 
+/** Plano de parcelamento com total próprio (ex.: 24x de R$ 577,00). */
+export const installmentPlanSchema = z.object({
+  installments: z.number().int().min(1).max(24),
+  installmentCents: z.number().int().positive(),
+});
+export type InstallmentPlanDto = z.infer<typeof installmentPlanSchema>;
+
 export const courseSummarySchema = z.object({
   id: z.string().uuid(),
   slug: z.string(),
@@ -40,6 +47,11 @@ export const courseSummarySchema = z.object({
   priceCents: z.number().int(),
   /** Teto de parcelas sem juros deste curso (varia por produto). */
   maxInstallments: z.number().int().positive(),
+  /**
+   * Planos com total próprio, em ordem crescente de parcelas. Vazio = preço único
+   * dividido sem juros até `maxInstallments`.
+   */
+  installmentPlans: z.array(installmentPlanSchema),
   level: z.enum(['iniciante', 'intermediario', 'avancado']),
   comingSoon: z.boolean(),
   coverUrl: z.string().nullable(),
