@@ -77,6 +77,7 @@ const INSTRUCTORS: SeedInstructor[] = [
     slug: 'dra-cintia-ghorayeb',
     name: 'Dra. Cintia Ghorayeb',
     bio: 'Coordenadora da Pós-graduação em Clínica Médica de Cães e Gatos. Responde pela integração entre os módulos, pelo alinhamento dos conteúdos ao raciocínio clínico orientado por problemas e pelo acompanhamento do corpo docente e dos encontros síncronos quinzenais do curso.',
+    photo: 'cintia.jpg',
   },
   {
     slug: 'coordenacao-mielograma',

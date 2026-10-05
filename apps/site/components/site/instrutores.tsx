@@ -33,6 +33,7 @@ const INSTRUTORES: Inst[] = [
     role: 'Coordenação · Clínica Médica',
     bio: 'Coordenadora da Pós-graduação em Clínica Médica de Cães e Gatos. Responde pela integração entre os módulos, pelo alinhamento dos conteúdos ao raciocínio clínico orientado por problemas e pelo acompanhamento do corpo docente e dos encontros síncronos do curso.',
     gradient: 'linear-gradient(150deg,#12603f,#0a2b20)',
+    photo: '/instrutores/cintia.jpg',
     slug: 'dra-cintia-ghorayeb',
   },
   {
@@ -41,6 +42,7 @@ const INSTRUTORES: Inst[] = [
     role: 'Coordenação · Mielograma',
     bio: 'Coordenador da Formação em Mielograma e Hematopatologia Medular em Cães e Gatos. Responde pela trilha teórico-prática de leitura do mielograma, da citomorfologia medular ao diagnóstico hematopatológico avançado.',
     gradient: 'linear-gradient(150deg,#2f5a45,#0c2a20)',
+    photo: '/instrutores/marcio.jpg',
   },
   {
     initial: 'R',
