@@ -20,7 +20,7 @@ import type { AuthUser } from '../common/auth-user';
 import type { AsaasWebhookDto, CreateCheckoutDto, OrderDto, PaymentWebhookDto } from './dto';
 import { PAYMENT_GATEWAY, type PaymentGateway } from './payment-gateway';
 import { asaasEventToStatus } from './asaas-gateway';
-import { effectiveInstallments, netAmountCents } from './pricing';
+import { courseMaxInstallments, effectiveInstallments, netAmountCents } from './pricing';
 
 @Injectable()
 export class CheckoutService {
@@ -46,6 +46,7 @@ export class CheckoutService {
         coverUrl: courses.coverUrl,
         priceCents: courses.priceCents,
         maxInstallments: courses.maxInstallments,
+        installmentPlans: courses.installmentPlans,
       })
       .from(courses)
       .where(
@@ -66,13 +67,18 @@ export class CheckoutService {
     if (already) throw new ConflictException('Você já está matriculado neste curso');
 
     // Regra comercial (server-authoritative): Pix à vista tem desconto; cartão e
-    // boleto/carnê pagam o preço cheio parcelável (até o teto).
+    // boleto/carnê pagam o preço cheio (ou o total do plano) parcelável até o teto.
     const installments = effectiveInstallments(
       dto.method,
       dto.installments,
-      course.maxInstallments,
+      courseMaxInstallments(course.maxInstallments, course.installmentPlans),
     );
-    const amountCents = netAmountCents(dto.method, course.priceCents);
+    const amountCents = netAmountCents(
+      dto.method,
+      course.priceCents,
+      installments,
+      course.installmentPlans,
+    );
 
     const [order] = await this.db
       .insert(orders)

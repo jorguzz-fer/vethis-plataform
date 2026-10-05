@@ -2608,6 +2608,10 @@ export interface components {
             subtitle: string | null;
             priceCents: number;
             maxInstallments: number;
+            installmentPlans: {
+                installments: number;
+                installmentCents: number;
+            }[];
             /** @enum {string} */
             level: "iniciante" | "intermediario" | "avancado";
             comingSoon: boolean;
@@ -2631,6 +2635,10 @@ export interface components {
             subtitle: string | null;
             priceCents: number;
             maxInstallments: number;
+            installmentPlans: {
+                installments: number;
+                installmentCents: number;
+            }[];
             /** @enum {string} */
             level: "iniciante" | "intermediario" | "avancado";
             comingSoon: boolean;
@@ -3020,6 +3028,11 @@ export interface components {
             subtitle: string | null;
             description: string | null;
             priceCents: number;
+            maxInstallments: number;
+            installmentPlans: {
+                installments: number;
+                installmentCents: number;
+            }[];
             /** @enum {string} */
             level: "iniciante" | "intermediario" | "avancado";
             /** @enum {string} */
@@ -3059,6 +3072,12 @@ export interface components {
             description?: string | null;
             /** @default 0 */
             priceCents: number;
+            /** @default 24 */
+            maxInstallments: number;
+            installmentPlans?: {
+                installments: number;
+                installmentCents: number;
+            }[];
             /**
              * @default iniciante
              * @enum {string}
@@ -3207,6 +3226,11 @@ export interface components {
             subtitle?: string | null;
             description?: string | null;
             priceCents?: number;
+            maxInstallments?: number;
+            installmentPlans?: {
+                installments: number;
+                installmentCents: number;
+            }[];
             /** @enum {string} */
             level?: "iniciante" | "intermediario" | "avancado";
             /** @enum {string} */

@@ -8,6 +8,7 @@ import { opportunities } from '../db/schema/crm';
 import { users } from '../db/schema/identity';
 import { CrmService } from '../crm/crm.service';
 import { PasswordService } from '../auth/password.service';
+import { normalizePlans } from '../checkout/pricing';
 import type {
   AdminCourseDetailDto,
   AdminCourseDto,
@@ -197,6 +198,7 @@ export class AdminService {
   async updateCourse(id: string, dto: UpdateCourseDto): Promise<AdminCourseDto> {
     const patch: Record<string, unknown> = { ...dto, updatedAt: new Date() };
     if (dto.status === 'published') patch.publishedAt = new Date();
+    if (dto.installmentPlans) patch.installmentPlans = normalizePlans(dto.installmentPlans);
     const [row] = await this.db.update(courses).set(patch).where(eq(courses.id, id)).returning({
       id: courses.id,
       slug: courses.slug,
@@ -290,6 +292,8 @@ export class AdminService {
       subtitle: c.subtitle,
       description: c.description,
       priceCents: c.priceCents,
+      maxInstallments: c.maxInstallments,
+      installmentPlans: c.installmentPlans ?? [],
       level: c.level,
       status: c.status,
       featuredRank: c.featuredRank,
@@ -313,6 +317,8 @@ export class AdminService {
         subtitle: dto.subtitle ?? null,
         description: dto.description ?? null,
         priceCents: dto.priceCents,
+        maxInstallments: dto.maxInstallments,
+        installmentPlans: normalizePlans(dto.installmentPlans),
         level: dto.level,
         status: dto.status,
         featuredRank: dto.featuredRank ?? 0,

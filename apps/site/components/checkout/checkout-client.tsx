@@ -7,6 +7,13 @@ import { Badge, Button, Field } from '@vethis/ui';
 import type { CourseDetail } from '@/lib/api';
 import { readAttribution } from '@/lib/attribution';
 import {
+  PIX_DISCOUNT_PERCENT,
+  cardAmountCents,
+  maxInstallmentsOf,
+  pixAmountCents,
+  type Priced,
+} from '@/lib/pricing';
+import {
   alunoUrl,
   browserApi,
   type AuthUser,
@@ -14,57 +21,41 @@ import {
   type PaymentMethod,
 } from '@/lib/browser-api';
 
-/** Desconto do Pix à vista — espelha a regra server-authoritative da API. */
-const PIX_DISCOUNT_PERCENT = 5;
-/** Teto global de parcelas (cartão e boleto/carnê); cada curso pode oferecer menos. */
-const MAX_INSTALLMENTS = 24;
-
-/** Teto de parcelas do curso, limitado ao teto global. */
-function installmentsFor(maxInstallments?: number | null): number {
-  if (!maxInstallments || maxInstallments < 1) return MAX_INSTALLMENTS;
-  return Math.min(Math.trunc(maxInstallments), MAX_INSTALLMENTS);
+/** Valor cobrado para o meio escolhido (Pix à vista tem desconto; cartão/boleto, o plano). */
+function netPriceCents(method: PaymentMethod, course: Priced, installments: number): number {
+  return method === 'pix'
+    ? pixAmountCents(course.priceCents)
+    : cardAmountCents(course, installments);
 }
 
-/** Valor cobrado para o meio escolhido (Pix à vista tem desconto). */
-function netPriceCents(method: PaymentMethod, priceCents: number): number {
-  if (method === 'pix') {
-    return Math.round((priceCents * (100 - PIX_DISCOUNT_PERCENT)) / 100);
-  }
-  return priceCents;
-}
-
-/** Opções de parcelamento (sem juros) até o teto do curso, dinheiro em centavos. */
-function installmentOptions(
-  priceCents: number,
-  maxInstallments: number,
-): { n: number; label: string }[] {
-  return Array.from({ length: installmentsFor(maxInstallments) }, (_, i) => {
+/** Opções de parcelamento até o teto do curso, com o total do plano correspondente. */
+function installmentOptions(course: Priced): { n: number; label: string }[] {
+  return Array.from({ length: maxInstallmentsOf(course) }, (_, i) => {
     const n = i + 1;
-    return { n, label: `${n}x de ${formatBRL(Math.round(priceCents / n))}` };
+    return { n, label: `${n}x de ${formatBRL(Math.round(cardAmountCents(course, n) / n))}` };
   });
 }
 
-/** Seletor de parcelas (sem juros), usado por cartão e boleto/carnê. */
+/** Seletor de parcelas, usado por cartão e boleto/carnê. */
 function InstallmentsField({
-  priceCents,
-  maxInstallments,
+  course,
   value,
   onChange,
 }: {
-  priceCents: number;
-  maxInstallments: number;
+  course: Priced;
   value: number;
   onChange: (n: number) => void;
 }) {
+  const hasPlans = (course.installmentPlans ?? []).length > 0;
   return (
     <label className="flex flex-col gap-1.5 text-sm font-semibold text-ink">
-      Parcelas (sem juros)
+      {hasPlans ? 'Parcelas' : 'Parcelas (sem juros)'}
       <select
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
         className="rounded-[10px] border-[1.5px] border-border px-3.5 py-3 text-[15px]"
       >
-        {installmentOptions(priceCents, maxInstallments).map((o) => (
+        {installmentOptions(course).map((o) => (
           <option key={o.n} value={o.n}>
             {o.label}
           </option>
@@ -407,12 +398,7 @@ function PaymentPanel({
                 required
               />
             </div>
-            <InstallmentsField
-              priceCents={course.priceCents}
-              maxInstallments={course.maxInstallments}
-              value={installments}
-              onChange={setInstallments}
-            />
+            <InstallmentsField course={course} value={installments} onChange={setInstallments} />
             <p className="text-xs text-muted">
               Dados de cobrança exigidos pela operadora do cartão:
             </p>
@@ -447,12 +433,7 @@ function PaymentPanel({
           </>
         ) : method === 'boleto' ? (
           <>
-            <InstallmentsField
-              priceCents={course.priceCents}
-              maxInstallments={course.maxInstallments}
-              value={installments}
-              onChange={setInstallments}
-            />
+            <InstallmentsField course={course} value={installments} onChange={setInstallments} />
             <p className="rounded-xl bg-paper px-4 py-3 text-sm text-muted">
               {installments > 1
                 ? `Ao confirmar, geramos um carnê de ${installments}x. A matrícula é liberada após a compensação da 1ª parcela (1–2 dias úteis).`
@@ -472,12 +453,12 @@ function PaymentPanel({
           {busy
             ? 'Processando…'
             : method === 'pix'
-              ? `Gerar Pix e pagar ${formatBRL(netPriceCents('pix', course.priceCents))}`
+              ? `Gerar Pix e pagar ${formatBRL(pixAmountCents(course.priceCents))}`
               : method === 'boleto'
                 ? installments > 1
                   ? `Gerar carnê de ${installments}x`
                   : 'Gerar boleto'
-                : `Pagar ${formatBRL(course.priceCents)}`}
+                : `Pagar ${formatBRL(cardAmountCents(course, installments))}`}
         </Button>
         <p className="text-center text-xs text-muted">
           🔒 Pagamento seguro · Garantia de 7 dias · Dados do cartão não são armazenados
@@ -659,9 +640,10 @@ function OrderSummary({
 }) {
   const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
   // Antes do pedido, espelha a regra do método escolhido; depois, usa o pedido.
-  const total = order?.amountCents ?? netPriceCents(method, course.priceCents);
   const parcels = order?.installments ?? (method === 'pix' ? 1 : installments);
-  const pixDiscount = method === 'pix' && !order ? course.priceCents - total : 0;
+  const subtotal = method === 'pix' ? course.priceCents : cardAmountCents(course, parcels);
+  const total = order?.amountCents ?? netPriceCents(method, course, parcels);
+  const pixDiscount = method === 'pix' && !order ? subtotal - total : 0;
   return (
     <aside className="h-fit rounded-2xl border border-border bg-white p-6 shadow-sm lg:sticky lg:top-6">
       <div
@@ -684,7 +666,7 @@ function OrderSummary({
       <div className="mt-4 border-t border-border pt-4">
         <div className="flex items-center justify-between">
           <span className="text-muted">Subtotal</span>
-          <span className="text-ink">{formatBRL(course.priceCents)}</span>
+          <span className="text-ink">{formatBRL(subtotal)}</span>
         </div>
         {pixDiscount > 0 ? (
           <div className="mt-2 flex items-center justify-between text-green-700">

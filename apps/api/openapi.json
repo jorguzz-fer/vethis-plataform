@@ -466,6 +466,27 @@
             "type": "integer",
             "exclusiveMinimum": 0
           },
+          "installmentPlans": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "installments": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 24
+                },
+                "installmentCents": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "required": [
+                "installments",
+                "installmentCents"
+              ]
+            }
+          },
           "level": {
             "type": "string",
             "enum": [
@@ -541,6 +562,7 @@
           "subtitle",
           "priceCents",
           "maxInstallments",
+          "installmentPlans",
           "level",
           "comingSoon",
           "coverUrl",
@@ -573,6 +595,27 @@
           "maxInstallments": {
             "type": "integer",
             "exclusiveMinimum": 0
+          },
+          "installmentPlans": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "installments": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 24
+                },
+                "installmentCents": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "required": [
+                "installments",
+                "installmentCents"
+              ]
+            }
           },
           "level": {
             "type": "string",
@@ -740,6 +783,7 @@
           "subtitle",
           "priceCents",
           "maxInstallments",
+          "installmentPlans",
           "level",
           "comingSoon",
           "coverUrl",
@@ -2202,6 +2246,30 @@
           "priceCents": {
             "type": "integer"
           },
+          "maxInstallments": {
+            "type": "integer"
+          },
+          "installmentPlans": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "installments": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 24
+                },
+                "installmentCents": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "required": [
+                "installments",
+                "installmentCents"
+              ]
+            }
+          },
           "level": {
             "type": "string",
             "enum": [
@@ -2344,6 +2412,8 @@
           "subtitle",
           "description",
           "priceCents",
+          "maxInstallments",
+          "installmentPlans",
           "level",
           "status",
           "featuredRank",
@@ -2388,6 +2458,34 @@
             "type": "integer",
             "minimum": 0,
             "default": 0
+          },
+          "maxInstallments": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 24,
+            "default": 24
+          },
+          "installmentPlans": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "installments": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 24
+                },
+                "installmentCents": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "required": [
+                "installments",
+                "installmentCents"
+              ]
+            },
+            "maxItems": 6
           },
           "level": {
             "type": "string",
@@ -2985,6 +3083,33 @@
           "priceCents": {
             "type": "integer",
             "minimum": 0
+          },
+          "maxInstallments": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 24
+          },
+          "installmentPlans": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "installments": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 24
+                },
+                "installmentCents": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "required": [
+                "installments",
+                "installmentCents"
+              ]
+            },
+            "maxItems": 6
           },
           "level": {
             "type": "string",

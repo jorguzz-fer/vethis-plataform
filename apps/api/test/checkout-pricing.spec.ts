@@ -2,9 +2,18 @@ import { describe, expect, it } from 'vitest';
 import {
   MAX_INSTALLMENTS,
   PIX_DISCOUNT_PERCENT,
+  cardAmountCents,
+  courseMaxInstallments,
   effectiveInstallments,
   netAmountCents,
+  normalizePlans,
 } from '../src/checkout/pricing';
+
+// Medicina Felina: 12x de R$ 725 (R$ 8.700) ou 24x de R$ 577 (R$ 13.848).
+const FELINA = [
+  { installments: 24, installmentCents: 57700 },
+  { installments: 12, installmentCents: 72500 },
+];
 
 describe('netAmountCents', () => {
   it('aplica desconto do Pix à vista', () => {
@@ -53,5 +62,44 @@ describe('effectiveInstallments', () => {
   it('cai no teto global quando o curso não define um válido', () => {
     expect(effectiveInstallments('card', 24, 0)).toBe(MAX_INSTALLMENTS);
     expect(effectiveInstallments('card', 24, Number.NaN)).toBe(MAX_INSTALLMENTS);
+  });
+});
+
+describe('planos de parcelamento', () => {
+  it('ordena e descarta planos inválidos ou duplicados', () => {
+    expect(
+      normalizePlans([
+        ...FELINA,
+        { installments: 12, installmentCents: 1 },
+        { installments: 0, installmentCents: 100 },
+        { installments: 30, installmentCents: 100 },
+        { installments: 6, installmentCents: 0 },
+      ]),
+    ).toEqual([
+      { installments: 12, installmentCents: 72500 },
+      { installments: 24, installmentCents: 57700 },
+    ]);
+  });
+
+  it('cobra o total do menor plano que comporta as parcelas', () => {
+    expect(cardAmountCents(870000, 1, FELINA)).toBe(870000);
+    expect(cardAmountCents(870000, 12, FELINA)).toBe(870000);
+    expect(cardAmountCents(870000, 13, FELINA)).toBe(1384800);
+    expect(cardAmountCents(870000, 24, FELINA)).toBe(1384800);
+  });
+
+  it('sem planos, mantém o preço cheio', () => {
+    expect(cardAmountCents(3064800, 24, [])).toBe(3064800);
+    expect(cardAmountCents(3064800, 24, null)).toBe(3064800);
+  });
+
+  it('Pix à vista: 5% sobre o preço base, mesmo com planos', () => {
+    expect(netAmountCents('pix', 870000, 24, FELINA)).toBe(826500);
+    expect(netAmountCents('boleto', 870000, 24, FELINA)).toBe(1384800);
+  });
+
+  it('o maior plano define o teto de parcelas', () => {
+    expect(courseMaxInstallments(10, FELINA)).toBe(24);
+    expect(courseMaxInstallments(10, [])).toBe(10);
   });
 });
