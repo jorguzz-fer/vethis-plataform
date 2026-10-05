@@ -28,7 +28,7 @@ export default async function HomePage() {
       <Cursos courses={featured} />
       <AppBand />
       <ClinicasDash />
-      <Instrutores />
+      <Instrutores courses={courses} />
       <Depoimento />
       <Cta />
     </>

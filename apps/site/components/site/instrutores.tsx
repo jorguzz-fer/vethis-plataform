@@ -1,3 +1,5 @@
+import type { CourseSummary } from '@/lib/api';
+
 type Inst = {
   initial: string;
   name: string;
@@ -6,6 +8,13 @@ type Inst = {
   gradient: string;
   /** Foto em /public/instrutores; cai para a inicial se o arquivo não existir. */
   photo?: string;
+  /**
+   * Slug do instrutor no catálogo: se ele tiver foto cadastrada no admin, ela
+   * tem prioridade sobre `photo`.
+   */
+  slug?: string;
+  /** Oculta o card sem apagar os dados (para reativar, basta remover a flag). */
+  hidden?: boolean;
 };
 
 const INSTRUTORES: Inst[] = [
@@ -16,6 +25,22 @@ const INSTRUTORES: Inst[] = [
     bio: 'Coordenadora acadêmica da Pós-graduação em Clínica Médica de Felinos. Médica-veterinária graduada em 1995, especialista em Medicina Felina, Ultrassonografia e Geriatria e Neonatologia, com diplomas internacionais em Medicina Felina e em Nefrologia e Urologia. Veterinária Cat Friendly (AAFP) e palestrante nacional e internacional.',
     gradient: 'linear-gradient(150deg,#12603f,#0a2b20)',
     photo: '/instrutores/patricia.jpg',
+    hidden: true,
+  },
+  {
+    initial: 'C',
+    name: 'Dra. Cintia Ghorayeb',
+    role: 'Coordenação · Clínica Médica',
+    bio: 'Coordenadora da Pós-graduação em Clínica Médica de Cães e Gatos. Responde pela integração entre os módulos, pelo alinhamento dos conteúdos ao raciocínio clínico orientado por problemas e pelo acompanhamento do corpo docente e dos encontros síncronos do curso.',
+    gradient: 'linear-gradient(150deg,#12603f,#0a2b20)',
+    slug: 'dra-cintia-ghorayeb',
+  },
+  {
+    initial: 'M',
+    name: 'Dr. Márcio Moreira',
+    role: 'Coordenação · Mielograma',
+    bio: 'Coordenador da Formação em Mielograma e Hematopatologia Medular em Cães e Gatos. Responde pela trilha teórico-prática de leitura do mielograma, da citomorfologia medular ao diagnóstico hematopatológico avançado.',
+    gradient: 'linear-gradient(150deg,#2f5a45,#0c2a20)',
   },
   {
     initial: 'R',
@@ -27,7 +52,17 @@ const INSTRUTORES: Inst[] = [
   },
 ];
 
-export function Instrutores() {
+export function Instrutores({ courses = [] }: { courses?: CourseSummary[] }) {
+  // Fotos cadastradas no admin (por slug do instrutor), vindas do catálogo.
+  const avatars = new Map<string, string>();
+  for (const c of courses) {
+    if (c.instructor?.avatarUrl) avatars.set(c.instructor.slug, c.instructor.avatarUrl);
+  }
+  const visible = INSTRUTORES.filter((i) => !i.hidden).map((i) => ({
+    ...i,
+    photo: (i.slug && avatars.get(i.slug)) || i.photo,
+  }));
+
   return (
     <section className="blk" id="instrutores">
       <div className="wrap">
@@ -42,7 +77,7 @@ export function Instrutores() {
           </p>
         </div>
         <div className="insts">
-          {INSTRUTORES.map((i) => (
+          {visible.map((i) => (
             <article className="inst-c" key={i.name}>
               <div className="top" style={{ background: i.gradient }}>
                 <div className="ph">
