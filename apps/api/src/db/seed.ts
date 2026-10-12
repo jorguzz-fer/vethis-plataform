@@ -190,7 +190,7 @@ const COURSES: SeedCourse[] = [
       {
         question: 'Como funciona o pagamento?',
         answer:
-          'Investimento de R$ 15.000,00. Você pode parcelar em até 10x de R$ 1.500,00 no cartão ou no boleto, ou pagar no Pix à vista com 5% de desconto (R$ 14.250,00).',
+          'Em até 24x de R$ 1.277,00 no boleto ou no cartão, ou no Pix à vista com 5% de desconto (R$ 29.115,60).',
       },
       {
         question: 'Como funciona a metodologia?',
@@ -476,7 +476,7 @@ const COURSES: SeedCourse[] = [
       {
         question: 'Como funciona o pagamento?',
         answer:
-          'Investimento de R$ 6.936,00. Você pode parcelar em até 24x de R$ 289,00 no boleto, pagar no Pix à vista com 5% de desconto (R$ 6.589,20) ou no cartão com condição especial.',
+          'Em 12x de R$ 725,00 ou 24x de R$ 577,00 no boleto ou no cartão, ou no Pix à vista com 5% de desconto (R$ 8.265,00).',
       },
       {
         question: 'Como funciona a metodologia?',
@@ -731,7 +731,7 @@ const COURSES: SeedCourse[] = [
       {
         question: 'Como funciona o pagamento?',
         answer:
-          'Investimento de R$ 9.288,00. Você pode parcelar em até 24x de R$ 387,00 no boleto, pagar no Pix à vista com 5% de desconto (R$ 8.823,60) ou no cartão com condição especial.',
+          'Em 12x de R$ 725,00 ou 24x de R$ 577,00 no boleto ou no cartão, ou no Pix à vista com 5% de desconto (R$ 8.265,00).',
       },
       {
         question: 'Como funciona a metodologia?',
@@ -994,7 +994,7 @@ const COURSES: SeedCourse[] = [
       {
         question: 'Como funciona o pagamento?',
         answer:
-          'Investimento de R$ 1.300,00. Você pode parcelar em até 10x de R$ 130,00 ou pagar no Pix à vista com 5% de desconto (R$ 1.235,00).',
+          'Em até 10x de R$ 187,00 no boleto ou no cartão, ou no Pix à vista com 5% de desconto (R$ 1.776,50).',
       },
       {
         question: 'Como funciona a metodologia?',
@@ -1187,7 +1187,7 @@ const COURSES: SeedCourse[] = [
     subtitle:
       'Do reconhecimento celular ao diagnóstico hematopatológico avançado, com leitura orientada de lâminas e casos.',
     description:
-      'Formação em Mielograma e Hematopatologia Medular em Cães e Gatos: uma trilha teórico-prática em três níveis, com 51 horas no total, que vai do reconhecimento celular ao diagnóstico hematopatológico avançado. O percurso é organizado por etapas: o módulo introdutório de citomorfologia medular e leitura inicial do mielograma; o nível intermediário, que aprofunda a interpretação hematopatológica e os distúrbios da hematopoiese; e o módulo avançado, que aborda hematopatologia neoplásica, leucemias, síndromes mielodisplásicas e introdução à biópsia de medula. No primeiro nível, o aluno aprende a reconhecer as principais populações celulares, organizar as sequências de maturação, avaliar qualidade e representatividade da amostra, realizar contagem diferencial orientada, compreender a relação mieloide:eritroide e distinguir medula normal, reacional ou claramente anormal. A metodologia combina teoria, leitura orientada de lâminas e discussão de casos, com foco em coleta, preparo, artefatos, armadilhas citológicas e um algoritmo básico de leitura. Indicada para médicos-veterinários, residentes, pós-graduandos e patologistas clínicos que desejam iniciar ou consolidar a leitura do mielograma com segurança e método.',
+      'Formação em Mielograma e Hematopatologia Medular em Cães e Gatos: uma trilha teórico-prática com 60 horas, organizada em três módulos independentes e progressivos de 20 horas cada, do reconhecimento celular ao diagnóstico hematopatológico avançado. O diferencial pedagógico é começar pelo reconhecimento citomorfológico e pela leitura básica da medula óssea antes de avançar para alterações complexas, neoplasias hematopoiéticas, leucemias, síndromes mielodisplásicas e introdução à biópsia medular. O Módulo 1 (Básico) ensina a reconhecer as populações celulares da medula, organizar as sequências de maturação, avaliar a amostra, fazer a contagem diferencial e interpretar a relação mieloide:eritroide. O Módulo 2 (Intermediário) aprofunda a interpretação das alterações das linhagens, displasias, pancitopenias e a elaboração do laudo. O Módulo 3 (Avançado) aborda leucemias, doenças linfoides e plasmocitárias, síndromes mielodisplásicas, exames complementares (citometria de fluxo, imuno-histoquímica, PARR e técnicas moleculares) e a leitura inicial da biópsia de medula óssea. Cada módulo combina 12 horas teóricas e 8 horas práticas, com leitura orientada de lâminas e discussão de casos.',
     // Oferta (completo): 10x de R$ 1.125,00 ou 24x de R$ 625,00 (boleto ou cartão).
     priceCents: 1125000,
     installmentPlans: [
@@ -1198,92 +1198,289 @@ const COURSES: SeedCourse[] = [
     specialty: 'hematologia',
     instructor: 'coordenacao-mielograma',
     featuredRank: 60,
-    workloadHours: 51,
+    workloadHours: 60,
+    // Grade sincronizada com o plano de curso (3 módulos de 20 h).
+    replaceModules: true,
     learningObjectives: [
-      'Reconhecer as principais populações celulares da medula óssea e organizar as sequências de maturação.',
-      'Avaliar a qualidade e a representatividade da amostra e identificar artefatos e armadilhas citológicas.',
-      'Realizar a contagem diferencial orientada e interpretar a relação mieloide:eritroide.',
-      'Distinguir medula normal, reacional ou claramente anormal com um algoritmo básico de leitura.',
-      'Interpretar os principais distúrbios da hematopoiese à luz do hemograma e do quadro clínico.',
-      'Reconhecer padrões de hematopatologia neoplásica, leucemias e síndromes mielodisplásicas.',
-      'Compreender as indicações e a leitura inicial da biópsia de medula óssea.',
+      'Reconhecer as células hematopoiéticas e não hematopoiéticas da medula óssea e organizar as sequências de maturação de cada linhagem.',
+      'Avaliar qualidade, representatividade, partículas medulares, celularidade e hemodiluição da amostra, identificando artefatos e armadilhas citológicas.',
+      'Realizar a contagem diferencial e interpretar criticamente a relação mieloide:eritroide.',
+      'Reconhecer alterações eritroides, granulocíticas e megacariocíticas, bloqueios maturativos, assincronias e padrões displásicos, correlacionando-os ao hemograma.',
+      'Diferenciar processos reacionais de doença medular primária e abordar pancitopenias e medulas hipocelulares de forma sistemática.',
+      'Elaborar a descrição, a conclusão e os diagnósticos diferenciais de um laudo de mielograma.',
+      'Reconhecer populações blásticas, leucemias, doenças linfoides e plasmocitárias, infiltrações medulares e síndromes mielodisplásicas.',
+      'Indicar e interpretar de forma integrada citometria de fluxo, imunocitoquímica, imuno-histoquímica, PARR e testes moleculares.',
+      'Compreender as indicações e limitações da biópsia de medula óssea e iniciar sua leitura histopatológica.',
     ],
     faq: [
       {
         question: 'Para quem é esta formação?',
         answer:
-          'Para médicos-veterinários, residentes, pós-graduandos e patologistas clínicos que desejam iniciar ou consolidar a leitura do mielograma com segurança e método.',
+          'Para médicos-veterinários, residentes, pós-graduandos, hematologistas e patologistas clínicos que desejam iniciar, consolidar ou aprofundar a leitura do mielograma e a hematopatologia medular.',
       },
       {
         question: 'Como o curso é organizado?',
         answer:
-          'Em três níveis: o módulo introdutório de citomorfologia medular e leitura inicial do mielograma; o nível intermediário, que aprofunda a interpretação hematopatológica e os distúrbios da hematopoiese; e o módulo avançado, que aborda hematopatologia neoplásica, leucemias, síndromes mielodisplásicas e introdução à biópsia de medula.',
+          'Em três módulos independentes e progressivos: Módulo 1 – Básico (Citomorfologia Medular e Leitura Inicial do Mielograma), Módulo 2 – Intermediário (Interpretação Hematopatológica e Distúrbios da Hematopoiese) e Módulo 3 – Avançado (Hematopatologia Neoplásica, Leucemias, SMD e Introdução à Biópsia de Medula).',
       },
       {
         question: 'Qual a carga horária?',
-        answer: 'A formação tem 51 horas no total, distribuídas entre os três níveis da trilha.',
+        answer:
+          'A formação tem 60 horas no total: três módulos de 20 horas, cada um com 12 horas teóricas e 8 horas práticas de leitura orientada de lâminas e discussão de casos.',
+      },
+      {
+        question: 'Como funciona a certificação?',
+        answer:
+          'Cada módulo pode ter certificação individual. Quem conclui os três níveis recebe a certificação de Formação Completa em Mielograma e Hematopatologia Medular em Cães e Gatos, com 60 horas.',
       },
       {
         question: 'Como funciona o pagamento?',
         answer:
-          'Investimento de R$ 15.000,00. Você pode parcelar em até 10x de R$ 1.500,00 no cartão ou no boleto, ou pagar no Pix à vista com 5% de desconto (R$ 14.250,00).',
+          'Formação completa em 10x de R$ 1.125,00 ou 24x de R$ 625,00 no boleto ou no cartão, ou no Pix à vista com 5% de desconto (R$ 10.687,50).',
       },
       {
         question: 'Como funciona a metodologia?',
         answer:
-          'A metodologia combina teoria, leitura orientada de lâminas e discussão de casos, com foco em coleta, preparo, artefatos, armadilhas citológicas e um algoritmo básico de leitura.',
+          'Teoria, leitura orientada de lâminas e discussão de casos, com algoritmos de leitura em cada nível: do reconhecimento celular à investigação integrada das doenças clonais, passando por hemograma, esfregaço, mielograma, exames complementares e biópsia medular.',
       },
     ],
     modules: [
       {
-        title: 'Nível 1: Citomorfologia Medular e Leitura Inicial do Mielograma',
+        title: 'Módulo 1 – Básico: Citomorfologia Medular e Leitura Inicial do Mielograma',
         lessons: [
-          { title: 'Indicações do mielograma e integração com o hemograma', min: 120, free: true },
-          { title: 'Coleta e preparo da amostra de medula óssea', min: 120 },
-          { title: 'Artefatos e armadilhas citológicas', min: 90 },
-          { title: 'Qualidade e representatividade da amostra', min: 90 },
-          { title: 'Reconhecimento das principais populações celulares', min: 120 },
           {
-            title: 'Sequências de maturação das linhagens eritroide, mieloide e megacariocítica',
-            min: 120,
+            title:
+              'Indicações do mielograma e integração inicial com hemograma e esfregaço sanguíneo',
+            min: 30,
+            free: true,
           },
-          { title: 'Contagem diferencial orientada', min: 90 },
-          { title: 'Relação mieloide:eritroide e sua interpretação', min: 90 },
-          { title: 'Medula normal, reacional ou claramente anormal', min: 90 },
-          { title: 'Algoritmo básico de leitura do mielograma', min: 90 },
-          { title: 'Leitura orientada de lâminas e discussão de casos — nível 1', min: 120 },
+          {
+            title:
+              'Hematopoiese e organização funcional da medula óssea: célula-tronco, progenitores e microambiente medular',
+            min: 40,
+          },
+          {
+            title:
+              'Coleta em cães e gatos: indicações, locais, técnicas e escolha do sítio conforme espécie e porte',
+            min: 40,
+          },
+          {
+            title:
+              'Processamento e confecção das lâminas: squash, esfregaço, partículas medulares e colorações',
+            min: 40,
+          },
+          {
+            title:
+              'Erros pré-analíticos e artefatos: hemodiluição, coagulação, esmagamento, baixa celularidade e falhas de coloração',
+            min: 30,
+          },
+          {
+            title:
+              'Princípios de maturação celular: tamanho, relação núcleo:citoplasma, cromatina, nucléolos e granulação',
+            min: 30,
+          },
+          { title: 'Série eritroide: estágios de maturação e critérios de diferenciação', min: 40 },
+          { title: 'Série granulocítica: do mieloblasto ao neutrófilo segmentado', min: 40 },
+          {
+            title: 'Série monocítica e diferenciação em relação a outras células mononucleares',
+            min: 25,
+          },
+          { title: 'Megacariócitos e avaliação inicial da série megacariocítica', min: 30 },
+          {
+            title:
+              'Linfócitos e precursores linfoides, plasmócitos, macrófagos, mastócitos, osteoblastos e osteoclastos',
+            min: 35,
+          },
+          { title: 'Blastos: conceito, características gerais e reconhecimento inicial', min: 30 },
+          {
+            title: 'Células que se confundem entre si e armadilhas citológicas da medula óssea',
+            min: 30,
+          },
+          {
+            title:
+              'Leitura sistemática do mielograma: partículas, celularidade, distribuição celular e representatividade das linhagens',
+            min: 40,
+          },
+          { title: 'Introdução à contagem diferencial medular', min: 35 },
+          {
+            title: 'Relação mieloide:eritroide: conceito, cálculo e interpretação básica',
+            min: 35,
+          },
+          { title: 'Maturação ordenada versus alteração de maturação', min: 30 },
+          { title: 'Reconhecimento inicial de hiperplasia, hipoplasia e aplasia', min: 35 },
+          {
+            title: 'Introdução à interpretação medular nas anemias regenerativas e arregenerativas',
+            min: 35,
+          },
+          { title: 'Introdução à abordagem da pancitopenia', min: 35 },
+          {
+            title: 'Processos reacionais versus suspeita de doença primária da medula óssea',
+            min: 35,
+          },
+          { title: 'Prática: demonstração de coleta e preparação de lâminas', min: 90 },
+          {
+            title: 'Prática: reconhecimento celular e montagem das sequências de maturação',
+            min: 90,
+          },
+          { title: 'Prática: qual é a célula? qual é a linhagem? madura ou imatura?', min: 90 },
+          { title: 'Prática: contagem diferencial e cálculo orientado da relação M:E', min: 90 },
+          {
+            title: 'Casos: hiperplasia eritroide, hiperplasia mieloide, hipoplasia e pancitopenia',
+            min: 90,
+          },
+          { title: 'Algoritmo básico de leitura do mielograma', min: 30 },
         ],
       },
       {
-        title: 'Nível 2: Interpretação Hematopatológica e Distúrbios da Hematopoiese',
+        title:
+          'Módulo 2 – Intermediário: Interpretação Hematopatológica e Distúrbios da Hematopoiese',
         lessons: [
-          { title: 'Interpretação hematopatológica integrada ao quadro clínico', min: 120 },
-          { title: 'Hipoplasia e aplasia medular', min: 120 },
-          { title: 'Hiperplasia eritroide, mieloide e megacariocítica', min: 120 },
-          { title: 'Diseritropoiese, disgranulopoiese e dismegacariocitopoiese', min: 120 },
-          { title: 'Medula na anemia não regenerativa e nas citopenias imunomediadas', min: 120 },
-          { title: 'Medula nas doenças infecciosas e inflamatórias', min: 120 },
-          { title: 'Mielofibrose, mielonecrose e outras alterações do estroma', min: 120 },
-          { title: 'Leitura orientada de lâminas e discussão de casos — nível 2', min: 120 },
+          { title: 'Avaliação crítica da qualidade e representatividade da amostra', min: 30 },
+          { title: 'Celularidade medular e distribuição das linhagens', min: 30 },
+          { title: 'Contagem diferencial medular: execução, interpretação e limitações', min: 40 },
+          {
+            title: 'Relação mieloide:eritroide: interpretação crítica e quando o índice engana',
+            min: 30,
+          },
+          { title: 'Integração entre hemograma, esfregaço sanguíneo e mielograma', min: 40 },
+          {
+            title:
+              'Linhagem eritroide: hiperplasia, hipoplasia, aplasia, eritropoiese ineficaz e alterações imunomediadas',
+            min: 70,
+          },
+          {
+            title:
+              'Linhagem granulocítica: granulopoiese de emergência, bloqueios maturativos, assincronias e disgranulopoiese',
+            min: 60,
+          },
+          {
+            title:
+              'Linhagem megacariocítica: alterações morfológicas, dismegacariopoiese e correlação com as plaquetas',
+            min: 50,
+          },
+          {
+            title:
+              'Pancitopenia: aplasia, doenças infecciosas, toxicidades, necrose medular, mielofibrose e infiltrações',
+            min: 70,
+          },
+          {
+            title:
+              'Medula hipocelular versus medula infiltrada: organizando o raciocínio diagnóstico',
+            min: 40,
+          },
+          { title: 'Displasia: diseritropoiese, disgranulopoiese e dismegacariopoiese', min: 60 },
+          { title: 'Displasia reacional/secundária versus suspeita de processo clonal', min: 45 },
+          { title: 'Processos reacionais versus doença primária da medula óssea', min: 40 },
+          {
+            title:
+              'Quando suspeitar de neoplasia hematopoiética e quando encaminhar para exames complementares',
+            min: 40,
+          },
+          { title: 'Quando o mielograma é insuficiente para responder à questão clínica', min: 30 },
+          {
+            title:
+              'Elaboração do laudo: descrição, interpretação, conclusão e diagnósticos diferenciais',
+            min: 45,
+          },
+          { title: 'Caso: anemia arregenerativa e eritropoiese ineficaz', min: 60 },
+          { title: 'Caso: trombocitopenia com diferentes respostas megacariocíticas', min: 60 },
+          { title: 'Caso: neutropenia e bloqueio maturativo', min: 60 },
+          { title: 'Caso: pancitopenia e medula hipocelular', min: 60 },
+          { title: 'Caso: hiperplasia eritroide e hiperplasia mieloide', min: 60 },
+          { title: 'Caso: aplasia/hipoplasia medular, toxicidades e doenças infecciosas', min: 60 },
+          {
+            title: 'Casos com alterações displásicas: alteração reacional ou doença clonal?',
+            min: 90,
+          },
+          { title: 'Algoritmo intermediário de interpretação', min: 30 },
         ],
       },
       {
-        title: 'Nível 3: Hematopatologia Neoplásica, Leucemias e Biópsia de Medula',
+        title:
+          'Módulo 3 – Avançado: Hematopatologia Neoplásica, Leucemias, SMD e Introdução à Biópsia de Medula',
         lessons: [
-          { title: 'Hematopatologia neoplásica: princípios e classificação', min: 120 },
-          { title: 'Leucemias agudas', min: 120 },
-          { title: 'Leucemias crônicas e neoplasias mieloproliferativas', min: 120 },
-          { title: 'Síndromes mielodisplásicas', min: 120 },
           {
-            title: 'Infiltração medular por linfoma, mieloma múltiplo e neoplasias metastáticas',
-            min: 120,
+            title:
+              'Classificação das neoplasias hematopoiéticas e sua aplicação crítica na Medicina Veterinária',
+            min: 30,
           },
-          { title: 'Exames complementares: citoquímica, imunofenotipagem e PARR', min: 120 },
           {
-            title: 'Introdução à biópsia de medula óssea: indicações, coleta e leitura inicial',
-            min: 120,
+            title: 'Blastos: critérios morfológicos, limitações e diagnósticos diferenciais',
+            min: 30,
           },
-          { title: 'Leitura orientada de lâminas e discussão de casos — nível 3', min: 120 },
+          {
+            title:
+              'Leucemias agudas: leucemia mieloide aguda, leucemia linfoblástica aguda e diferenciação inicial',
+            min: 40,
+          },
+          { title: 'Leucemias e doenças mieloproliferativas crônicas', min: 30 },
+          { title: 'Reação leucemoide versus leucemia', min: 20 },
+          {
+            title:
+              'Doenças linfoides com envolvimento medular: linfoma, linfoma leucemizado e linfocitose reacional',
+            min: 30,
+          },
+          {
+            title:
+              'Neoplasias plasmocitárias: mieloma múltiplo e plasmocitose reacional versus neoplásica',
+            min: 30,
+          },
+          { title: 'Outras infiltrações medulares, mieloftise e leucoeritroblastose', min: 30 },
+          {
+            title:
+              'Síndrome mielodisplásica: conceito, hematopoiese ineficaz, citopenias, celularidade e blastos',
+            min: 45,
+          },
+          {
+            title:
+              'Diseritropoiese, disgranulopoiese e dismegacariopoiese: critérios morfológicos e quantificação',
+            min: 45,
+          },
+          {
+            title: 'Displasia reacional/secundária versus síndrome mielodisplásica clonal',
+            min: 30,
+          },
+          {
+            title:
+              'SMD com aumento de blastos, progressão para LMA e limites dos critérios em cães e gatos',
+            min: 30,
+          },
+          { title: 'Citometria de fluxo e imunofenotipagem', min: 40 },
+          { title: 'Imunocitoquímica e imuno-histoquímica', min: 30 },
+          { title: 'PARR, testes de clonalidade, citogenética e técnicas moleculares', min: 40 },
+          {
+            title: 'Como escolher o exame complementar e integrar os resultados com a morfologia',
+            min: 40,
+          },
+          { title: 'Aspiração versus biópsia: indicações e o que cada método responde', min: 30 },
+          { title: 'Biópsia medular: coleta, fixação, processamento e descalcificação', min: 30 },
+          {
+            title: 'Arquitetura medular, celularidade e distribuição das linhagens na histologia',
+            min: 40,
+          },
+          {
+            title: 'Megacariócitos na histologia; hipoplasia, aplasia, necrose e fibrose medular',
+            min: 30,
+          },
+          {
+            title:
+              'Infiltração neoplásica, mieloftise e imuno-histoquímica aplicada à medula óssea',
+            min: 30,
+          },
+          { title: 'Correlação entre mielograma e biópsia de medula', min: 20 },
+          { title: 'Caso: reação leucemoide versus leucemia', min: 50 },
+          { title: 'Caso: leucemia mieloide aguda versus leucemia linfoblástica aguda', min: 50 },
+          { title: 'Caso: linfoma com envolvimento medular', min: 50 },
+          { title: 'Caso: mieloma múltiplo e plasmocitose reacional', min: 50 },
+          { title: 'Caso: gato FeLV positivo com alterações displásicas', min: 50 },
+          { title: 'Caso: síndrome mielodisplásica e SMD com aumento de blastos', min: 60 },
+          { title: 'Caso: mieloftise por neoplasia não hematopoiética', min: 50 },
+          {
+            title:
+              'Casos em etapas: hemograma, esfregaço, mielograma, exames complementares e biópsia',
+            min: 90,
+          },
+          { title: 'Perguntas-guia para casos avançados', min: 30 },
         ],
       },
     ],
