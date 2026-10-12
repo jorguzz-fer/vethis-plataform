@@ -1695,6 +1695,11 @@ async function main(): Promise<void> {
     // Em re-seed, opcionalmente preserva capa/instrutor já definidos no admin
     // (não sobrescreve esses campos; os demais continuam sincronizados pelo seed).
     const setScalars: Partial<typeof scalars> = { ...scalars };
+    // Publicação e ordem de destaque são decisões do admin: o seed só as define ao
+    // criar o curso. Sem isso, um curso despublicado voltava ao site a cada deploy
+    // com SEED_ON_START e a ordem definida no backoffice era desfeita.
+    delete setScalars.status;
+    delete setScalars.featuredRank;
     if (c.preserveCoverInstructor || c.preserveCover) {
       delete setScalars.coverUrl;
     }
