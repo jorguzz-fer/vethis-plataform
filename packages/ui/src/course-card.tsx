@@ -65,8 +65,11 @@ export function CourseCard({
         ) : null}
         <h3 className="text-base font-bold leading-snug text-ink">{title}</h3>
         <div className="mt-auto flex items-center justify-between gap-3 pt-2">
-          <span className="font-serif text-lg font-semibold text-green-700">{priceLabel}</span>
-          {cta}
+          <span className="min-w-0 font-serif text-lg font-semibold text-green-700">
+            {priceLabel}
+          </span>
+          {/* CTA nunca encolhe nem quebra linha; quem cede espaço é o rótulo de preço. */}
+          {cta ? <div className="shrink-0 whitespace-nowrap">{cta}</div> : null}
         </div>
       </div>
     </article>
