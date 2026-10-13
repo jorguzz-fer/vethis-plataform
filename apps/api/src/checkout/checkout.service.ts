@@ -175,8 +175,15 @@ export class CheckoutService {
     return this.loadOrderDto(order.id, user.id);
   }
 
-  /** Webhook do gateway: localiza a cobrança e confirma/estorna o pedido. */
+  /**
+   * Webhook genérico (dev/testes): localiza a cobrança e confirma o pedido. Não
+   * tem autenticação, então só existe com o gateway fake fora de produção — com
+   * o Asaas, a confirmação vem exclusivamente de `handleAsaasWebhook`.
+   */
   async handleWebhook(dto: PaymentWebhookDto): Promise<{ ok: true }> {
+    if (this.config.NODE_ENV === 'production' || !this.gateway.simulatable) {
+      throw new ForbiddenException('Webhook genérico indisponível');
+    }
     const [payment] = await this.db
       .select()
       .from(payments)

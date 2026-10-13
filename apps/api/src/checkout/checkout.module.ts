@@ -23,9 +23,13 @@ import { PAYMENT_GATEWAY, type PaymentGateway } from './payment-gateway';
       inject: [APP_CONFIG],
       useFactory: (config: AppConfig): PaymentGateway => {
         if (config.PAYMENT_GATEWAY === 'asaas') {
-          new Logger('CheckoutModule').log(
-            `Gateway de pagamento: asaas (${config.ASAAS_BASE_URL})`,
-          );
+          const logger = new Logger('CheckoutModule');
+          logger.log(`Gateway de pagamento: asaas (${config.ASAAS_BASE_URL})`);
+          if (config.NODE_ENV === 'production' && /sandbox/i.test(config.ASAAS_BASE_URL)) {
+            logger.warn(
+              'ATENÇÃO: NODE_ENV=production com ASAAS_BASE_URL de SANDBOX — as cobranças NÃO são reais. Em produção use https://api.asaas.com/v3 com a chave de produção.',
+            );
+          }
           return new AsaasPaymentGateway(config);
         }
         return new FakePaymentGateway();

@@ -47,6 +47,16 @@ const EnvSchema = z
         message: 'ASAAS_API_KEY é obrigatória quando PAYMENT_GATEWAY=asaas',
       });
     }
+    // Sem o token, todo webhook é recusado (401) e Pix/boleto nunca confirmam —
+    // falha silenciosa em produção. Melhor não subir.
+    if (env.PAYMENT_GATEWAY === 'asaas' && !env.ASAAS_WEBHOOK_TOKEN) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['ASAAS_WEBHOOK_TOKEN'],
+        message:
+          'ASAAS_WEBHOOK_TOKEN é obrigatório quando PAYMENT_GATEWAY=asaas (mesmo valor cadastrado no webhook do painel Asaas)',
+      });
+    }
   });
 
 export type AppConfig = Readonly<z.infer<typeof EnvSchema>>;

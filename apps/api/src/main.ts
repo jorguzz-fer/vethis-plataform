@@ -12,6 +12,11 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { bufferLogs: false });
   const config = app.get<AppConfig>(APP_CONFIG);
 
+  // Atrás do proxy do Coolify (Traefik): sem isto, req.ip é o IP interno do
+  // proxy — o rate limit (por IP) vira um balde único para todos os usuários e
+  // o antifraude do Asaas (remoteIp do cartão) recebe sempre o mesmo IP.
+  app.set('trust proxy', 1);
+
   // Segurança de borda (Blueprint §6).
   app.use(helmet());
   app.use(cookieParser(config.SESSION_SECRET));
