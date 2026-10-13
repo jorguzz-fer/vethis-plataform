@@ -32,6 +32,19 @@ const EnvSchema = z
     ANTHROPIC_API_KEY: z.string().min(1).optional(),
     AI_MODEL: z.string().min(1).default('claude-opus-4-8'),
 
+    // E-mails transacionais (port MailTransport). `log` só registra (dev);
+    // `brevo` envia de verdade e exige BREVO_API_KEY + MAIL_FROM (domínio
+    // verificado no painel da Brevo).
+    MAIL_PROVIDER: z.enum(['log', 'brevo']).default('log'),
+    BREVO_API_KEY: z.string().min(1).optional(),
+    MAIL_FROM: z.string().email().optional(),
+    MAIL_FROM_NAME: z.string().min(1).default('Vethis'),
+    MAIL_REPLY_TO: z.string().email().optional(),
+    // Quem recebe o aviso interno a cada venda confirmada (opcional).
+    SALES_NOTIFY_EMAIL: z.string().email().optional(),
+    // URL pública da área do aluno (links dos e-mails).
+    ALUNO_URL: z.string().url().default('http://localhost:5173'),
+
     // Pagamentos (port PaymentGateway, ADR 0004). `fake` em dev; `asaas` quando as
     // credenciais estiverem no ambiente. Base URL: sandbox por padrão.
     PAYMENT_GATEWAY: z.enum(['fake', 'asaas']).default('fake'),
@@ -40,6 +53,23 @@ const EnvSchema = z
     ASAAS_WEBHOOK_TOKEN: z.string().min(1).optional(),
   })
   .superRefine((env, ctx) => {
+    if (env.MAIL_PROVIDER === 'brevo') {
+      if (!env.BREVO_API_KEY) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['BREVO_API_KEY'],
+          message: 'BREVO_API_KEY é obrigatória quando MAIL_PROVIDER=brevo',
+        });
+      }
+      if (!env.MAIL_FROM) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['MAIL_FROM'],
+          message:
+            'MAIL_FROM (remetente verificado na Brevo) é obrigatório quando MAIL_PROVIDER=brevo',
+        });
+      }
+    }
     if (env.PAYMENT_GATEWAY === 'asaas' && !env.ASAAS_API_KEY) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
