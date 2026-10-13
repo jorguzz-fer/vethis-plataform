@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ConfigModule } from './config/config.module';
+import { MailModule } from './mail/mail.module';
 import { DbModule } from './db/db.module';
 import { RedisModule } from './redis/redis.module';
 import { HealthModule } from './health/health.module';
@@ -25,6 +26,7 @@ import { OpenApiModule } from './openapi/openapi.module';
 @Module({
   imports: [
     ConfigModule,
+    MailModule,
     DbModule,
     RedisModule,
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 120 }]),

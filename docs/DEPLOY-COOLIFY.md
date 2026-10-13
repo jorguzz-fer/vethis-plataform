@@ -131,3 +131,33 @@ o código é o mesmo. Checklist:
 Endpoints relevantes: `POST /v1/webhooks/asaas` (produção, autenticado pelo header
 `asaas-access-token`); `POST /v1/webhooks/payments` e `simulate-payment` só
 funcionam com `PAYMENT_GATEWAY=fake` fora de produção.
+
+## E-mails transacionais (Brevo)
+
+A API envia três e-mails ao aluno (bem-vindo ao criar a conta, pedido criado
+com Pix/boleto, pagamento confirmado com link da área do aluno) e, opcionalmente,
+um aviso interno por venda. Sem configurar, `MAIL_PROVIDER=log` apenas registra
+no console — **nada é enviado** (a API avisa com `WARN` no boot em produção).
+
+1. Em **https://app.brevo.com**: crie a conta e, em **Remetentes e domínios →
+   Domínios**, adicione `vethis.com.br` e publique os registros DNS que a Brevo
+   mostrar (DKIM/SPF, e opcionalmente DMARC). Sem isso o e-mail cai em spam ou é
+   recusado. Depois cadastre o remetente (ex.: `nao-responda@vethis.com.br`).
+2. Em **SMTP & API → Chaves de API**, gere uma chave.
+3. Na **API-Vethis** (Coolify → Environment Variables):
+   ```
+   MAIL_PROVIDER=brevo
+   BREVO_API_KEY=<chave>
+   MAIL_FROM=nao-responda@vethis.com.br
+   MAIL_FROM_NAME=Vethis
+   MAIL_REPLY_TO=contato@vethis.com.br      # opcional: para onde vão as respostas
+   SALES_NOTIFY_EMAIL=vendas@vethis.com.br  # opcional: aviso interno por venda
+   ALUNO_URL=https://app.vethis.com.br
+   ```
+   Com `MAIL_PROVIDER=brevo` sem `BREVO_API_KEY`/`MAIL_FROM`, a API não sobe.
+4. Redeploy e conferir no log: `E-mail: brevo (remetente nao-responda@vethis.com.br)`.
+5. Teste: crie uma conta nova no checkout (bem-vindo) e faça um Pix de teste
+   (pedido criado → pagamento confirmado + aviso interno).
+
+Os envios são em segundo plano: uma falha na Brevo vira `WARN` no log e nunca
+bloqueia o registro nem a confirmação da matrícula.

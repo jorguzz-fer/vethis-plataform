@@ -21,6 +21,8 @@ import type { AsaasWebhookDto, CreateCheckoutDto, OrderDto, PaymentWebhookDto } 
 import { PAYMENT_GATEWAY, type PaymentGateway } from './payment-gateway';
 import { asaasEventToStatus } from './asaas-gateway';
 import { courseMaxInstallments, effectiveInstallments, netAmountCents } from './pricing';
+import { MailerService } from '../mail/mailer.service';
+import { orderCreatedMail, paymentConfirmedMail, salesNoticeMail } from '../mail/templates';
 
 @Injectable()
 export class CheckoutService {
@@ -30,6 +32,7 @@ export class CheckoutService {
     @Inject(DB) private readonly db: Database,
     @Inject(PAYMENT_GATEWAY) private readonly gateway: PaymentGateway,
     @Inject(APP_CONFIG) private readonly config: AppConfig,
+    @Inject(MailerService) private readonly mailer: MailerService,
   ) {}
 
   /** Inicia o checkout: cria o pedido, cobra no gateway e (se já aprovado) matricula. */
@@ -147,6 +150,21 @@ export class CheckoutService {
       await this.confirmOrderPaid(order.id);
       return this.loadOrderDto(order.id, user.id);
     }
+
+    // Pedido aguardando pagamento (Pix/boleto): e-mail com o código/boleto.
+    this.mailer.sendSafe(
+      { email: user.email },
+      orderCreatedMail({
+        name: await this.userName(user.id),
+        courseTitle: course.title,
+        method: payment.method,
+        amountCents: payment.amountCents,
+        installments: payment.installments,
+        pixCopyPaste: payment.pixCopyPaste,
+        boletoUrl: payment.boletoUrl,
+        alunoUrl: this.mailer.alunoUrl,
+      }),
+    );
 
     return this.toOrderDto(order, payment, course);
   }
@@ -270,6 +288,65 @@ export class CheckoutService {
       // CRM é efeito secundário — nunca bloqueia a matrícula.
       this.logger.warn(`Falha ao registrar compra no CRM: ${String(err)}`);
     });
+    await this.sendPaymentEmails(order).catch((err) => {
+      this.logger.warn(`Falha ao preparar e-mails de confirmação: ${String(err)}`);
+    });
+  }
+
+  private async userName(userId: string): Promise<string | null> {
+    const [u] = await this.db
+      .select({ name: users.name })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+    return u?.name ?? null;
+  }
+
+  /** Confirmação para o aluno + aviso interno de venda (se configurado). */
+  private async sendPaymentEmails(order: Order): Promise<void> {
+    const [buyer] = await this.db
+      .select({ email: users.email, name: users.name })
+      .from(users)
+      .where(eq(users.id, order.userId))
+      .limit(1);
+    const [course] = await this.db
+      .select({ title: courses.title })
+      .from(courses)
+      .where(eq(courses.id, order.courseId))
+      .limit(1);
+    const [payment] = await this.db
+      .select({
+        method: payments.method,
+        installments: payments.installments,
+        amountCents: payments.amountCents,
+      })
+      .from(payments)
+      .where(eq(payments.orderId, order.id))
+      .limit(1);
+    if (!buyer || !course || !payment) return;
+
+    const common = {
+      courseTitle: course.title,
+      method: payment.method,
+      amountCents: payment.amountCents,
+      installments: payment.installments,
+    };
+    this.mailer.sendSafe(
+      { email: buyer.email, name: buyer.name ?? undefined },
+      paymentConfirmedMail({ ...common, name: buyer.name, alunoUrl: this.mailer.alunoUrl }),
+    );
+    const team = this.mailer.salesNotifyEmail;
+    if (team) {
+      this.mailer.sendSafe(
+        { email: team },
+        salesNoticeMail({
+          ...common,
+          buyerName: buyer.name,
+          buyerEmail: buyer.email,
+          orderId: order.id,
+        }),
+      );
+    }
   }
 
   /** Alimenta a timeline do CRM na compra confirmada (lead ganho + interação). */
