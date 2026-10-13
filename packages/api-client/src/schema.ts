@@ -3076,6 +3076,7 @@ export interface components {
             /** @enum {string} */
             status: "draft" | "published";
             featuredRank: number;
+            comingSoon: boolean;
             coverUrl: string | null;
             /** Format: uuid */
             specialtyId: string | null;
@@ -3128,6 +3129,8 @@ export interface components {
             status: "draft" | "published";
             /** @default 0 */
             featuredRank: number;
+            /** @default false */
+            comingSoon: boolean;
             /** Format: uri */
             coverUrl?: string | null;
             /** Format: uuid */
@@ -3274,6 +3277,7 @@ export interface components {
             /** @enum {string} */
             status?: "draft" | "published";
             featuredRank?: number;
+            comingSoon?: boolean;
             /** Format: uri */
             coverUrl?: string | null;
             /** Format: uuid */
