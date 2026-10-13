@@ -27,5 +27,6 @@ export const publicUserSchema = z.object({
 export const authUserSchema = z.object({
   id: z.string().uuid(),
   email: z.string().email(),
+  name: z.string().nullable(),
   role: roleSchema,
 });

@@ -34,7 +34,7 @@ export class SessionGuard implements CanActivate {
     if (!user) {
       throw new UnauthorizedException('Sessão inválida');
     }
-    req.user = { id: user.id, email: user.email, role: user.role };
+    req.user = { id: user.id, email: user.email, name: user.name, role: user.role };
     return true;
   }
 }

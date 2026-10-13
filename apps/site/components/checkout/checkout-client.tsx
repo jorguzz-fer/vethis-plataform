@@ -1,6 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useState,
+  type FormEvent,
+  type InputHTMLAttributes,
+} from 'react';
 import Link from 'next/link';
 import { formatBRL } from '@vethis/shared';
 import { Badge, Button, Field } from '@vethis/ui';
@@ -65,6 +72,72 @@ function InstallmentsField({
   );
 }
 
+/** Campo de senha com "olhinho" para mostrar/ocultar (mesmo visual do Field do DS). */
+function PasswordField({
+  label,
+  className,
+  ...props
+}: Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & { label: string }) {
+  const [show, setShow] = useState(false);
+  const id = useId();
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={id} className="text-sm font-semibold text-ink">
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          id={id}
+          type={show ? 'text' : 'password'}
+          className={`w-full rounded-[10px] border-[1.5px] border-border py-3 pl-3.5 pr-12 text-[15px] text-ink outline-none focus:border-green-700 focus:ring-4 focus:ring-green-700/[0.13] ${className ?? ''}`}
+          {...props}
+        />
+        <button
+          type="button"
+          onClick={() => setShow((v) => !v)}
+          aria-label={show ? 'Ocultar senha' : 'Mostrar senha'}
+          aria-pressed={show}
+          className="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-muted hover:text-ink"
+        >
+          {show ? (
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.8 21.8 0 0 1 5.06-6.06" />
+              <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.8 21.8 0 0 1-3.22 4.19" />
+              <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24" />
+              <line x1="1" y1="1" x2="23" y2="23" />
+            </svg>
+          ) : (
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          )}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function CheckoutClient({ course }: { course: CourseDetail }) {
   const [me, setMe] = useState<AuthUser | null | undefined>(undefined);
   const [order, setOrder] = useState<OrderDto | null>(null);
@@ -115,7 +188,7 @@ export function CheckoutClient({ course }: { course: CourseDetail }) {
               await browserApi.POST('/v1/auth/logout').catch(() => undefined);
               setMe(null); // volta ao passo 1 (criar conta / entrar)
             }}
-            defaultName={''}
+            defaultName={me.name ?? ''}
             onOrder={setOrder}
             method={method}
             setMethod={setMethod}
@@ -213,9 +286,8 @@ function AuthPanel({ onAuthed }: { onAuthed: (u: AuthUser) => void }) {
           autoComplete="email"
           required
         />
-        <Field
+        <PasswordField
           label="Senha"
-          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
