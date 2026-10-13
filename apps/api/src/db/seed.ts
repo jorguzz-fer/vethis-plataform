@@ -5,7 +5,6 @@ import { createDb } from './client';
 import { courseModules, courses, instructors, lessons, specialties } from './schema/catalog';
 import { enrollments } from './schema/enrollment';
 import { users } from './schema/identity';
-import { leads } from './schema/crm';
 import { channelRules, channels } from './schema/channels';
 import type { ChannelGroup, CourseLevel } from './schema/enums';
 
@@ -1826,15 +1825,8 @@ async function main(): Promise<void> {
     .onConflictDoNothing({ target: users.email });
   console.log('Staff demo: staff@vethis.dev / staff12345.');
 
-  // Leads de exemplo para o CRM.
-  await db
-    .insert(leads)
-    .values([
-      { name: 'Clínica PetVida', email: 'contato@petvida.example', stage: 'new' },
-      { name: 'Dr. Rafael Costa', email: 'rafael@example.com', stage: 'contacted' },
-      { name: 'Hospital Veterinário Sul', email: 'adm@hvsul.example', stage: 'qualified' },
-    ])
-    .onConflictDoNothing();
+  // Sem leads de exemplo: `leads` não tem chave única, então entravam de novo a
+  // cada seed. O CRM em produção só recebe leads reais (site/formulários).
 
   // Canais de aquisição do CRM (template do mapa de fluxo) + regras UTM→canal.
   type SeedChannel = {
