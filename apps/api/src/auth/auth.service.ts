@@ -2,6 +2,8 @@ import { ConflictException, Inject, Injectable, UnauthorizedException } from '@n
 import { UsersService } from '../users/users.service';
 import type { User } from '../db/schema/identity';
 import { PasswordService } from './password.service';
+import { MailerService } from '../mail/mailer.service';
+import { welcomeMail } from '../mail/templates';
 import type { LoginDto, RegisterDto } from './dto';
 
 /** Mensagem uniforme no login — não revela se o e-mail existe (sem enumeração). */
@@ -12,6 +14,7 @@ export class AuthService {
   constructor(
     @Inject(UsersService) private readonly users: UsersService,
     @Inject(PasswordService) private readonly passwords: PasswordService,
+    @Inject(MailerService) private readonly mailer: MailerService,
   ) {}
 
   async register(dto: RegisterDto): Promise<User> {
@@ -20,12 +23,17 @@ export class AuthService {
       throw new ConflictException('E-mail já cadastrado');
     }
     const passwordHash = await this.passwords.hash(dto.password);
-    return this.users.create({
+    const user = await this.users.create({
       email: dto.email,
       passwordHash,
       name: dto.name,
       role: 'aluno',
     });
+    this.mailer.sendSafe(
+      { email: user.email, name: user.name ?? undefined },
+      welcomeMail({ name: user.name, alunoUrl: this.mailer.alunoUrl }),
+    );
+    return user;
   }
 
   async validateCredentials(dto: LoginDto): Promise<User> {
