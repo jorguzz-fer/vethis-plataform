@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { formatBRL } from '@vethis/shared';
 import { Badge, Button, buttonClasses } from '@vethis/ui';
 import { api, type AdminCourse } from '../api';
@@ -7,6 +7,7 @@ import { api, type AdminCourse } from '../api';
 export function CoursesPage() {
   const [courses, setCourses] = useState<AdminCourse[] | null>(null);
   const [saving, setSaving] = useState(false);
+  const navigate = useNavigate();
 
   function load() {
     api
@@ -23,6 +24,24 @@ export function CoursesPage() {
       body: { status },
     });
     load();
+  }
+
+  /** Cria uma cópia (rascunho) com módulos e aulas e abre o editor dela. */
+  async function duplicate(course: AdminCourse) {
+    if (saving) return;
+    setSaving(true);
+    try {
+      const { data, error } = await api.POST('/v1/admin/courses/{id}/duplicate', {
+        params: { path: { id: course.id } },
+      });
+      if (error || !data) {
+        alert('Não foi possível duplicar o curso.');
+        return;
+      }
+      navigate(`/cursos/${data.id}`);
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function remove(course: AdminCourse) {
@@ -132,6 +151,9 @@ export function CoursesPage() {
                       <Link to={`/cursos/${c.id}`} className={buttonClasses('soft', 'sm')}>
                         Editar
                       </Link>
+                      <Button size="sm" variant="soft" onClick={() => duplicate(c)}>
+                        Duplicar
+                      </Button>
                       <Button size="sm" variant="soft" onClick={() => toggle(c)}>
                         {c.status === 'published' ? 'Despublicar' : 'Publicar'}
                       </Button>

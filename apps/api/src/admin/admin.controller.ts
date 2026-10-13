@@ -113,6 +113,11 @@ export class AdminController {
     return this.admin.reorderCourses(dto.ids);
   }
 
+  @Post('courses/:id/duplicate')
+  duplicateCourse(@Param('id') id: string): Promise<AdminCourseDetailDto> {
+    return this.admin.duplicateCourse(id);
+  }
+
   @Get('courses/:id')
   courseDetail(@Param('id') id: string): Promise<AdminCourseDetailDto> {
     return this.admin.getCourseDetail(id);

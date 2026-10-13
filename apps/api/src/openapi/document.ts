@@ -468,6 +468,14 @@ export function buildOpenApiDocument() {
     responses: { 200: { description: 'OK', ...json(z.array(AdminCourse)) } },
   });
   registry.registerPath({
+    method: 'post',
+    path: '/v1/admin/courses/{id}/duplicate',
+    tags: ['backoffice'],
+    summary: 'Duplica o curso (com módulos e aulas) como rascunho',
+    request: idParam,
+    responses: { 201: { description: 'Criado', ...json(AdminCourseDetail) } },
+  });
+  registry.registerPath({
     method: 'get',
     path: '/v1/admin/courses/{id}',
     tags: ['backoffice'],
