@@ -2288,6 +2288,9 @@
           "featuredRank": {
             "type": "integer"
           },
+          "comingSoon": {
+            "type": "boolean"
+          },
           "coverUrl": {
             "type": [
               "string",
@@ -2417,6 +2420,7 @@
           "level",
           "status",
           "featuredRank",
+          "comingSoon",
           "coverUrl",
           "specialtyId",
           "instructorId",
@@ -2509,6 +2513,10 @@
             "minimum": 0,
             "maximum": 1000,
             "default": 0
+          },
+          "comingSoon": {
+            "type": "boolean",
+            "default": false
           },
           "coverUrl": {
             "type": [
@@ -3130,6 +3138,9 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 1000
+          },
+          "comingSoon": {
+            "type": "boolean"
           },
           "coverUrl": {
             "type": [

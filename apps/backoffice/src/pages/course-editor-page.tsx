@@ -49,6 +49,7 @@ export function CourseEditorPage() {
     plans: [] as PlanRow[],
     level: 'iniciante' as Level,
     status: 'draft' as Status,
+    comingSoon: false,
     coverUrl: '',
     specialtyId: '',
     instructorId: '',
@@ -87,6 +88,7 @@ export function CourseEditorPage() {
           })),
           level: data.level,
           status: data.status,
+          comingSoon: data.comingSoon ?? false,
           coverUrl: data.coverUrl ?? '',
           specialtyId: data.specialtyId ?? '',
           instructorId: data.instructorId ?? '',
@@ -122,6 +124,7 @@ export function CourseEditorPage() {
         .filter((p) => p.installments >= 1 && p.installments <= 24 && p.installmentCents > 0),
       level: form.level,
       status: form.status,
+      comingSoon: form.comingSoon,
       coverUrl: form.coverUrl || null,
       specialtyId: form.specialtyId || null,
       instructorId: form.instructorId || null,
@@ -432,6 +435,18 @@ export function CourseEditorPage() {
             onChange={(e) => set('status', e.target.checked ? 'published' : 'draft')}
           />
           Publicado (visível no site)
+        </label>
+        <label className="flex items-center gap-2 text-sm font-semibold text-ink">
+          <input
+            type="checkbox"
+            checked={form.comingSoon}
+            onChange={(e) => set('comingSoon', e.target.checked)}
+          />
+          Em breve
+          <span className="font-normal text-muted">
+            — aparece no site sem preço nem botão "Ver curso", só com captação de interesse.
+            Desmarque para liberar a venda.
+          </span>
         </label>
 
         {msg ? <p className="text-sm text-muted">{msg}</p> : null}

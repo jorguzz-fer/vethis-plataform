@@ -64,6 +64,8 @@ const courseFieldsSchema = z.object({
   status: z.enum(statusValues).default('draft'),
   /** Ordem de destaque: maior aparece antes na home e no catálogo. Padrão 0. */
   featuredRank: z.number().int().min(0).max(1000).default(0),
+  /** "Em breve": listado na vitrine sem preço nem checkout (captação de interesse). */
+  comingSoon: z.boolean().default(false),
   coverUrl: z.string().url().max(1000).nullable().optional(),
   specialtyId: z.string().uuid().nullable().optional(),
   instructorId: z.string().uuid().nullable().optional(),
@@ -92,6 +94,7 @@ export const updateCourseSchema = z
     level: z.enum(levelValues).optional(),
     status: z.enum(statusValues).optional(),
     featuredRank: z.number().int().min(0).max(1000).optional(),
+    comingSoon: z.boolean().optional(),
     coverUrl: z.string().url().max(1000).nullable().optional(),
     specialtyId: z.string().uuid().nullable().optional(),
     instructorId: z.string().uuid().nullable().optional(),
@@ -140,6 +143,7 @@ export const adminCourseDetailSchema = z.object({
   level: z.enum(levelValues),
   status: z.enum(statusValues),
   featuredRank: z.number().int(),
+  comingSoon: z.boolean(),
   coverUrl: z.string().nullable(),
   specialtyId: z.string().uuid().nullable(),
   instructorId: z.string().uuid().nullable(),
