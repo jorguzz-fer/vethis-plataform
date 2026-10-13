@@ -335,6 +335,68 @@ export class AdminService {
     return this.getCourseDetail(row.id);
   }
 
+  /**
+   * Duplica um curso com módulos e aulas, como rascunho (fora do site até ser
+   * publicado), slug único e título "(cópia)". Capa, preço, planos, FAQ etc.
+   * são copiados; matrículas e pedidos não.
+   */
+  async duplicateCourse(id: string): Promise<AdminCourseDetailDto> {
+    const source = await this.getCourseDetail(id);
+    const [row] = await this.db
+      .select()
+      .from(courses)
+      .where(and(eq(courses.id, id), isNull(courses.deletedAt)))
+      .limit(1);
+    if (!row) throw new NotFoundException('Curso não encontrado');
+
+    const title = `${row.title} (cópia)`;
+    const slug = await this.uniqueCourseSlug(`${row.slug}-copia`);
+    const newId = await this.db.transaction(async (tx) => {
+      const [created] = await tx
+        .insert(courses)
+        .values({
+          slug,
+          title,
+          subtitle: row.subtitle,
+          description: row.description,
+          priceCents: row.priceCents,
+          maxInstallments: row.maxInstallments,
+          installmentPlans: row.installmentPlans,
+          level: row.level,
+          status: 'draft',
+          featuredRank: 0,
+          comingSoon: row.comingSoon,
+          coverUrl: row.coverUrl,
+          workloadHours: row.workloadHours,
+          learningObjectives: row.learningObjectives,
+          faq: row.faq,
+          specialtyId: row.specialtyId,
+          instructorId: row.instructorId,
+        })
+        .returning({ id: courses.id });
+      if (!created) throw new ConflictException('Falha ao duplicar curso');
+      for (const m of source.modules) {
+        const [mod] = await tx
+          .insert(courseModules)
+          .values({ courseId: created.id, title: m.title, position: m.position })
+          .returning({ id: courseModules.id });
+        if (!mod || m.lessons.length === 0) continue;
+        await tx.insert(lessons).values(
+          m.lessons.map((l) => ({
+            moduleId: mod.id,
+            title: l.title,
+            durationSeconds: l.durationSeconds,
+            vimeoVideoId: l.vimeoVideoId,
+            isFree: l.isFree,
+            position: l.position,
+          })),
+        );
+      }
+      return created.id;
+    });
+    return this.getCourseDetail(newId);
+  }
+
   async deleteCourse(id: string): Promise<{ ok: true }> {
     const [row] = await this.db
       .update(courses)

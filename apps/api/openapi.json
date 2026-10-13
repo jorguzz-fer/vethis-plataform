@@ -4247,6 +4247,36 @@
         }
       }
     },
+    "/v1/admin/courses/{id}/duplicate": {
+      "post": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Duplica o curso (com módulos e aulas) como rascunho",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCourseDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/admin/courses/{id}/modules": {
       "post": {
         "tags": [
