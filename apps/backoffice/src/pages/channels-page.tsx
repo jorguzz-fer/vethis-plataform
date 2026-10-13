@@ -85,10 +85,14 @@ function ChannelsBoard() {
   }
   async function addRule(channelId: string, utmSource: string, utmMedium: string) {
     if (!utmSource.trim()) return;
-    await api.POST('/v1/admin/channels/{id}/rules', {
+    const { response } = await api.POST('/v1/admin/channels/{id}/rules', {
       params: { path: { id: channelId } },
       body: { utmSource: utmSource.trim(), utmMedium: utmMedium.trim() || null },
     });
+    if (response.status === 409) {
+      alert('Esta regra já existe neste canal.');
+      return;
+    }
     load();
   }
 
@@ -421,10 +425,11 @@ function UnmappedBoard() {
 
   async function createRule(o: UnmappedOrigin, channelId: string) {
     if (!channelId || !o.utmSource) return;
-    await api.POST('/v1/admin/channels/{id}/rules', {
+    const { response } = await api.POST('/v1/admin/channels/{id}/rules', {
       params: { path: { id: channelId } },
       body: { utmSource: o.utmSource, utmMedium: o.utmMedium },
     });
+    if (response.status === 409) alert('Esta regra já existe nesse canal.');
     load();
   }
 

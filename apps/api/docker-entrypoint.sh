@@ -17,6 +17,11 @@ chown -R node:node "$UPLOADS_DIR" 2>/dev/null ||
 echo "[entrypoint] Aplicando migrations…"
 su-exec node node dist/db/migrate.js
 
+if [ "${RESET_CRM_ON_START}" = "true" ]; then
+  echo "[entrypoint] RESET_CRM_ON_START=true → zerando o CRM (leads, interações e oportunidades)…"
+  su-exec node node dist/db/reset-crm.js
+fi
+
 if [ "${SEED_ON_START}" = "true" ]; then
   echo "[entrypoint] SEED_ON_START=true → executando seed (idempotente)…"
   su-exec node node dist/db/seed.js

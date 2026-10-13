@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and, asc, count, eq, gte, lte } from 'drizzle-orm';
 import { DB, type Database } from '../db/client';
 import { channelRules, channels, type ChannelRule } from '../db/schema/channels';
@@ -34,6 +34,11 @@ function ruleToDto(r: ChannelRule): ChannelRuleDto {
     utmMedium: r.utmMedium,
     priority: r.priority,
   };
+}
+
+/** Violação de unique no Postgres (código 23505). */
+function isUniqueViolation(err: unknown): boolean {
+  return typeof err === 'object' && err !== null && (err as { code?: string }).code === '23505';
 }
 
 @Injectable()
@@ -116,12 +121,19 @@ export class ChannelsService {
 
   async addRule(channelId: string, dto: CreateChannelRuleDto): Promise<ChannelDto> {
     await this.getChannel(channelId); // 404 se não existir
-    await this.db.insert(channelRules).values({
-      channelId,
-      utmSource: dto.utmSource,
-      utmMedium: dto.utmMedium ?? null,
-      priority: dto.priority ?? 0,
-    });
+    try {
+      await this.db.insert(channelRules).values({
+        channelId,
+        utmSource: dto.utmSource,
+        utmMedium: dto.utmMedium ?? null,
+        priority: dto.priority ?? 0,
+      });
+    } catch (err) {
+      if (isUniqueViolation(err)) {
+        throw new ConflictException('Esta regra (utm_source/utm_medium) já existe neste canal');
+      }
+      throw err;
+    }
     return this.getChannel(channelId);
   }
 

@@ -1,4 +1,14 @@
-import { boolean, integer, pgTable, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import {
+  boolean,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  unique,
+  uniqueIndex,
+  uuid,
+} from 'drizzle-orm/pg-core';
 import { channelGroupEnum } from './enums';
 
 /**
@@ -34,7 +44,14 @@ export const channelRules = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [unique('channel_rules_uq').on(t.channelId, t.utmSource, t.utmMedium)],
+  (t) => [
+    unique('channel_rules_uq').on(t.channelId, t.utmSource, t.utmMedium),
+    // No Postgres NULL ≠ NULL, então a unique acima não cobre regras sem medium
+    // (cada seed/insert criava "meta", "tiktok"… de novo). Este índice parcial fecha o buraco.
+    uniqueIndex('channel_rules_no_medium_uq')
+      .on(t.channelId, t.utmSource)
+      .where(sql`${t.utmMedium} is null`),
+  ],
 );
 
 export type Channel = typeof channels.$inferSelect;
