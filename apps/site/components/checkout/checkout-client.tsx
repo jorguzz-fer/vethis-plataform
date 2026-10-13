@@ -110,7 +110,12 @@ export function CheckoutClient({ course }: { course: CourseDetail }) {
         ) : me ? (
           <PaymentPanel
             course={course}
-            defaultName=""
+            me={me}
+            onSwitchAccount={async () => {
+              await browserApi.POST('/v1/auth/logout').catch(() => undefined);
+              setMe(null); // volta ao passo 1 (criar conta / entrar)
+            }}
+            defaultName={''}
             onOrder={setOrder}
             method={method}
             setMethod={setMethod}
@@ -246,6 +251,8 @@ const METHODS: { key: PaymentMethod; label: string; hint: string }[] = [
 
 function PaymentPanel({
   course,
+  me,
+  onSwitchAccount,
   defaultName,
   onOrder,
   method,
@@ -254,6 +261,8 @@ function PaymentPanel({
   setInstallments,
 }: {
   course: CourseDetail;
+  me: AuthUser;
+  onSwitchAccount: () => Promise<void>;
   defaultName: string;
   onOrder: (o: OrderDto) => void;
   method: PaymentMethod;
@@ -334,6 +343,19 @@ function PaymentPanel({
         Passo 2 de 2
       </span>
       <h1 className="mt-1 font-serif text-2xl font-semibold text-green-800">Pagamento</h1>
+      {/* Deixa explícito em qual conta o curso vai entrar — evita compra na conta
+          errada em computador compartilhado ou sessão antiga. */}
+      <p className="mt-2 text-sm text-muted">
+        Comprando como <strong className="text-ink">{me.email}</strong> · o curso será liberado
+        nesta conta.{' '}
+        <button
+          type="button"
+          onClick={() => void onSwitchAccount()}
+          className="font-semibold text-green-700 underline-offset-2 hover:underline"
+        >
+          Trocar de conta
+        </button>
+      </p>
 
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         <Field
