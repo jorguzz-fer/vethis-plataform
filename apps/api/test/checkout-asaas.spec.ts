@@ -88,9 +88,29 @@ describe('loadConfig — gateway asaas', () => {
   it('exige ASAAS_API_KEY quando PAYMENT_GATEWAY=asaas', () => {
     expect(() => loadConfig({ ...baseEnv, PAYMENT_GATEWAY: 'asaas' })).toThrow(/ASAAS_API_KEY/);
   });
-  it('aceita asaas com a chave presente', () => {
-    const cfg = loadConfig({ ...baseEnv, PAYMENT_GATEWAY: 'asaas', ASAAS_API_KEY: 'k' });
+  it('exige ASAAS_WEBHOOK_TOKEN quando PAYMENT_GATEWAY=asaas', () => {
+    expect(() => loadConfig({ ...baseEnv, PAYMENT_GATEWAY: 'asaas', ASAAS_API_KEY: 'k' })).toThrow(
+      /ASAAS_WEBHOOK_TOKEN/,
+    );
+  });
+  it('aceita asaas com chave e token presentes (sandbox por padrão)', () => {
+    const cfg = loadConfig({
+      ...baseEnv,
+      PAYMENT_GATEWAY: 'asaas',
+      ASAAS_API_KEY: 'k',
+      ASAAS_WEBHOOK_TOKEN: 't',
+    });
     expect(cfg.PAYMENT_GATEWAY).toBe('asaas');
     expect(cfg.ASAAS_BASE_URL).toContain('sandbox');
+  });
+  it('aceita a URL de produção do Asaas', () => {
+    const cfg = loadConfig({
+      ...baseEnv,
+      PAYMENT_GATEWAY: 'asaas',
+      ASAAS_API_KEY: 'k',
+      ASAAS_WEBHOOK_TOKEN: 't',
+      ASAAS_BASE_URL: 'https://api.asaas.com/v3',
+    });
+    expect(cfg.ASAAS_BASE_URL).toBe('https://api.asaas.com/v3');
   });
 });

@@ -97,3 +97,37 @@ DNS: aponte todos esses subdomínios (A record) para o IP do servidor do Coolify
 - Mantenha `admin.vethis.com.br` restrito (IP allow-list/VPN) se possível.
 - Backups: configure snapshot/backup do volume do `postgres` no Coolify.
 - O `docker-compose.prod.yml` (com `caddy`) continua válido para VPS **sem** Coolify.
+
+## Asaas em produção (pagamentos reais)
+
+Sandbox e produção diferem **só por variáveis de ambiente** na **API-Vethis** —
+o código é o mesmo. Checklist:
+
+1. No painel do Asaas **de produção** (`https://www.asaas.com`, não o sandbox):
+   - **Integrações → Chave de API**: gere a chave de produção.
+   - **Integrações → Webhooks → Novo**: URL `https://api.vethis.com.br/v1/webhooks/asaas`,
+     versão **v3**, token de autenticação (invente um segredo longo e guarde),
+     fila de sincronização **ativa**, e-mail de alerta preenchido. Eventos mínimos:
+     `PAYMENT_CONFIRMED`, `PAYMENT_RECEIVED` (os demais são ignorados pela API).
+   - Cartão de crédito: confirme que a conta está **aprovada para cobranças no cartão**
+     (o Asaas libera após análise; antes disso a API devolve o erro do provedor).
+2. Na **API-Vethis** (Coolify → Environment Variables):
+   ```
+   PAYMENT_GATEWAY=asaas
+   ASAAS_BASE_URL=https://api.asaas.com/v3
+   ASAAS_API_KEY=<chave de PRODUÇÃO>
+   ASAAS_WEBHOOK_TOKEN=<o mesmo token cadastrado no webhook>
+   ```
+   Sem `ASAAS_WEBHOOK_TOKEN` a API **não sobe** (de propósito: sem ele nenhum
+   Pix/boleto confirmaria). Com `NODE_ENV=production` e URL de sandbox, a API sobe
+   mas registra um `WARN` no log de boot.
+3. Redeploy da API e conferir no log: `Gateway de pagamento: asaas (https://api.asaas.com/v3)`.
+4. Teste real de ponta a ponta: um Pix de valor baixo (crie um curso de teste
+   despublicado ou use um cupom/valor mínimo), confira que o pedido vai para
+   `paid` e a matrícula aparece na área do aluno; depois estorne no painel.
+5. Se o webhook falhar (token errado, API fora), o Asaas **pausa a fila** após
+   várias tentativas: em **Integrações → Webhooks** reative a fila depois de corrigir.
+
+Endpoints relevantes: `POST /v1/webhooks/asaas` (produção, autenticado pelo header
+`asaas-access-token`); `POST /v1/webhooks/payments` e `simulate-payment` só
+funcionam com `PAYMENT_GATEWAY=fake` fora de produção.
