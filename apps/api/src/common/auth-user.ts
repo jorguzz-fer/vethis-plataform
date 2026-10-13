@@ -5,6 +5,7 @@ import type { Role } from '../db/schema/enums';
 export interface AuthUser {
   id: string;
   email: string;
+  name: string | null;
   role: Role;
 }
 
