@@ -309,10 +309,17 @@ function PaymentPanel({
           attribution: readAttribution(),
         },
       });
-      if (err || !data)
+      if (err || !data) {
+        // A API repassa a razão do provedor (ex.: valor mínimo, CPF inválido,
+        // chave rejeitada); mostrar isso vale mais que um texto genérico.
+        const body = err as { message?: string | string[] } | undefined;
+        const detail = Array.isArray(body?.message) ? body?.message.join('; ') : body?.message;
         throw new Error(
-          'Não foi possível iniciar o pagamento. Confira seus dados e tente novamente.',
+          detail
+            ? `Não foi possível iniciar o pagamento: ${detail}`
+            : 'Não foi possível iniciar o pagamento. Confira seus dados e tente novamente.',
         );
+      }
       onOrder(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Falha no pagamento.');
