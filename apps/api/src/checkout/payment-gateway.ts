@@ -53,6 +53,8 @@ export interface PaymentGateway {
   /** `true` quando é um adapter de desenvolvimento (permite simular confirmação). */
   readonly simulatable: boolean;
   createCharge(input: CreateChargeInput): Promise<ChargeResult>;
+  /** Situação atual de uma cobrança no provedor (usado pela reconciliação). */
+  getChargeStatus(providerChargeId: string): Promise<ChargeResult['status']>;
 }
 
 /** Token de injeção do gateway ativo. */

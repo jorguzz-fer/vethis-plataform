@@ -4,6 +4,7 @@ import { UsersModule } from '../users/users.module';
 import { APP_CONFIG, type AppConfig } from '../config/configuration';
 import { CheckoutController } from './checkout.controller';
 import { CheckoutService } from './checkout.service';
+import { PaymentReconcilerService } from './payment-reconciler.service';
 import { FakePaymentGateway } from './fake-gateway';
 import { AsaasPaymentGateway } from './asaas-gateway';
 import { PAYMENT_GATEWAY, type PaymentGateway } from './payment-gateway';
@@ -18,6 +19,7 @@ import { PAYMENT_GATEWAY, type PaymentGateway } from './payment-gateway';
   controllers: [CheckoutController],
   providers: [
     CheckoutService,
+    PaymentReconcilerService,
     {
       provide: PAYMENT_GATEWAY,
       inject: [APP_CONFIG],

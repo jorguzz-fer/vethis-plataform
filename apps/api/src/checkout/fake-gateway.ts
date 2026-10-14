@@ -19,6 +19,11 @@ export class FakePaymentGateway implements PaymentGateway {
   readonly provider = 'fake';
   readonly simulatable = true;
 
+  /** O fake nunca confirma sozinho — em dev a confirmação vem do simulate-payment. */
+  async getChargeStatus(): Promise<ChargeResult['status']> {
+    return 'pending';
+  }
+
   async createCharge(input: CreateChargeInput): Promise<ChargeResult> {
     const providerChargeId = `fake_${randomUUID()}`;
 

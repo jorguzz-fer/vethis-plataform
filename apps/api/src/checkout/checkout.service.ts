@@ -8,7 +8,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { and, eq, isNull } from 'drizzle-orm';
+import { and, eq, gte, isNotNull, isNull } from 'drizzle-orm';
 import { DB, type Database } from '../db/client';
 import { courses } from '../db/schema/catalog';
 import { enrollments } from '../db/schema/enrollment';
@@ -258,6 +258,44 @@ export class CheckoutService {
     }
     await this.confirmOrderPaid(orderId);
     return { ok: true };
+  }
+
+  /**
+   * Reconciliação: para cada pedido pendente recente com cobrança no gateway
+   * ativo, consulta o provedor e confirma os já pagos (matrícula + e-mails).
+   * Idempotente e tolerante: erro em um pedido não interrompe os demais.
+   */
+  async reconcilePendingPayments(): Promise<{ checked: number; confirmed: number }> {
+    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const rows = await this.db
+      .select({ orderId: orders.id, chargeId: payments.providerChargeId })
+      .from(orders)
+      .innerJoin(payments, eq(payments.orderId, orders.id))
+      .where(
+        and(
+          eq(orders.status, 'pending'),
+          gte(orders.createdAt, since),
+          eq(payments.provider, this.gateway.provider),
+          isNotNull(payments.providerChargeId),
+        ),
+      )
+      .limit(200);
+
+    let confirmed = 0;
+    for (const row of rows) {
+      if (!row.chargeId) continue;
+      try {
+        const status = await this.gateway.getChargeStatus(row.chargeId);
+        if (status === 'paid') {
+          await this.confirmOrderPaid(row.orderId);
+          confirmed += 1;
+          this.logger.log(`Reconciliação confirmou o pedido ${row.orderId} (${row.chargeId}).`);
+        }
+      } catch (err) {
+        this.logger.warn(`Reconciliação: falha no pedido ${row.orderId}: ${String(err)}`);
+      }
+    }
+    return { checked: rows.length, confirmed };
   }
 
   /**

@@ -14,6 +14,9 @@ import { CurrentUser, type AuthUser } from '../common/auth-user';
 import { SkipThrottle } from '@nestjs/throttler';
 import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 import { SessionGuard } from '../auth/guards/session.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../common/roles.decorator';
+import { PaymentReconcilerService } from './payment-reconciler.service';
 import { CheckoutService } from './checkout.service';
 import {
   asaasWebhookSchema,
@@ -32,7 +35,19 @@ import {
  */
 @Controller({ version: '1' })
 export class CheckoutController {
-  constructor(@Inject(CheckoutService) private readonly checkout: CheckoutService) {}
+  constructor(
+    @Inject(CheckoutService) private readonly checkout: CheckoutService,
+    @Inject(PaymentReconcilerService) private readonly reconciler: PaymentReconcilerService,
+  ) {}
+
+  /** Backoffice: sincroniza agora os pedidos pendentes com o provedor. */
+  @Post('admin/payments/reconcile')
+  @HttpCode(200)
+  @UseGuards(SessionGuard, RolesGuard)
+  @Roles('staff', 'admin')
+  reconcile(): Promise<{ checked: number; confirmed: number }> {
+    return this.reconciler.run();
+  }
 
   @Post('checkout')
   @UseGuards(SessionGuard)
