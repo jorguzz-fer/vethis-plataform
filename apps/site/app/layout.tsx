@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { Header } from '@/components/site/header';
 import { Footer } from '@/components/site/footer';
 import { AttributionTracker } from '@/components/site/attribution-tracker';
+import { SiteChrome } from '@/components/site/site-chrome';
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, DEFAULT_OG_IMAGE } from '@/lib/seo';
 import './globals.css';
 import './prototype.css';
@@ -58,9 +59,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
         <AttributionTracker />
-        <Header />
-        <main id="top">{children}</main>
-        <Footer />
+        {/* /links (link-in-bio) sai sem cabeçalho/rodapé; o resto do site mantém. */}
+        <SiteChrome header={<Header />} footer={<Footer />}>
+          {children}
+        </SiteChrome>
       </body>
     </html>
   );
