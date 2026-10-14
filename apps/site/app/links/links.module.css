@@ -26,10 +26,6 @@
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
-.page a {
-  color: inherit;
-  text-decoration: none;
-}
 .wrap {
   max-width: 480px;
   margin: 0 auto;
@@ -205,12 +201,12 @@
   background: var(--gold-500);
   color: var(--green-900);
 }
-.btnOutline {
+.page .btnOutline {
   border: 1.5px solid var(--green-700);
   color: var(--green-700);
   background: transparent;
 }
-.btnSoft {
+.page .btnSoft {
   background: var(--green-50);
   color: var(--green-700);
 }
@@ -231,7 +227,7 @@
   font-size: 15px;
   border-radius: var(--radius-md);
 }
-.btnWa {
+.page .btnWa {
   background: var(--green-900);
   color: var(--on-green);
 }
