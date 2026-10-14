@@ -103,6 +103,13 @@ describe('loadConfig — gateway asaas', () => {
     expect(cfg.PAYMENT_GATEWAY).toBe('asaas');
     expect(cfg.ASAAS_BASE_URL).toContain('sandbox');
   });
+  it('reconciliação ligada por padrão (300 s) e desligável com 0', () => {
+    expect(loadConfig(baseEnv).PAYMENT_RECONCILE_INTERVAL_SEC).toBe(300);
+    expect(
+      loadConfig({ ...baseEnv, PAYMENT_RECONCILE_INTERVAL_SEC: '0' })
+        .PAYMENT_RECONCILE_INTERVAL_SEC,
+    ).toBe(0);
+  });
   it('aceita a URL de produção do Asaas', () => {
     const cfg = loadConfig({
       ...baseEnv,

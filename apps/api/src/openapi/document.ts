@@ -469,6 +469,18 @@ export function buildOpenApiDocument() {
   });
   registry.registerPath({
     method: 'post',
+    path: '/v1/admin/payments/reconcile',
+    tags: ['backoffice'],
+    summary: 'Sincroniza pedidos pendentes com o provedor de pagamento (confirma os já pagos)',
+    responses: {
+      200: {
+        description: 'OK',
+        ...json(z.object({ checked: z.number().int(), confirmed: z.number().int() })),
+      },
+    },
+  });
+  registry.registerPath({
+    method: 'post',
     path: '/v1/admin/courses/{id}/duplicate',
     tags: ['backoffice'],
     summary: 'Duplica o curso (com módulos e aulas) como rascunho',

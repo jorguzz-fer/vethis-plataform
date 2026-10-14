@@ -132,6 +132,14 @@ export class AsaasPaymentGateway implements PaymentGateway {
     return created.id;
   }
 
+  async getChargeStatus(providerChargeId: string): Promise<ChargeResult['status']> {
+    const payment = await this.request<AsaasPayment>(
+      'GET',
+      `/payments/${encodeURIComponent(providerChargeId)}`,
+    );
+    return asaasStatusToCharge(payment.status);
+  }
+
   async createCharge(input: CreateChargeInput): Promise<ChargeResult> {
     const customer = await this.ensureCustomer(input);
     const value = Number((input.amountCents / 100).toFixed(2));

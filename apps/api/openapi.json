@@ -4265,6 +4265,38 @@
         }
       }
     },
+    "/v1/admin/payments/reconcile": {
+      "post": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Sincroniza pedidos pendentes com o provedor de pagamento (confirma os já pagos)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "checked": {
+                      "type": "integer"
+                    },
+                    "confirmed": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "checked",
+                    "confirmed"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/admin/courses/{id}/duplicate": {
       "post": {
         "tags": [

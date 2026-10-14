@@ -51,6 +51,8 @@ const EnvSchema = z
     ASAAS_API_KEY: z.string().min(1).optional(),
     ASAAS_BASE_URL: z.string().url().default('https://api-sandbox.asaas.com/v3'),
     ASAAS_WEBHOOK_TOKEN: z.string().min(1).optional(),
+    // Reconciliação de pagamentos pendentes com o provedor (segundos; 0 desliga).
+    PAYMENT_RECONCILE_INTERVAL_SEC: z.coerce.number().int().min(0).default(300),
   })
   .superRefine((env, ctx) => {
     if (env.MAIL_PROVIDER === 'brevo') {

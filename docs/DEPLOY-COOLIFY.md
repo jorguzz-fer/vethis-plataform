@@ -127,6 +127,11 @@ o código é o mesmo. Checklist:
    `paid` e a matrícula aparece na área do aluno; depois estorne no painel.
 5. Se o webhook falhar (token errado, API fora), o Asaas **pausa a fila** após
    várias tentativas: em **Integrações → Webhooks** reative a fila depois de corrigir.
+6. **Rede de segurança:** a API reconcilia sozinha. A cada
+   `PAYMENT_RECONCILE_INTERVAL_SEC` (padrão 300 s; primeira rodada 20 s após o
+   boot) ela consulta no Asaas os pedidos pendentes dos últimos 30 dias e
+   confirma os já pagos (matrícula + e-mails), mesmo que o webhook não tenha
+   chegado. Para forçar agora: `POST /v1/admin/payments/reconcile` (staff/admin).
 
 Endpoints relevantes: `POST /v1/webhooks/asaas` (produção, autenticado pelo header
 `asaas-access-token`); `POST /v1/webhooks/payments` e `simulate-payment` só
