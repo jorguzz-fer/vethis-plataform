@@ -10,6 +10,10 @@ const nextConfig = {
     '@vethis/design-tokens',
     '@vethis/shared',
   ],
+  // Plano de marketing (documento interno, noindex) servido como HTML estático de /public.
+  async rewrites() {
+    return [{ source: '/plano-mkt', destination: '/plano-mkt.html' }];
+  },
 };
 
 export default nextConfig;
