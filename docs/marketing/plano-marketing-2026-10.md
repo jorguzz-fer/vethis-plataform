@@ -2,7 +2,8 @@
 
 > Consolidação da reunião de marketing de 19/10/2026 (Fernando Jorge, Dra. Cintia Ghorayeb,
 > Dra. Roberta Ruiz e Rafa). Horizonte: 4 semanas (20/10 a 15/11). Documento vivo: revisar a
-> cada reunião semanal. Anexo: [Guia de gravação](./guia-gravacao.md).
+> cada reunião semanal. Anexo: [Guia de gravação](./guia-gravacao.md). Versão para compartilhar:
+> [plano-marketing-2026-10.html](./plano-marketing-2026-10.html).
 
 ## 1. Onde estamos
 
