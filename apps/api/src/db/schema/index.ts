@@ -11,4 +11,5 @@ export * from './enrollment';
 export * from './commerce';
 export * from './crm';
 export * from './channels';
+export * from './plan-tasks';
 export * from './audit';

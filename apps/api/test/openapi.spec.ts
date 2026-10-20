@@ -37,6 +37,11 @@ describe('buildOpenApiDocument', () => {
     expect(doc.paths?.['/v1/admin/users/{id}/enrollments']).toBeDefined();
   });
 
+  it('expõe as rotas públicas do plano de marketing', () => {
+    expect(doc.paths?.['/v1/plan/tasks']).toBeDefined();
+    expect(doc.paths?.['/v1/plan/tasks/{key}']?.put).toBeDefined();
+  });
+
   it('registra os schemas de resposta', () => {
     const schemas = doc.components?.schemas ?? {};
     expect(schemas['CourseSummary']).toBeDefined();

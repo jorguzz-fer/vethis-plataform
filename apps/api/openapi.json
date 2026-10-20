@@ -3067,6 +3067,86 @@
           "modules"
         ]
       },
+      "PlanTask": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{2,40}$"
+          },
+          "done": {
+            "type": "boolean"
+          },
+          "doneAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "key",
+          "done",
+          "doneAt",
+          "updatedAt"
+        ]
+      },
+      "PlanTasks": {
+        "type": "object",
+        "properties": {
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9-]{2,40}$"
+                },
+                "done": {
+                  "type": "boolean"
+                },
+                "doneAt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "key",
+                "done",
+                "doneAt",
+                "updatedAt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "tasks"
+        ]
+      },
+      "SetPlanTaskInput": {
+        "type": "object",
+        "properties": {
+          "done": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "done"
+        ]
+      },
       "UpdateCourseInput": {
         "type": "object",
         "properties": {
@@ -5343,6 +5423,69 @@
           },
           "503": {
             "description": "IA indisponível"
+          }
+        }
+      }
+    },
+    "/v1/plan/tasks": {
+      "get": {
+        "tags": [
+          "plan"
+        ],
+        "summary": "Estado das tarefas do plano de marketing (público)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanTasks"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/plan/tasks/{key}": {
+      "put": {
+        "tags": [
+          "plan"
+        ],
+        "summary": "Marca ou desmarca uma tarefa do plano de marketing (público, sem identidade)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]{2,40}$"
+            },
+            "required": true,
+            "name": "key",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetPlanTaskInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanTask"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Chave ou corpo inválido"
           }
         }
       }

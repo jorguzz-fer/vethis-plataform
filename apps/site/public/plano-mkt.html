@@ -23,6 +23,8 @@
         --title-on-green: #f6f9f4;
         --brand:
           Montserrat, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        --prog-a: #14523a;
+        --prog-b: #b58d4f;
         --green-900: #02301b;
         --green-800: #0b3d2a;
         --green-700: #14523a;
@@ -59,6 +61,8 @@
           --gold-text: var(--gold-400);
           --gold-50: #2a2316;
           --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 16px 40px -20px rgba(0, 0, 0, 0.6);
+          --prog-a: #3e7d5f;
+          --prog-b: #c9a461;
           color-scheme: dark;
         }
       }
@@ -73,6 +77,8 @@
         --gold-text: var(--gold-400);
         --gold-50: #2a2316;
         --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 16px 40px -20px rgba(0, 0, 0, 0.6);
+        --prog-a: #3e7d5f;
+        --prog-b: #c9a461;
         color-scheme: dark;
       }
 
@@ -729,6 +735,219 @@
         font-size: 15px;
       }
 
+      /* ---------- tarefas interativas ---------- */
+      .chk {
+        width: 36px;
+        padding-right: 0;
+      }
+      input[type='checkbox'] {
+        width: 18px;
+        height: 18px;
+        margin: 2px 0 0;
+        accent-color: var(--green-700);
+        cursor: pointer;
+      }
+      tr.is-done td:not(.chk) {
+        color: var(--muted);
+      }
+      tr.is-done td.when {
+        text-decoration: line-through;
+        color: var(--muted);
+      }
+      tr.is-late td.when {
+        color: var(--error);
+      }
+      tr.is-soon td.when {
+        color: var(--gold-text);
+      }
+      [data-flag]::after {
+        content: attr(data-flag);
+        display: inline-block;
+        margin-left: 8px;
+        padding: 1px 8px;
+        border-radius: 100px;
+        font-family: var(--brand);
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        vertical-align: 1px;
+        background: var(--gold-50);
+        color: var(--gold-text);
+      }
+      .is-late [data-flag]::after,
+      .is-late[data-flag]::after {
+        background: var(--error);
+        color: #fff;
+      }
+      .tasks li {
+        grid-template-columns: 22px 1fr;
+      }
+      .tasks li::before {
+        display: none;
+      }
+      .tasks li.is-done span {
+        color: var(--muted);
+      }
+      .tasks li.is-done b {
+        color: var(--muted);
+      }
+      .prog {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--brand);
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+      }
+      .prog b {
+        color: var(--ink);
+        font-weight: 700;
+      }
+      .prog-bar {
+        display: inline-block;
+        width: 110px;
+        height: 6px;
+        border-radius: 100px;
+        background: var(--tint);
+        overflow: hidden;
+      }
+      .prog-bar i {
+        display: block;
+        height: 100%;
+        border-radius: 100px;
+        background: linear-gradient(90deg, var(--prog-a), var(--prog-b));
+        transition: width 0.4s ease;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .prog-bar i {
+          transition: none;
+        }
+      }
+      .front header .prog {
+        flex-basis: 100%;
+        margin-top: 4px;
+      }
+      @media (max-width: 640px) {
+        /* Em tela estreita cada ação vira um bloco: checkbox, texto e, embaixo,
+       quem e prazo (com a etiqueta de atraso visível, sem rolagem lateral). */
+        .front table {
+          min-width: 0;
+        }
+        .front thead {
+          display: none;
+        }
+        .front tbody tr {
+          display: grid;
+          grid-template-columns: 30px max-content 1fr;
+          gap: 4px 10px;
+          padding: 12px 12px 12px 14px;
+          border-bottom: 1px solid var(--border);
+        }
+        .front tbody tr:last-child {
+          border-bottom: 0;
+        }
+        .front tbody td {
+          display: block;
+          padding: 0;
+          border: 0;
+          min-width: 0;
+        }
+        .front td.chk {
+          grid-column: 1;
+          grid-row: 1 / span 2;
+          width: auto;
+        }
+        .front td.chk + td {
+          grid-column: 2 / span 2;
+        }
+        .front td.who,
+        .front td.when {
+          grid-row: 2;
+          font-size: 13px;
+          white-space: normal;
+        }
+        .front td.who {
+          grid-column: 2;
+          color: var(--muted);
+        }
+        .front td.when {
+          grid-column: 3;
+        }
+      }
+      .wk-prog {
+        margin-top: 6px;
+        display: flex;
+      }
+      .wk-prog .prog-bar {
+        width: 90px;
+      }
+      .hero-prog {
+        display: grid;
+        gap: 8px;
+        max-width: 520px;
+        font-family: var(--brand);
+        font-size: 13px;
+        color: var(--on-green);
+      }
+      .hero-prog b {
+        color: var(--title-on-green);
+        font-size: 15px;
+      }
+      .hero-prog .prog-bar {
+        display: block;
+        width: 100%;
+        height: 8px;
+        background: rgba(234, 240, 236, 0.16);
+      }
+      .hero-prog .prog-bar i {
+        background: linear-gradient(90deg, var(--green-500), var(--gold-400));
+      }
+      .alerts {
+        background: var(--gold-50);
+        border-bottom: 1px solid var(--line);
+      }
+      .alerts .wrap {
+        padding-block: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 18px;
+        font-family: var(--brand);
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--ink);
+      }
+      .alerts .late {
+        color: var(--error);
+        font-weight: 700;
+      }
+      .alerts a {
+        color: var(--green-700);
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+        transform: translateX(-50%);
+        background: var(--green-900);
+        color: var(--on-green);
+        padding: 10px 16px;
+        border-radius: 10px;
+        font-size: 14px;
+        box-shadow: var(--shadow);
+        z-index: 20;
+        max-width: calc(100% - 32px);
+      }
+      .toast.err {
+        background: var(--error);
+        color: #fff;
+      }
+      #sync {
+        font-variant-numeric: tabular-nums;
+      }
+
       footer .wrap {
         padding-block: 28px 40px;
         color: var(--muted);
@@ -772,6 +991,10 @@
           <span>Dra. Roberta Ruiz</span>
           <span>Rafa</span>
         </div>
+        <div class="hero-prog" id="hero-prog">
+          <span class="prog-n"><b>0</b>/45 tarefas feitas</span>
+          <span class="prog-bar"><i style="width: 0%"></i></span>
+        </div>
       </div>
     </header>
 
@@ -787,6 +1010,13 @@
         <a href="#guia">Guia de gravação</a>
       </div>
     </nav>
+    <div class="alerts" id="alerts" hidden>
+      <div class="wrap">
+        <span id="alert-late" hidden></span>
+        <span id="alert-soon" hidden></span>
+        <a href="#frentes" id="alert-link" hidden>ver a primeira atrasada</a>
+      </div>
+    </div>
 
     <main>
       <section id="regras">
@@ -981,19 +1211,27 @@
               <span class="code">F1</span>
               <h3>Governança e aprovação</h3>
               <span class="owner">Dono: Fernando · Apoio: Roberta</span>
+              <div class="prog" data-front="f1">
+                <span class="prog-n"><b>0</b>/4</span
+                ><span class="prog-bar"><i style="width: 0%"></i></span>
+              </div>
             </header>
             <div class="body">
               <div class="tbl">
                 <table>
                   <thead>
                     <tr>
+                      <th class="chk"></th>
                       <th>Ação</th>
                       <th>Quem</th>
                       <th>Prazo</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr data-task="f1-01" data-due="2026-10-21">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f1-01" aria-label="Concluída" />
+                      </td>
                       <td>
                         Criar o grupo de aprovação no WhatsApp (Cintia, Fernando, Roberta; Rafa
                         opcional)
@@ -1001,19 +1239,28 @@
                       <td class="who">Roberta</td>
                       <td class="when">21/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f1-02" data-due="2026-10-21">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f1-02" aria-label="Concluída" />
+                      </td>
                       <td>Definir o fluxo: proposta, arte e texto no grupo, joinha, publicação</td>
                       <td class="who">Fernando</td>
                       <td class="when">21/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f1-03" data-due="2026-10-24">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f1-03" aria-label="Concluída" />
+                      </td>
                       <td>
                         Receber as fotos oficiais em alta da Cintia e montar o banco de imagens
                       </td>
                       <td class="who">Cintia / Fernando</td>
                       <td class="when">24/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f1-04" data-due="2026-10-24">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f1-04" aria-label="Concluída" />
+                      </td>
                       <td>
                         Checklist de publicação (foto oficial? texto aprovado? colab marcado? origem
                         certa?)
@@ -1036,29 +1283,43 @@
               <span class="code">F2</span>
               <h3>Contratos e direitos de imagem</h3>
               <span class="owner">Dono: Rafa · Apoio: Cintia, Kleber</span>
+              <div class="prog" data-front="f2">
+                <span class="prog-n"><b>0</b>/6</span
+                ><span class="prog-bar"><i style="width: 0%"></i></span>
+              </div>
             </header>
             <div class="body">
               <div class="tbl">
                 <table>
                   <thead>
                     <tr>
+                      <th class="chk"></th>
                       <th>Ação</th>
                       <th>Quem</th>
                       <th>Prazo</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr data-task="f2-01" data-due="2026-10-21">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f2-01" aria-label="Concluída" />
+                      </td>
                       <td>Reenviar ao Rafa a última versão do contrato (a do Kleber)</td>
                       <td class="who">Cintia</td>
                       <td class="when">21/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f2-02" data-due="2026-10-23">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f2-02" aria-label="Concluída" />
+                      </td>
                       <td>Anexar o termo de cessão de uso de imagem ao contrato</td>
                       <td class="who">Rafa</td>
                       <td class="when">23/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f2-03" data-due="2026-10-23">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f2-03" aria-label="Concluída" />
+                      </td>
                       <td>
                         Criar o grupo de WhatsApp com os professores e avisar que o contrato vai
                         chegar
@@ -1066,19 +1327,28 @@
                       <td class="who">Cintia</td>
                       <td class="when">23/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f2-04" data-due="2026-10-24">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f2-04" aria-label="Concluída" />
+                      </td>
                       <td>
                         Enviar contrato e termo a todos; registrar quem recebeu, comentou e assinou
                       </td>
                       <td class="who">Rafa</td>
                       <td class="when">24/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f2-05" data-due="2026-10-24">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f2-05" aria-label="Concluída" />
+                      </td>
                       <td>Enviar a planilha de professores (com Lattes) ao Fernando</td>
                       <td class="who">Cintia</td>
                       <td class="when">24/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f2-06" data-due="2026-10-31">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f2-06" aria-label="Concluída" />
+                      </td>
                       <td>Consolidar pedidos de mudança e devolver ao Kleber</td>
                       <td class="who">Rafa</td>
                       <td class="when">31/10</td>
@@ -1098,19 +1368,27 @@
               <span class="code">F3</span>
               <h3>Produção de vídeo</h3>
               <span class="owner">Dono: Fernando · Apoio: Cintia</span>
+              <div class="prog" data-front="f3">
+                <span class="prog-n"><b>0</b>/6</span
+                ><span class="prog-bar"><i style="width: 0%"></i></span>
+              </div>
             </header>
             <div class="body">
               <div class="tbl">
                 <table>
                   <thead>
                     <tr>
+                      <th class="chk"></th>
                       <th>Ação</th>
                       <th>Quem</th>
                       <th>Prazo</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr data-task="f3-01" data-due="2026-10-21">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f3-01" aria-label="Concluída" />
+                      </td>
                       <td>
                         Guia de gravação, versão aulas e versão publicidade (<a href="#guia"
                           >anexo</a
@@ -1119,27 +1397,42 @@
                       <td class="who">Fernando</td>
                       <td class="when">21/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f3-02" data-due="2026-10-24">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f3-02" aria-label="Concluída" />
+                      </td>
                       <td>Enviar um trecho de vídeo considerado dez de dez como referência</td>
                       <td class="who">Cintia</td>
                       <td class="when">24/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f3-03" data-due="2026-10-26">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f3-03" aria-label="Concluída" />
+                      </td>
                       <td>Piloto de 1 minuto seguindo o guia (fim de semana)</td>
                       <td class="who">Cintia</td>
                       <td class="when">26/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f3-04" data-due="2026-10-28">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f3-04" aria-label="Concluída" />
+                      </td>
                       <td>Ajustar o guia com base no piloto e enviar ao grupo dos professores</td>
                       <td class="who">Fernando</td>
                       <td class="when">28/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f3-05">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f3-05" aria-label="Concluída" />
+                      </td>
                       <td>1:1 de setup (luz, câmera, cenário) para quem pedir</td>
                       <td class="who">Fernando</td>
                       <td class="when">contínuo</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f3-06" data-due="2026-10-31">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f3-06" aria-label="Concluída" />
+                      </td>
                       <td>
                         Mapear quem precisa do estúdio (prioridade: professor de São Paulo com 12 h
                         de gravação) e propor datas
@@ -1162,6 +1455,10 @@
               <span class="code">F4</span>
               <h3>Conteúdo e pipeline</h3>
               <span class="owner">Dono: Fernando · Aprovação: Cintia</span>
+              <div class="prog" data-front="f4">
+                <span class="prog-n"><b>0</b>/7</span
+                ><span class="prog-bar"><i style="width: 0%"></i></span>
+              </div>
             </header>
             <div class="body">
               <p style="font-size: 15px; color: var(--muted)">
@@ -1173,33 +1470,49 @@
                 <table>
                   <thead>
                     <tr>
+                      <th class="chk"></th>
                       <th>Ação</th>
                       <th>Quem</th>
                       <th>Prazo</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr data-task="f4-01" data-due="2026-10-21">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f4-01" aria-label="Concluída" />
+                      </td>
                       <td>Lista inicial de temas para aprovação</td>
                       <td class="who">Fernando</td>
                       <td class="when">21/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f4-02" data-due="2026-10-23">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f4-02" aria-label="Concluída" />
+                      </td>
                       <td>Aprovar ou ajustar os temas</td>
                       <td class="who">Cintia</td>
                       <td class="when">23/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f4-03" data-due="2026-10-23">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f4-03" aria-label="Concluída" />
+                      </td>
                       <td>3 roteiros curtos (até 60 s) para o primeiro fim de semana</td>
                       <td class="who">Fernando</td>
                       <td class="when">23/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f4-04" data-due="2026-10-26">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f4-04" aria-label="Concluída" />
+                      </td>
                       <td>Gravar os 3 primeiros vídeos</td>
                       <td class="who">Cintia</td>
                       <td class="when">26/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f4-05" data-due="2026-10-28">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f4-05" aria-label="Concluída" />
+                      </td>
                       <td>
                         Calendário editorial de 4 semanas e automação do pipeline (blog, Instagram,
                         LinkedIn)
@@ -1207,12 +1520,18 @@
                       <td class="who">Fernando</td>
                       <td class="when">28/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f4-06" data-due="2026-10-30">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f4-06" aria-label="Concluída" />
+                      </td>
                       <td>Edição e publicação em colab do primeiro lote</td>
                       <td class="who">Fernando</td>
                       <td class="when">30/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f4-07">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f4-07" aria-label="Concluída" />
+                      </td>
                       <td>Novo lote de roteiros toda quinta, para gravação no fim de semana</td>
                       <td class="who">Fernando</td>
                       <td class="when">semanal</td>
@@ -1270,29 +1589,43 @@
               <span class="code">F5</span>
               <h3>Instagram da Vethis</h3>
               <span class="owner">Dono: Fernando</span>
+              <div class="prog" data-front="f5">
+                <span class="prog-n"><b>0</b>/6</span
+                ><span class="prog-bar"><i style="width: 0%"></i></span>
+              </div>
             </header>
             <div class="body">
               <div class="tbl">
                 <table>
                   <thead>
                     <tr>
+                      <th class="chk"></th>
                       <th>Ação</th>
                       <th>Quem</th>
                       <th>Prazo</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr data-task="f5-01" data-due="2026-10-22">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f5-01" aria-label="Concluída" />
+                      </td>
                       <td>Bio, foto, destaques e link para a página de links</td>
                       <td class="who">Fernando</td>
                       <td class="when">22/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f5-02" data-due="2026-10-22">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f5-02" aria-label="Concluída" />
+                      </td>
                       <td>Seguir todos os professores, coordenadores e perfis parceiros</td>
                       <td class="who">Fernando</td>
                       <td class="when">22/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f5-03" data-due="2026-10-30">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f5-03" aria-label="Concluída" />
+                      </td>
                       <td>
                         Primeiras 6 publicações (institucional + temas aprovados), todas em colab
                         com a Cintia
@@ -1300,17 +1633,26 @@
                       <td class="who">Fernando</td>
                       <td class="when">30/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f5-04">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f5-04" aria-label="Concluída" />
+                      </td>
                       <td>Cadência: 3 publicações por semana e stories nos dias de publicação</td>
                       <td class="who">Fernando</td>
                       <td class="when">a partir de 27/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f5-05" data-due="2026-11-06">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f5-05" aria-label="Concluída" />
+                      </td>
                       <td>Colab com a Roberta (público de estudantes)</td>
                       <td class="who">Fernando / Roberta</td>
                       <td class="when">06/11</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f5-06">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f5-06" aria-label="Concluída" />
+                      </td>
                       <td>Colab com cada professor assinado ao publicar o tema do módulo dele</td>
                       <td class="who">Fernando</td>
                       <td class="when">a partir de 03/11</td>
@@ -1330,19 +1672,27 @@
               <span class="code">F6</span>
               <h3>Embaixadores e parcerias</h3>
               <span class="owner">Dono: Fernando · Comercial: Kleber · Petlove: Cintia</span>
+              <div class="prog" data-front="f6">
+                <span class="prog-n"><b>0</b>/7</span
+                ><span class="prog-bar"><i style="width: 0%"></i></span>
+              </div>
             </header>
             <div class="body">
               <div class="tbl">
                 <table>
                   <thead>
                     <tr>
+                      <th class="chk"></th>
                       <th>Ação</th>
                       <th>Quem</th>
                       <th>Prazo</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr data-task="f6-01" data-due="2026-10-28">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f6-01" aria-label="Concluída" />
+                      </td>
                       <td>
                         Proposta de mecânica do cupom (código por professor, desconto ao aluno,
                         contrapartida ao professor)
@@ -1350,7 +1700,10 @@
                       <td class="who">Fernando</td>
                       <td class="when">28/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f6-02" data-due="2026-10-28">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f6-02" aria-label="Concluída" />
+                      </td>
                       <td>
                         Enquanto não há cupom no checkout: link rastreado por professor e canal no
                         CRM
@@ -1358,27 +1711,42 @@
                       <td class="who">Fernando</td>
                       <td class="when">28/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f6-03" data-due="2026-10-28">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f6-03" aria-label="Concluída" />
+                      </td>
                       <td>Registrar no backlog da plataforma o cupom com desconto e comissão</td>
                       <td class="who">Fernando</td>
                       <td class="when">28/10</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f6-04" data-due="2026-11-04">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f6-04" aria-label="Concluída" />
+                      </td>
                       <td>Validar valores e contrapartida</td>
                       <td class="who">Kleber</td>
                       <td class="when">04/11</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f6-05" data-due="2026-11-04">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f6-05" aria-label="Concluída" />
+                      </td>
                       <td>Cláusula do programa de embaixadores no contrato ou em aditivo</td>
                       <td class="who">Kleber / Rafa</td>
                       <td class="when">04/11</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f6-06" data-due="2026-11-10">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f6-06" aria-label="Concluída" />
+                      </td>
                       <td>Preparar um one-pager da pós para a conversa com a Petlove</td>
                       <td class="who">Fernando</td>
                       <td class="when">10/11</td>
                     </tr>
-                    <tr>
+                    <tr data-task="f6-07" data-due="2026-11-15">
+                      <td class="chk">
+                        <input type="checkbox" id="t-f6-07" aria-label="Concluída" />
+                      </td>
                       <td>Sondar a Silvia sobre o formato possível com a Petlove após a posse</td>
                       <td class="who">Cintia</td>
                       <td class="when">15/11</td>
@@ -1435,7 +1803,13 @@
           </div>
           <ol class="timeline">
             <li>
-              <div class="wk">Semana 1<small>20 a 26/10</small></div>
+              <div class="wk" data-from="2026-10-20" data-to="2026-10-26">
+                Semana 1<small>20 a 26/10</small
+                ><span class="prog wk-prog"
+                  ><span class="prog-n"><b>0</b>/0</span
+                  ><span class="prog-bar"><i style="width: 0%"></i></span
+                ></span>
+              </div>
               <ul>
                 <li>F1 pronta: grupo, fluxo, banco de imagens.</li>
                 <li>F2: contratos enviados, grupo dos professores criado.</li>
@@ -1445,7 +1819,13 @@
               </ul>
             </li>
             <li>
-              <div class="wk">Semana 2<small>27/10 a 02/11</small></div>
+              <div class="wk" data-from="2026-10-27" data-to="2026-11-02">
+                Semana 2<small>27/10 a 02/11</small
+                ><span class="prog wk-prog"
+                  ><span class="prog-n"><b>0</b>/0</span
+                  ><span class="prog-bar"><i style="width: 0%"></i></span
+                ></span>
+              </div>
               <ul>
                 <li>
                   F3: guia revisado após o piloto, enviado aos professores; mapeamento de quem usa o
@@ -1463,7 +1843,13 @@
               </ul>
             </li>
             <li>
-              <div class="wk">Semana 3<small>03 a 09/11</small></div>
+              <div class="wk" data-from="2026-11-03" data-to="2026-11-09">
+                Semana 3<small>03 a 09/11</small
+                ><span class="prog wk-prog"
+                  ><span class="prog-n"><b>0</b>/0</span
+                  ><span class="prog-bar"><i style="width: 0%"></i></span
+                ></span>
+              </div>
               <ul>
                 <li>
                   F5 e F6: primeiros colabs com professores assinados, cada um com link próprio.
@@ -1473,7 +1859,13 @@
               </ul>
             </li>
             <li>
-              <div class="wk">Semana 4<small>10 a 15/11</small></div>
+              <div class="wk" data-from="2026-11-10" data-to="2026-11-15">
+                Semana 4<small>10 a 15/11</small
+                ><span class="prog wk-prog"
+                  ><span class="prog-n"><b>0</b>/0</span
+                  ><span class="prog-bar"><i style="width: 0%"></i></span
+                ></span>
+              </div>
               <ul>
                 <li>F6: one-pager pronto; Cintia sonda a Silvia (Petlove).</li>
                 <li>F2: meta de 100% assinados.</li>
@@ -1607,26 +1999,30 @@
             <h2>Para a próxima reunião</h2>
           </div>
           <ul class="tasks">
-            <li>
-              <span>Valor do desconto e da contrapartida do cupom por professor (Kleber).</span>
+            <li data-task="pauta-1">
+              <input type="checkbox" id="t-pauta-1" aria-label="Concluída" /><span
+                >Valor do desconto e da contrapartida do cupom por professor (Kleber).</span
+              >
             </li>
-            <li>
-              <span
+            <li data-task="pauta-2">
+              <input type="checkbox" id="t-pauta-2" aria-label="Concluída" /><span
                 >Data de abertura da turma e meta de matrículas: define a intensidade do
                 calendário.</span
               >
             </li>
-            <li>
-              <span
+            <li data-task="pauta-3">
+              <input type="checkbox" id="t-pauta-3" aria-label="Concluída" /><span
                 >Orçamento de mídia paga, se houver, para impulsionar as peças em colab que
                 performarem.</span
               >
             </li>
-            <li>
-              <span>Os colabs saem como @vethiseducacao ou cria-se um perfil por curso?</span>
+            <li data-task="pauta-4">
+              <input type="checkbox" id="t-pauta-4" aria-label="Concluída" /><span
+                >Os colabs saem como @vethiseducacao ou cria-se um perfil por curso?</span
+              >
             </li>
-            <li>
-              <span
+            <li data-task="pauta-5">
+              <input type="checkbox" id="t-pauta-5" aria-label="Concluída" /><span
                 >Quem é a segunda voz nos vídeos quando a Cintia não puder (Roberta se
                 ofereceu).</span
               >
@@ -1642,24 +2038,26 @@
             <h2>O que cada um faz até sexta</h2>
           </div>
           <ul class="tasks">
-            <li>
-              <span
+            <li data-task="semana-cintia" data-due="2026-10-24">
+              <input type="checkbox" id="t-semana-cintia" aria-label="Concluída" /><span
                 ><b>Cintia</b>: reenvia ao Rafa a última versão do contrato; manda as fotos em alta
                 e a planilha dos professores para o Fernando; no fim de semana grava o piloto de 1
                 min e os 3 primeiros vídeos com os roteiros que chegam na quinta.</span
               >
             </li>
-            <li>
-              <span><b>Roberta</b>: cria o grupo de aprovação hoje.</span>
+            <li data-task="semana-roberta" data-due="2026-10-24">
+              <input type="checkbox" id="t-semana-roberta" aria-label="Concluída" /><span
+                ><b>Roberta</b>: cria o grupo de aprovação hoje.</span
+              >
             </li>
-            <li>
-              <span
+            <li data-task="semana-rafa" data-due="2026-10-24">
+              <input type="checkbox" id="t-semana-rafa" aria-label="Concluída" /><span
                 ><b>Rafa</b>: junta o termo de cessão de imagem ao contrato e dispara para todos os
                 professores até sexta, com planilha de quem recebeu e quem assinou.</span
               >
             </li>
-            <li>
-              <span
+            <li data-task="semana-fernando" data-due="2026-10-24">
+              <input type="checkbox" id="t-semana-fernando" aria-label="Concluída" /><span
                 ><b>Fernando</b>: guia de gravação e lista de temas amanhã; perfil da Vethis
                 configurado e seguindo todo mundo até quarta; roteiros na quinta.</span
               >
@@ -1860,7 +2258,216 @@
       <div class="wrap">
         <span>Vethis · Educação Médica Veterinária</span>
         <span>Documento vivo. Revisar a cada reunião semanal. Versão de 20/10/2026.</span>
+        <span id="sync">Carregando o estado das tarefas…</span>
       </div>
     </footer>
+
+    <script>
+      (function () {
+        var API = '/plano-mkt/tasks';
+        var items = Array.prototype.slice.call(document.querySelectorAll('[data-task]'));
+        var state = {};
+        var latest = 0;
+        var syncEl = document.getElementById('sync');
+
+        function today() {
+          var d = new Date();
+          return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        }
+        function parseDay(iso) {
+          var p = iso.split('-');
+          return new Date(+p[0], +p[1] - 1, +p[2]);
+        }
+        function isDone(el) {
+          var s = state[el.getAttribute('data-task')];
+          return !!(s && s.done);
+        }
+        function setProg(box, done, total) {
+          if (!box) return;
+          var n = box.querySelector('.prog-n');
+          var bar = box.querySelector('.prog-bar i');
+          if (n) {
+            var suffix = box.id === 'hero-prog' ? ' tarefas feitas' : '';
+            n.innerHTML = '<b>' + done + '</b>/' + total + suffix;
+          }
+          if (bar) bar.style.width = (total ? Math.round((done / total) * 100) : 0) + '%';
+        }
+        function flagTarget(el) {
+          return el.querySelector('td.when') || el.querySelector(':scope > span') || el;
+        }
+        function render() {
+          var t = today();
+          var late = 0,
+            soon = 0,
+            doneCount = 0,
+            firstLate = null;
+          items.forEach(function (el) {
+            var done = isDone(el);
+            var cb = el.querySelector('input[type=checkbox]');
+            if (cb && cb !== document.activeElement) cb.checked = done;
+            el.classList.toggle('is-done', done);
+            el.classList.remove('is-late', 'is-soon');
+            var ft = flagTarget(el);
+            ft.removeAttribute('data-flag');
+            if (done) doneCount++;
+            var due = el.getAttribute('data-due');
+            if (!done && due) {
+              var days = Math.round((parseDay(due) - t) / 864e5);
+              if (days < 0) {
+                el.classList.add('is-late');
+                ft.setAttribute('data-flag', 'atrasada');
+                late++;
+                if (!firstLate) firstLate = el;
+              } else if (days <= 3) {
+                el.classList.add('is-soon');
+                ft.setAttribute(
+                  'data-flag',
+                  days === 0
+                    ? 'vence hoje'
+                    : days === 1
+                      ? 'vence amanhã'
+                      : 'vence em ' + days + ' dias',
+                );
+                soon++;
+              }
+            }
+          });
+          Array.prototype.forEach.call(
+            document.querySelectorAll('.prog[data-front]'),
+            function (p) {
+              var code = p.getAttribute('data-front') + '-';
+              var rows = items.filter(function (e) {
+                return e.getAttribute('data-task').indexOf(code) === 0;
+              });
+              setProg(p, rows.filter(isDone).length, rows.length);
+            },
+          );
+          Array.prototype.forEach.call(document.querySelectorAll('.wk[data-from]'), function (w) {
+            var a = w.getAttribute('data-from'),
+              b = w.getAttribute('data-to');
+            var rows = items.filter(function (e) {
+              var d = e.getAttribute('data-due');
+              return d && d >= a && d <= b;
+            });
+            setProg(w.querySelector('.prog'), rows.filter(isDone).length, rows.length);
+          });
+          setProg(document.getElementById('hero-prog'), doneCount, items.length);
+
+          var alerts = document.getElementById('alerts');
+          var lateEl = document.getElementById('alert-late');
+          var soonEl = document.getElementById('alert-soon');
+          var link = document.getElementById('alert-link');
+          alerts.hidden = late === 0 && soon === 0;
+          lateEl.hidden = late === 0;
+          lateEl.innerHTML =
+            '<span class="late">' +
+            late +
+            (late === 1 ? ' tarefa atrasada' : ' tarefas atrasadas') +
+            '</span>';
+          soonEl.hidden = soon === 0;
+          soonEl.textContent = soon + (soon === 1 ? ' vence' : ' vencem') + ' nos próximos 3 dias';
+          link.hidden = !firstLate;
+          if (firstLate) {
+            link.onclick = function (ev) {
+              ev.preventDefault();
+              firstLate.scrollIntoView({ block: 'center' });
+            };
+          }
+        }
+        function showSync() {
+          if (!latest) {
+            syncEl.textContent = 'Ninguém marcou nada ainda.';
+            return;
+          }
+          var min = Math.round((Date.now() - latest) / 60000);
+          syncEl.textContent =
+            min < 1
+              ? 'Atualizado agora'
+              : min < 60
+                ? 'Atualizado há ' + min + ' min'
+                : 'Atualizado há ' + Math.round(min / 60) + ' h';
+        }
+        var toastTimer;
+        function toast(msg, isErr) {
+          var el = document.getElementById('toast');
+          if (!el) {
+            el = document.createElement('div');
+            el.id = 'toast';
+            document.body.appendChild(el);
+          }
+          el.className = 'toast' + (isErr ? ' err' : '');
+          el.textContent = msg;
+          el.hidden = false;
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(function () {
+            el.hidden = true;
+          }, 3500);
+        }
+        function load() {
+          return fetch(API, { cache: 'no-store' })
+            .then(function (r) {
+              if (!r.ok) throw new Error(r.status);
+              return r.json();
+            })
+            .then(function (data) {
+              state = {};
+              latest = 0;
+              (data.tasks || []).forEach(function (t) {
+                state[t.key] = t;
+                var u = Date.parse(t.updatedAt);
+                if (u > latest) latest = u;
+              });
+              render();
+              showSync();
+            })
+            .catch(function () {
+              syncEl.textContent =
+                'Sem conexão com o servidor; as marcações não estão sincronizadas.';
+              render();
+            });
+        }
+        items.forEach(function (el) {
+          var cb = el.querySelector('input[type=checkbox]');
+          if (!cb) return;
+          cb.addEventListener('change', function () {
+            var key = el.getAttribute('data-task');
+            var prev = state[key];
+            var done = cb.checked;
+            state[key] = { key: key, done: done, updatedAt: new Date().toISOString() };
+            render();
+            fetch(API + '/' + key, {
+              method: 'PUT',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({ done: done }),
+            })
+              .then(function (r) {
+                if (!r.ok) throw new Error(r.status);
+                return r.json();
+              })
+              .then(function (t) {
+                state[key] = t;
+                latest = Math.max(latest, Date.parse(t.updatedAt));
+                render();
+                showSync();
+              })
+              .catch(function () {
+                if (prev) state[key] = prev;
+                else delete state[key];
+                render();
+                toast('Não foi possível salvar. Tente de novo.', true);
+              });
+          });
+        });
+        render();
+        load();
+        setInterval(function () {
+          if (!document.hidden) load();
+        }, 30000);
+        setInterval(showSync, 60000);
+        document.addEventListener('visibilitychange', function () {
+          if (!document.hidden) load();
+        });
+      })();
+    </script>
   </body>
 </html>
