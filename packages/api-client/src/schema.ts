@@ -2574,6 +2574,91 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/plan/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Estado das tarefas do plano de marketing (público) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PlanTasks"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/plan/tasks/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Marca ou desmarca uma tarefa do plano de marketing (público, sem identidade) */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    key: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["SetPlanTaskInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PlanTask"];
+                    };
+                };
+                /** @description Chave ou corpo inválido */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3300,6 +3385,27 @@ export interface components {
                     durationMinutes: number;
                 }[];
             }[];
+        };
+        PlanTask: {
+            key: string;
+            done: boolean;
+            /** Format: date-time */
+            doneAt: string | null;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        PlanTasks: {
+            tasks: {
+                key: string;
+                done: boolean;
+                /** Format: date-time */
+                doneAt: string | null;
+                /** Format: date-time */
+                updatedAt: string;
+            }[];
+        };
+        SetPlanTaskInput: {
+            done: boolean;
         };
         UpdateCourseInput: {
             slug?: string;

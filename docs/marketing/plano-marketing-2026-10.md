@@ -3,7 +3,9 @@
 > Consolidação da reunião de marketing de 19/10/2026 (Fernando Jorge, Dra. Cintia Ghorayeb,
 > Dra. Roberta Ruiz e Rafa). Horizonte: 4 semanas (20/10 a 15/11). Documento vivo: revisar a
 > cada reunião semanal. Anexo: [Guia de gravação](./guia-gravacao.md). Versão para compartilhar:
-> [vethis.com.br/plano-mkt](https://vethis.com.br/plano-mkt).
+> [vethis.com.br/plano-mkt](https://vethis.com.br/plano-mkt), interativa: checkboxes
+> compartilhados (sem login), barra de progresso por frente e por semana e alerta de prazo. O
+> estado vive na API (`/v1/plan/tasks`).
 
 ## 1. Onde estamos
 
