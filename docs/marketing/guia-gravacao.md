@@ -1,5 +1,10 @@
 # Guia de gravação Vethis
 
+> Versão resumida. O manual completo, com ilustrações, passo a passo do setup, equipamento por
+> faixa de preço e tabela de problemas, está em
+> [vethis.com.br/guia-gravacao](https://vethis.com.br/guia-gravacao)
+> (fonte: `apps/site/public/guia-gravacao.html`).
+
 > Para professores e coordenadores que gravam em casa ou no consultório. O objetivo é que
 > todas as aulas e peças tenham a mesma qualidade de imagem e som, independente de onde
 > foram gravadas. Dúvida ou dificuldade de setup: fala com o Fernando, ele faz um 1:1 por
