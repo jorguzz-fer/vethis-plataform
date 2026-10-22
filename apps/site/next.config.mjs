@@ -10,6 +10,10 @@ const nextConfig = {
     '@vethis/design-tokens',
     '@vethis/shared',
   ],
+  // Páginas estáticas autônomas (HTML pronto em /public) servidas em URL limpa.
+  async rewrites() {
+    return [{ source: '/guia-gravacao', destination: '/guia-gravacao/index.html' }];
+  },
 };
 
 export default nextConfig;
