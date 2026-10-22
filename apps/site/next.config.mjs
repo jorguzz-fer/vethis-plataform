@@ -12,7 +12,10 @@ const nextConfig = {
   ],
   // Plano de marketing (documento interno, noindex) servido como HTML estático de /public.
   async rewrites() {
-    return [{ source: '/plano-mkt', destination: '/plano-mkt.html' }];
+    return [
+      { source: '/plano-mkt', destination: '/plano-mkt.html' },
+      { source: '/guia-gravacao', destination: '/guia-gravacao.html' },
+    ];
   },
 };
 
