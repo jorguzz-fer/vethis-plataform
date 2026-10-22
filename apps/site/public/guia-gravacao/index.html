@@ -393,6 +393,24 @@
       figcaption b {
         color: var(--ink);
       }
+      .video {
+        margin: 0 0 28px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #000;
+        box-shadow: var(--shadow);
+      }
+      .video video {
+        display: block;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+      }
+      .video-note {
+        margin: 10px 0 0;
+        font-size: 14px;
+        color: var(--muted);
+      }
       .figs {
         display: grid;
         gap: 16px;
@@ -786,6 +804,19 @@
               consistência entre as aulas do seu módulo vale mais do que qualquer equipamento.
             </p>
           </div>
+          <div class="video">
+            <video
+              controls
+              preload="metadata"
+              playsinline
+              src="https://d2ol7oe51mr4n9.cloudfront.net/user_30iEq3RiLvig85MUONpnSPIG44p/8231be56-7a50-4093-b227-2bce3a6ba582.mp4"
+              title="O setup em 8 passos (vídeo, 2 min)"
+            ></video>
+          </div>
+          <p class="video-note">
+            Vídeo de 2 minutos com os 8 passos do setup, narrado. Os mesmos passos estão detalhados
+            abaixo.
+          </p>
           <div class="figs">
             <figure>
               <svg viewBox="0 0 640 330" role="img" aria-labelledby="t-setup">
