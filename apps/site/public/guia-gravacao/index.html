@@ -1,0 +1,2325 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Guia de Gravação · Vethis</title>
+    <meta
+      name="description"
+      content="Manual para professores e coordenadores da Vethis: como gravar aulas e vídeos curtos em casa com qualidade de estúdio — câmera, luz, som, fundo, equipamento e passo a passo."
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#02301B" />
+    <link rel="icon" href="/vethis-mark.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+    />
+    <style>
+      /* Manual de gravação para professores. Mesmos tokens do design system Vethis
+     usados no plano: serif nos títulos, Montserrat nos rótulos, sans no corpo.
+     Ilustrações em SVG inline (linha verde = certo, linha vermelha = errado). */
+      :root {
+        --green-900: #02301b;
+        --green-800: #0b3d2a;
+        --green-700: #14523a;
+        --green-500: #3e7d5f;
+        --green-50: #eaf3ee;
+        --gold-600: #a8793c;
+        --gold-500: #b58d4f;
+        --gold-400: #c9a461;
+        --gold-50: #f5ecda;
+        --ink: #16201b;
+        --paper: #f7f6f2;
+        --card: #ffffff;
+        --border: #e2e1d8;
+        --muted: #5c665f;
+        --line: rgba(14, 74, 56, 0.12);
+        --error: #c0392b;
+        --logo-bar: #f7f6f2;
+        --on-green: #eaf0ec;
+        --title-on-green: #f6f9f4;
+        --tint: var(--green-50);
+        --gold-text: var(--gold-600);
+        --ill-ok: #14523a;
+        --ill-bad: #c0392b;
+        --ill-soft: #c9a461;
+        --ill-fill: #eaf3ee;
+        --ill-bg: #ffffff;
+        --shadow: 0 1px 2px rgba(10, 31, 25, 0.06), 0 12px 34px -18px rgba(10, 31, 25, 0.3);
+        --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+        --sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        --brand:
+          Montserrat, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        --wrap: 1080px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+          --paper: #08150f;
+          --card: #0f241b;
+          --ink: #e7efe8;
+          --border: rgba(180, 210, 195, 0.16);
+          --muted: #9db0a5;
+          --line: rgba(180, 210, 195, 0.14);
+          --tint: #0c2a1e;
+          --gold-text: var(--gold-400);
+          --gold-50: #2a2316;
+          --ill-ok: #5fa37f;
+          --ill-bad: #e0665a;
+          --ill-soft: #c9a461;
+          --ill-fill: #163626;
+          --ill-bg: #0f241b;
+          --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 16px 40px -20px rgba(0, 0, 0, 0.6);
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme='dark'] {
+        --paper: #08150f;
+        --card: #0f241b;
+        --ink: #e7efe8;
+        --border: rgba(180, 210, 195, 0.16);
+        --muted: #9db0a5;
+        --line: rgba(180, 210, 195, 0.14);
+        --tint: #0c2a1e;
+        --gold-text: var(--gold-400);
+        --gold-50: #2a2316;
+        --ill-ok: #5fa37f;
+        --ill-bad: #e0665a;
+        --ill-soft: #c9a461;
+        --ill-fill: #163626;
+        --ill-bg: #0f241b;
+        --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 16px 40px -20px rgba(0, 0, 0, 0.6);
+        color-scheme: dark;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0 0 auto;
+        height: env(safe-area-inset-top, 0px);
+        z-index: 10;
+        background: var(--green-900);
+      }
+      a {
+        color: inherit;
+      }
+      h1,
+      h2,
+      h3,
+      h4 {
+        margin: 0;
+        font-family: var(--serif);
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        text-wrap: balance;
+        line-height: 1.15;
+      }
+      p {
+        margin: 0;
+      }
+      ul,
+      ol {
+        margin: 0;
+        padding-left: 20px;
+      }
+      li + li {
+        margin-top: 6px;
+      }
+      .wrap {
+        max-width: var(--wrap);
+        margin-inline: auto;
+        padding-left: max(16px, env(safe-area-inset-left, 0px));
+        padding-right: max(16px, env(safe-area-inset-right, 0px));
+      }
+      .eyebrow {
+        font-family: var(--brand);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--gold-text);
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+      }
+      .eyebrow::before {
+        content: '';
+        width: 22px;
+        height: 1px;
+        background: currentColor;
+        opacity: 0.7;
+      }
+
+      .logobar {
+        background: var(--logo-bar);
+      }
+      .logobar .wrap {
+        padding-block: 20px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .logobar img {
+        height: 76px;
+        width: auto;
+        max-width: 100%;
+      }
+      .logobar .date {
+        font-family: var(--brand);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #5c665f;
+        text-align: right;
+      }
+      .hero {
+        background:
+          radial-gradient(900px 420px at 85% -10%, rgba(201, 164, 97, 0.16), transparent 60%),
+          var(--green-900);
+        color: var(--on-green);
+      }
+      .hero .wrap {
+        padding-block: 40px 44px;
+        display: grid;
+        gap: 20px;
+      }
+      .hero .eyebrow {
+        color: var(--gold-400);
+      }
+      .hero h1 {
+        font-size: clamp(32px, 5vw, 52px);
+        max-width: 20ch;
+        color: var(--title-on-green);
+      }
+      .hero h1 em {
+        font-style: italic;
+        color: var(--gold-400);
+      }
+      .hero .lead {
+        font-size: clamp(16px, 1.6vw, 18px);
+        max-width: 62ch;
+        opacity: 0.9;
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 10px;
+        font-family: var(--brand);
+        font-size: 12.5px;
+        font-weight: 500;
+      }
+      .meta span {
+        border: 1px solid rgba(234, 240, 236, 0.22);
+        border-radius: 100px;
+        padding: 5px 12px;
+      }
+
+      .nav {
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        z-index: 5;
+        background: var(--paper);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav .wrap {
+        display: flex;
+        gap: 4px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        padding-block: 8px;
+      }
+      .nav .wrap::-webkit-scrollbar {
+        display: none;
+      }
+      .nav a {
+        white-space: nowrap;
+        text-decoration: none;
+        font-family: var(--brand);
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--muted);
+        padding: 6px 10px;
+        border-radius: 100px;
+      }
+      .nav a:hover,
+      .nav a:focus-visible {
+        color: var(--green-700);
+        background: var(--tint);
+        outline: none;
+      }
+
+      section {
+        scroll-margin-top: 60px;
+      }
+      section .wrap {
+        padding-block: 48px;
+        border-bottom: 1px solid var(--line);
+      }
+      .head {
+        display: grid;
+        gap: 12px;
+        margin-bottom: 28px;
+        max-width: 70ch;
+      }
+      .head h2 {
+        font-size: clamp(28px, 3.4vw, 40px);
+      }
+      .head p {
+        color: var(--muted);
+        font-size: 17px;
+      }
+      h3 {
+        font-family: var(--sans);
+        font-size: 19px;
+        letter-spacing: 0;
+        margin-bottom: 10px;
+      }
+      .cols {
+        display: grid;
+        gap: 24px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+      .cols > * {
+        min-width: 0;
+      }
+      .muted {
+        color: var(--muted);
+      }
+
+      /* resumo */
+      .summary {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+      .sum {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 20px;
+        box-shadow: var(--shadow);
+        min-width: 0;
+      }
+      .sum .eyebrow {
+        margin-bottom: 8px;
+      }
+      .sum b {
+        display: block;
+        font-family: var(--serif);
+        font-size: 19px;
+        margin-bottom: 6px;
+      }
+      .sum p {
+        color: var(--muted);
+        font-size: 14.5px;
+      }
+
+      /* passos */
+      .steps {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 12px;
+        counter-reset: step;
+      }
+      .steps li {
+        display: grid;
+        grid-template-columns: 40px 1fr;
+        gap: 14px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin: 0;
+        min-width: 0;
+      }
+      .steps li::before {
+        counter-increment: step;
+        content: counter(step);
+        font-family: var(--serif);
+        font-size: 26px;
+        line-height: 1;
+        color: var(--gold-text);
+        padding-top: 2px;
+      }
+      .steps b {
+        display: block;
+        margin-bottom: 2px;
+      }
+      .steps p {
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      /* ilustrações */
+      figure {
+        margin: 0;
+        background: var(--ill-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+        min-width: 0;
+      }
+      figure svg {
+        width: 100%;
+        height: auto;
+        display: block;
+        max-width: 100%;
+      }
+      figcaption {
+        margin-top: 10px;
+        font-size: 13.5px;
+        color: var(--muted);
+      }
+      figcaption b {
+        color: var(--ink);
+      }
+      .figs {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        margin: 22px 0;
+      }
+      .ok {
+        stroke: var(--ill-ok);
+      }
+      .bad {
+        stroke: var(--ill-bad);
+      }
+      .soft {
+        stroke: var(--ill-soft);
+      }
+      .fill {
+        fill: var(--ill-fill);
+      }
+      .lbl {
+        font-family: var(--brand);
+        font-size: 11px;
+        font-weight: 600;
+        fill: var(--muted);
+        letter-spacing: 0.5px;
+      }
+      .lbl.ok {
+        fill: var(--ill-ok);
+        stroke: none;
+      }
+      .lbl.bad {
+        fill: var(--ill-bad);
+        stroke: none;
+      }
+      .tag {
+        display: inline-block;
+        font-family: var(--brand);
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        padding: 2px 9px;
+        border-radius: 100px;
+        margin-right: 6px;
+      }
+      .tag.ok {
+        background: var(--green-50);
+        color: var(--green-700);
+      }
+      .tag.bad {
+        background: #fbe3e0;
+        color: var(--error);
+      }
+      :root[data-theme='dark'] .tag.ok {
+        background: #163626;
+        color: #8fd1ad;
+      }
+      :root[data-theme='dark'] .tag.bad {
+        background: #3a1a16;
+        color: #f0a39a;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) .tag.ok {
+          background: #163626;
+          color: #8fd1ad;
+        }
+        :root:not([data-theme='light']) .tag.bad {
+          background: #3a1a16;
+          color: #f0a39a;
+        }
+      }
+
+      /* tabelas */
+      .tbl {
+        overflow-x: auto;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+        margin-top: 16px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 560px;
+        font-size: 14.5px;
+      }
+      th,
+      td {
+        text-align: left;
+        vertical-align: top;
+        padding: 11px 14px;
+        border-bottom: 1px solid var(--border);
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      th {
+        font-family: var(--brand);
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 600;
+        background: var(--tint);
+      }
+      td.price {
+        white-space: nowrap;
+        color: var(--gold-text);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* dicas e avisos */
+      .tip {
+        background: var(--tint);
+        border-radius: 12px;
+        padding: 16px 20px;
+        font-size: 15px;
+        margin-top: 18px;
+      }
+      .tip b {
+        font-family: var(--brand);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--gold-text);
+        display: block;
+        margin-bottom: 4px;
+      }
+      .warn {
+        background: var(--gold-50);
+      }
+      .two {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        margin-top: 18px;
+      }
+      .box {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 20px;
+        min-width: 0;
+      }
+      .box h4 {
+        font-size: 17px;
+        margin-bottom: 8px;
+        color: var(--green-700);
+      }
+      :root[data-theme='dark'] .box h4 {
+        color: var(--gold-400);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) .box h4 {
+          color: var(--gold-400);
+        }
+      }
+      .box ul {
+        font-size: 14.5px;
+        color: var(--muted);
+      }
+      .box ul b {
+        color: var(--ink);
+      }
+
+      /* equipamento */
+      .tiers {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        margin-top: 18px;
+      }
+      .tier {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 20px 22px;
+        box-shadow: var(--shadow);
+        min-width: 0;
+        display: grid;
+        gap: 8px;
+        align-content: start;
+      }
+      .tier .eyebrow {
+        margin-bottom: 2px;
+      }
+      .tier h3 {
+        font-family: var(--serif);
+        font-size: 22px;
+        margin: 0;
+      }
+      .tier .price {
+        font-family: var(--brand);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--gold-text);
+      }
+      .tier ul {
+        font-size: 14.5px;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+      .tier ul b {
+        color: var(--ink);
+      }
+      .tier.hl {
+        border-color: var(--gold-500);
+      }
+
+      /* checklist final */
+      .check {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 8px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+      .check li {
+        display: grid;
+        grid-template-columns: 22px 1fr;
+        gap: 10px;
+        font-size: 15px;
+        margin: 0;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px 12px;
+      }
+      .check input {
+        width: 18px;
+        height: 18px;
+        margin: 3px 0 0;
+        accent-color: var(--green-700);
+      }
+      .check li.on span {
+        color: var(--muted);
+        text-decoration: line-through;
+      }
+      .sources {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 14px;
+      }
+      .sources a {
+        color: var(--green-700);
+      }
+      :root[data-theme='dark'] .sources a {
+        color: var(--gold-400);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) .sources a {
+          color: var(--gold-400);
+        }
+      }
+      .callout {
+        margin-top: 22px;
+        padding: 18px 22px;
+        border-radius: 12px;
+        background: var(--green-900);
+        color: var(--on-green);
+        font-size: 15px;
+      }
+      .callout b {
+        color: var(--gold-400);
+      }
+      footer .wrap {
+        padding-block: 28px 40px;
+        color: var(--muted);
+        font-family: var(--brand);
+        font-size: 12.5px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 24px;
+        justify-content: space-between;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        html {
+          scroll-behavior: smooth;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logobar">
+      <div class="wrap">
+        <img
+          src="/vethis-logo.png"
+          width="560"
+          height="463"
+          alt="Vethis · Educação Médica Veterinária"
+        />
+        <span class="date">Guia de gravação<br />Outubro 2026</span>
+      </div>
+    </div>
+    <header class="hero">
+      <div class="wrap">
+        <span class="eyebrow">Manual para professores e coordenadores</span>
+        <h1>Gravar em casa com a <em>qualidade do estúdio</em></h1>
+        <p class="lead">
+          Tudo o que você precisa para gravar aulas e vídeos curtos da Vethis com o celular ou a
+          webcam: posição da câmera, luz, som, fundo, roupa, equipamento por faixa de preço e o
+          passo a passo de cada gravação. O objetivo é que todas as aulas tenham a mesma cara,
+          independente de onde foram gravadas.
+        </p>
+        <div class="meta">
+          <span>Celular ou webcam</span>
+          <span>Aulas e publicidade</span>
+          <span>Leitura de 15 minutos</span>
+          <span>Dúvidas: 1:1 com o Fernando</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="nav" aria-label="Capítulos">
+      <div class="wrap">
+        <a href="#resumo">Resumo</a>
+        <a href="#setup">Setup em 10 min</a>
+        <a href="#camera">Câmera</a>
+        <a href="#luz">Luz</a>
+        <a href="#som">Som</a>
+        <a href="#fundo">Fundo</a>
+        <a href="#voce">Você na tela</a>
+        <a href="#equipamento">Equipamento</a>
+        <a href="#gravando">Gravando</a>
+        <a href="#formatos">Formatos</a>
+        <a href="#problemas">Problemas</a>
+        <a href="#checklist">Checklist</a>
+      </div>
+    </nav>
+
+    <main>
+      <section id="resumo">
+        <div class="wrap">
+          <div class="head">
+            <span class="eyebrow">Resumo em 1 minuto</span>
+            <h2>Seis decisões que resolvem 90% da qualidade</h2>
+            <p>Se você só puder ler uma coisa, leia isto. O resto do guia detalha cada ponto.</p>
+          </div>
+          <div class="summary">
+            <div class="sum">
+              <span class="eyebrow">Câmera</span>
+              <b>Na altura dos olhos</b>
+              <p>
+                Celular na traseira, em tripé ou apoio firme, 1080p a 30 fps. Nunca de baixo para
+                cima.
+              </p>
+            </div>
+            <div class="sum">
+              <span class="eyebrow">Enquadramento</span>
+              <b>Olhos no terço de cima</b>
+              <p>
+                Ombros dentro do quadro, um palmo de folga acima da cabeça, um braço de distância.
+              </p>
+            </div>
+            <div class="sum">
+              <span class="eyebrow">Luz</span>
+              <b>Luz na frente do rosto</b>
+              <p>Janela ou luminária de frente para você, nunca atrás. Apague a luz do teto.</p>
+            </div>
+            <div class="sum">
+              <span class="eyebrow">Som</span>
+              <b>Lapela e silêncio</b>
+              <p>
+                Microfone de lapela faz mais diferença que qualquer câmera. Cômodo com tapete,
+                cortina ou sofá.
+              </p>
+            </div>
+            <div class="sum">
+              <span class="eyebrow">Fundo</span>
+              <b>Limpo e a 1 metro</b>
+              <p>Parede lisa ou estante arrumada, você afastado dela. Sem cozinha, cama ou pia.</p>
+            </div>
+            <div class="sum">
+              <span class="eyebrow">Teste</span>
+              <b>10 segundos antes de tudo</b>
+              <p>Grave, assista com fone, ajuste. Só depois grave o bloco inteiro.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="setup">
+        <div class="wrap">
+          <div class="head">
+            <span class="eyebrow">Passo a passo</span>
+            <h2>O setup em 10 minutos</h2>
+            <p>
+              Monte uma vez, fotografe o resultado e repita igual nas próximas gravações. A
+              consistência entre as aulas do seu módulo vale mais do que qualquer equipamento.
+            </p>
+          </div>
+          <div class="figs">
+            <figure>
+              <svg viewBox="0 0 640 330" role="img" aria-labelledby="t-setup">
+                <title id="t-setup">
+                  Vista de cima do setup: janela à frente, câmera entre você e a janela, parede a um
+                  metro atrás
+                </title>
+                <rect
+                  x="20"
+                  y="20"
+                  width="600"
+                  height="290"
+                  rx="10"
+                  fill="none"
+                  class="soft"
+                  stroke-width="1.5"
+                  stroke-dasharray="6 6"
+                />
+                <text x="34" y="44" class="lbl">CÔMODO · VISTA DE CIMA</text>
+                <rect x="200" y="20" width="240" height="8" class="fill" stroke="none" />
+                <rect
+                  x="200"
+                  y="20"
+                  width="240"
+                  height="8"
+                  fill="none"
+                  class="ok"
+                  stroke-width="2"
+                />
+                <text x="320" y="48" text-anchor="middle" class="lbl ok">JANELA (LUZ)</text>
+                <circle cx="320" cy="135" r="22" fill="none" class="ok" stroke-width="2.5" />
+                <rect
+                  x="300"
+                  y="128"
+                  width="40"
+                  height="14"
+                  rx="3"
+                  fill="none"
+                  class="ok"
+                  stroke-width="2.5"
+                />
+                <text x="320" y="175" text-anchor="middle" class="lbl">CÂMERA</text>
+                <circle cx="320" cy="235" r="20" class="fill" stroke="none" />
+                <circle cx="320" cy="235" r="20" fill="none" class="ok" stroke-width="2.5" />
+                <text x="320" y="240" text-anchor="middle" class="lbl ok">VOCÊ</text>
+                <line
+                  x1="320"
+                  y1="157"
+                  x2="320"
+                  y2="213"
+                  class="soft"
+                  stroke-width="1.5"
+                  stroke-dasharray="4 4"
+                />
+                <text x="334" y="190" class="lbl">≈ 1 BRAÇO</text>
+                <line x1="20" y1="300" x2="620" y2="300" class="ok" stroke-width="3" />
+                <text x="34" y="292" class="lbl">PAREDE OU ESTANTE (FUNDO)</text>
+                <line
+                  x1="480"
+                  y1="256"
+                  x2="480"
+                  y2="298"
+                  class="soft"
+                  stroke-width="1.5"
+                  stroke-dasharray="4 4"
+                />
+                <text x="490" y="282" class="lbl">≥ 1 M</text>
+                <line
+                  x1="245"
+                  y1="28"
+                  x2="320"
+                  y2="213"
+                  class="soft"
+                  stroke-width="1"
+                  stroke-dasharray="3 5"
+                />
+                <line
+                  x1="395"
+                  y1="28"
+                  x2="320"
+                  y2="213"
+                  class="soft"
+                  stroke-width="1"
+                  stroke-dasharray="3 5"
+                />
+                <circle cx="150" cy="120" r="12" fill="none" class="ok" stroke-width="2" />
+                <text x="150" y="150" text-anchor="middle" class="lbl">LUMINÁRIA</text>
+                <text x="150" y="163" text-anchor="middle" class="lbl">(OPCIONAL, 45°)</text>
+                <line
+                  x1="160"
+                  y1="128"
+                  x2="300"
+                  y2="228"
+                  class="soft"
+                  stroke-width="1"
+                  stroke-dasharray="3 5"
+                />
+              </svg>
+              <figcaption>
+                <b>Arranjo padrão.</b> A luz (janela ou luminária) fica atrás da câmera, iluminando
+                seu rosto. Você fica a pelo menos 1 m da parede do fundo. A câmera, a um braço de
+                distância.
+              </figcaption>
+            </figure>
+          </div>
+          <ol class="steps">
+            <li>
+              <div>
+                <b>Escolha o cômodo mais silencioso e com janela.</b>
+                <p>
+                  Quarto de hóspedes, escritório, consultório vazio. Evite cozinha, banheiro e sala
+                  vazia (eco).
+                </p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Posicione a cadeira de frente para a janela, a 1 metro da parede.</b>
+                <p>
+                  A parede atrás de você é o fundo. Nada de janela, porta aberta ou espelho atrás.
+                </p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Coloque a câmera entre você e a janela, na altura dos olhos.</b>
+                <p>
+                  Tripé, pilha de livros ou prateleira. Nunca apoiada na mesa, apontando para cima.
+                </p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Prenda a lapela no peito e esconda o cabo.</b>
+                <p>
+                  Um palmo abaixo do queixo, no centro. Sem lapela, aproxime a câmera e fale um
+                  pouco mais alto.
+                </p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Apague a luz do teto e as luzes atrás de você.</b>
+                <p>
+                  Luz de cima faz sombra nos olhos. Se a janela não bastar, ligue a luminária de
+                  frente, um pouco de lado.
+                </p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Configure o celular: 1080p, 30 fps, câmera traseira, grade ligada.</b>
+                <p>
+                  Ative "Não perturbe" ou modo avião. Confira o espaço livre: 10 minutos ocupam
+                  perto de 1 GB.
+                </p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Trave foco e exposição no seu rosto.</b>
+                <p>
+                  Toque e segure no rosto na tela até aparecer "AE/AF bloqueado" (iPhone) ou o
+                  cadeado (Android).
+                </p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Grave 10 segundos, assista com fone, ajuste e só então grave de verdade.</b>
+                <p>
+                  Olhe: rosto claro? Ombros no quadro? Som limpo? Fundo arrumado? Repita até os
+                  quatro estarem bons.
+                </p>
+              </div>
+            </li>
+          </ol>
+          <div class="tip">
+            <b>Dica</b>
+            Depois do primeiro setup bom, tire uma foto do arranjo (posição da cadeira, da câmera e
+            da luminária) e guarde no celular. Nas próximas gravações, monte pela foto. Assim todas
+            as aulas do módulo ficam iguais.
+          </div>
+        </div>
+      </section>
+
+      <section id="camera">
+        <div class="wrap">
+          <div class="head">
+            <span class="eyebrow">Capítulo 1</span>
+            <h2>Câmera e enquadramento</h2>
+            <p>
+              O celular que você já tem grava melhor do que muita câmera antiga. O que define a
+              qualidade é altura, distância e estabilidade, não a marca.
+            </p>
+          </div>
+          <div class="figs">
+            <figure>
+              <svg viewBox="0 0 640 300" role="img" aria-labelledby="t-alt">
+                <title id="t-alt">
+                  Vista lateral: câmera na altura dos olhos versus câmera baixa apontando para cima
+                </title>
+                <text x="30" y="30" class="lbl ok">CERTO · ALTURA DOS OLHOS</text>
+                <circle cx="150" cy="120" r="26" fill="none" class="ok" stroke-width="2.5" />
+                <path d="M110 230 Q150 150 190 230 Z" fill="none" class="ok" stroke-width="2.5" />
+                <line x1="100" y1="232" x2="200" y2="232" class="ok" stroke-width="2.5" />
+                <rect
+                  x="248"
+                  y="110"
+                  width="28"
+                  height="18"
+                  rx="3"
+                  fill="none"
+                  class="ok"
+                  stroke-width="2.5"
+                />
+                <line x1="262" y1="128" x2="262" y2="232" class="ok" stroke-width="2" />
+                <line x1="248" y1="232" x2="276" y2="232" class="ok" stroke-width="2" />
+                <line
+                  x1="180"
+                  y1="118"
+                  x2="246"
+                  y2="118"
+                  class="soft"
+                  stroke-width="1.5"
+                  stroke-dasharray="4 4"
+                />
+                <text x="262" y="100" text-anchor="middle" class="lbl">CÂMERA</text>
+                <text x="160" y="268" text-anchor="middle" class="lbl">
+                  LENTE NA LINHA DOS OLHOS
+                </text>
+
+                <line
+                  x1="320"
+                  y1="20"
+                  x2="320"
+                  y2="280"
+                  class="soft"
+                  stroke-width="1"
+                  stroke-dasharray="3 5"
+                />
+
+                <text x="350" y="30" class="lbl bad">ERRADO · CELULAR NA MESA</text>
+                <circle cx="470" cy="120" r="26" fill="none" class="bad" stroke-width="2.5" />
+                <path d="M430 230 Q470 150 510 230 Z" fill="none" class="bad" stroke-width="2.5" />
+                <line x1="420" y1="232" x2="520" y2="232" class="bad" stroke-width="2.5" />
+                <rect
+                  x="560"
+                  y="208"
+                  width="28"
+                  height="18"
+                  rx="3"
+                  fill="none"
+                  class="bad"
+                  stroke-width="2.5"
+                  transform="rotate(-30 574 217)"
+                />
+                <line
+                  x1="565"
+                  y1="205"
+                  x2="500"
+                  y2="128"
+                  class="bad"
+                  stroke-width="1.5"
+                  stroke-dasharray="4 4"
+                />
+                <text x="470" y="268" class="lbl" text-anchor="middle">
+                  DE BAIXO: QUEIXO, TETO E NARIZ
+                </text>
+              </svg>
+              <figcaption>
+                <b>Altura.</b> A lente na linha dos olhos deixa o rosto natural. De baixo, aparecem
+                queixo e teto; de cima demais, a cabeça encolhe.
+              </figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="0 0 640 300" role="img" aria-labelledby="t-enq">
+                <title id="t-enq">
+                  Enquadramento: olhos no terço superior, ombros no quadro, folga acima da cabeça
+                </title>
+                <rect
+                  x="60"
+                  y="20"
+                  width="400"
+                  height="260"
+                  rx="8"
+                  fill="none"
+                  class="ok"
+                  stroke-width="2.5"
+                />
+                <line
+                  x1="193"
+                  y1="20"
+                  x2="193"
+                  y2="280"
+                  class="soft"
+                  stroke-width="1"
+                  stroke-dasharray="4 4"
+                />
+                <line
+                  x1="327"
+                  y1="20"
+                  x2="327"
+                  y2="280"
+                  class="soft"
+                  stroke-width="1"
+                  stroke-dasharray="4 4"
+                />
+                <line
+                  x1="60"
+                  y1="107"
+                  x2="460"
+                  y2="107"
+                  class="soft"
+                  stroke-width="1"
+                  stroke-dasharray="4 4"
+                />
+                <line
+                  x1="60"
+                  y1="193"
+                  x2="460"
+                  y2="193"
+                  class="soft"
+                  stroke-width="1"
+                  stroke-dasharray="4 4"
+                />
+                <circle cx="260" cy="118" r="38" class="fill" stroke="none" />
+                <circle cx="260" cy="118" r="38" fill="none" class="ok" stroke-width="2.5" />
+                <circle cx="246" cy="110" r="3" fill="var(--ill-ok)" stroke="none" />
+                <circle cx="274" cy="110" r="3" fill="var(--ill-ok)" stroke="none" />
+                <path
+                  d="M150 280 Q165 190 260 185 Q355 190 370 280"
+                  fill="var(--ill-fill)"
+                  class="ok"
+                  stroke-width="2.5"
+                />
+                <line x1="475" y1="20" x2="475" y2="80" class="soft" stroke-width="1.5" />
+                <line x1="470" y1="20" x2="480" y2="20" class="soft" stroke-width="1.5" />
+                <line x1="470" y1="80" x2="480" y2="80" class="soft" stroke-width="1.5" />
+                <text x="486" y="54" class="lbl">1 PALMO</text>
+                <text x="486" y="67" class="lbl">DE FOLGA</text>
+                <text x="486" y="112" class="lbl">OLHOS NA LINHA</text>
+                <text x="486" y="125" class="lbl">DO TERÇO DE CIMA</text>
+                <text x="486" y="236" class="lbl">OMBROS E PARTE</text>
+                <text x="486" y="249" class="lbl">DO PEITO NO QUADRO</text>
+              </svg>
+              <figcaption>
+                <b>Enquadramento.</b> Ligue a grade do celular. Os olhos ficam na linha de cima, com
+                um palmo de folga acima da cabeça. Ombros sempre dentro do quadro.
+              </figcaption>
+            </figure>
+          </div>
+          <div class="two">
+            <div class="box">
+              <h4>No celular</h4>
+              <ul>
+                <li>
+                  <b>Câmera traseira</b>, não a frontal: a traseira tem mais qualidade. Use a tela
+                  de um segundo aparelho ou espelho para conferir, ou grave 10 s de teste.
+                </li>
+                <li>
+                  <b>1080p a 30 fps.</b> 4K só se o aparelho não esquentar e você tiver espaço. 60
+                  fps não ajuda em aula.
+                </li>
+                <li><b>Grade ligada</b> (Ajustes › Câmera › Grade) para alinhar os terços.</li>
+                <li>
+                  <b>Limpe a lente</b> com a camiseta ou um pano. Lente suja deixa a imagem leitosa.
+                </li>
+                <li>
+                  <b>Trave foco e exposição</b> no rosto. Senão a câmera "pulsa" quando você se
+                  mexe.
+                </li>
+                <li>
+                  <b>Horizontal para aulas, vertical para redes.</b> Decida antes de apertar REC.
+                </li>
+                <li>
+                  <b>Modo avião ou Não perturbe.</b> Uma ligação no meio interrompe a gravação.
+                </li>
+                <li>
+                  <b>Bateria e espaço.</b> Carregue antes; 10 minutos em 1080p ocupam perto de 1 GB.
+                </li>
+              </ul>
+            </div>
+            <div class="box">
+              <h4>Na webcam ou notebook</h4>
+              <ul>
+                <li>
+                  <b>Webcam externa Full HD</b> no topo do monitor, com o monitor levantado até a
+                  lente ficar na altura dos olhos.
+                </li>
+                <li>
+                  <b>Câmera do notebook é o último recurso:</b> apoie o notebook em livros até a
+                  lente chegar aos olhos, senão filma de baixo.
+                </li>
+                <li>
+                  <b>Luz na frente é ainda mais importante:</b> webcam sofre com pouca luz e fica
+                  granulada.
+                </li>
+                <li>
+                  <b>Grave em um programa</b>, não na reunião: OBS Studio (grátis), QuickTime (Mac)
+                  ou Câmera (Windows), em 1080p.
+                </li>
+                <li><b>Feche outros programas</b> e notificações do computador.</li>
+                <li>
+                  <b>Se usar slides</b>, grave a tela separadamente (OBS ou gravador de tela) e
+                  envie os dois arquivos; a edição combina.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="tip">
+            <b>Distância</b>
+            Um braço esticado entre você e a câmera. Mais perto distorce o rosto; mais longe, o som
+            piora e você vira um ponto no fundo. Se precisar aparecer de corpo inteiro (demonstração
+            de exame físico, por exemplo), afaste a câmera, mas use lapela.
+          </div>
+        </div>
+      </section>
+
+      <section id="luz">
+        <div class="wrap">
+          <div class="head">
+            <span class="eyebrow">Capítulo 2</span>
+            <h2>Luz: a diferença entre amador e profissional</h2>
+            <p>
+              Uma janela bem usada vale mais do que um equipamento caro. A regra é uma só: a luz
+              principal vem da frente, um pouco de lado e um pouco de cima.
+            </p>
+          </div>
+          <div class="figs">
+            <figure>
+              <svg viewBox="0 0 640 300" role="img" aria-labelledby="t-luz">
+                <title id="t-luz">
+                  Vista de cima: janela de frente ilumina o rosto; janela atrás vira contraluz
+                </title>
+                <text x="30" y="30" class="lbl ok">CERTO · JANELA DE FRENTE</text>
+                <rect x="60" y="50" width="200" height="8" class="fill" stroke="none" />
+                <rect
+                  x="60"
+                  y="50"
+                  width="200"
+                  height="8"
+                  fill="none"
+                  class="ok"
+                  stroke-width="2"
+                />
+                <text x="160" y="78" text-anchor="middle" class="lbl">JANELA</text>
+                <rect
+                  x="146"
+                  y="120"
+                  width="28"
+                  height="14"
+                  rx="3"
+                  fill="none"
+                  class="ok"
+                  stroke-width="2.5"
+                />
+                <text x="160" y="110" text-anchor="middle" class="lbl">CÂMERA</text>
+                <circle cx="160" cy="190" r="20" class="fill" stroke="none" />
+                <circle cx="160" cy="190" r="20" fill="none" class="ok" stroke-width="2.5" />
+                <path
+                  d="M100 58 L148 173 M160 58 L160 168 M220 58 L172 173"
+                  class="soft"
+                  stroke-width="1"
+                  stroke-dasharray="3 5"
+                />
+                <line x1="60" y1="260" x2="260" y2="260" class="ok" stroke-width="3" />
+                <text x="160" y="282" text-anchor="middle" class="lbl">PAREDE (FUNDO)</text>
+                <text x="160" y="230" text-anchor="middle" class="lbl ok">ROSTO CLARO</text>
+
+                <line
+                  x1="320"
+                  y1="20"
+                  x2="320"
+                  y2="290"
+                  class="soft"
+                  stroke-width="1"
+                  stroke-dasharray="3 5"
+                />
+
+                <text x="350" y="30" class="lbl bad">ERRADO · JANELA ATRÁS</text>
+                <rect
+                  x="380"
+                  y="252"
+                  width="200"
+                  height="8"
+                  fill="none"
+                  class="bad"
+                  stroke-width="2"
+                />
+                <text x="480" y="282" text-anchor="middle" class="lbl">JANELA</text>
+                <rect
+                  x="466"
+                  y="90"
+                  width="28"
+                  height="14"
+                  rx="3"
+                  fill="none"
+                  class="bad"
+                  stroke-width="2.5"
+                />
+                <text x="480" y="80" text-anchor="middle" class="lbl">CÂMERA</text>
+                <circle
+                  cx="480"
+                  cy="160"
+                  r="20"
+                  fill="var(--ill-bad)"
+                  fill-opacity="0.25"
+                  class="bad"
+                  stroke-width="2.5"
+                />
+                <path
+                  d="M420 250 L468 177 M480 250 L480 182 M540 250 L492 177"
+                  class="soft"
+                  stroke-width="1"
+                  stroke-dasharray="3 5"
+                />
+                <text x="480" y="200" text-anchor="middle" class="lbl bad">
+                  SILHUETA, ROSTO ESCURO
+                </text>
+              </svg>
+              <figcaption>
+                <b>Luz natural.</b> Sente de frente para a janela, com a câmera entre vocês. Janela
+                atrás de você vira contraluz: o fundo estoura e seu rosto fica escuro.
+              </figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="0 0 640 300" role="img" aria-labelledby="t-art">
+                <title id="t-art">
+                  Vista de cima: luz principal a 45 graus, rebatedor do outro lado, câmera à frente
+                </title>
+                <text x="30" y="30" class="lbl ok">LUZ ARTIFICIAL · ESQUEMA SIMPLES</text>
+                <circle cx="320" cy="200" r="22" class="fill" stroke="none" />
+                <circle cx="320" cy="200" r="22" fill="none" class="ok" stroke-width="2.5" />
+                <text x="320" y="205" text-anchor="middle" class="lbl ok">VOCÊ</text>
+                <rect
+                  x="306"
+                  y="90"
+                  width="28"
+                  height="14"
+                  rx="3"
+                  fill="none"
+                  class="ok"
+                  stroke-width="2.5"
+                />
+                <text x="320" y="80" text-anchor="middle" class="lbl">CÂMERA</text>
+                <circle cx="190" cy="100" r="18" fill="none" class="ok" stroke-width="2.5" />
+                <circle cx="190" cy="100" r="8" fill="var(--ill-soft)" stroke="none" />
+                <text x="190" y="140" text-anchor="middle" class="lbl">LUZ PRINCIPAL</text>
+                <text x="190" y="153" text-anchor="middle" class="lbl">45° · ACIMA DOS OLHOS</text>
+                <line
+                  x1="204"
+                  y1="112"
+                  x2="302"
+                  y2="188"
+                  class="soft"
+                  stroke-width="1.5"
+                  stroke-dasharray="4 4"
+                />
+                <rect
+                  x="440"
+                  y="150"
+                  width="8"
+                  height="70"
+                  rx="2"
+                  fill="none"
+                  class="ok"
+                  stroke-width="2"
+                />
+                <text x="444" y="240" text-anchor="middle" class="lbl">REBATEDOR</text>
+                <text x="444" y="253" text-anchor="middle" class="lbl">(CARTOLINA, ISOPOR)</text>
+                <line
+                  x1="438"
+                  y1="185"
+                  x2="344"
+                  y2="200"
+                  class="soft"
+                  stroke-width="1"
+                  stroke-dasharray="3 5"
+                />
+                <line x1="100" y1="275" x2="540" y2="275" class="ok" stroke-width="3" />
+                <text x="320" y="295" text-anchor="middle" class="lbl">
+                  PAREDE (FUNDO) · SEM LUZ FORTE APONTADA
+                </text>
+              </svg>
+              <figcaption>
+                <b>Luz artificial.</b> Ring light ou luminária à frente, um pouco de lado e acima
+                dos olhos. Do outro lado, uma cartolina ou parede branca suaviza a sombra. Nada
+                forte apontado para o fundo.
+              </figcaption>
+            </figure>
+          </div>
+          <div class="two">
+            <div class="box">
+              <h4>Luz natural (de dia)</h4>
+              <ul>
+                <li>
+                  <b>Horário:</b> manhã ou fim de tarde dão luz suave. Sol forte entrando direto na
+                  janela queima o rosto; feche uma cortina fina (voil) ou afaste-se.
+                </li>
+                <li>
+                  <b>Posição:</b> janela de frente ou a 45°. Se a janela ficar totalmente de lado,
+                  metade do rosto escurece; use uma cartolina branca do outro lado.
+                </li>
+                <li>
+                  <b>Constância:</b> nuvens mudam a luz no meio da aula. Para gravações longas,
+                  prefira luz artificial ou grave em blocos curtos.
+                </li>
+                <li>
+                  <b>Apague as outras luzes:</b> misturar luz da janela (azulada) com lâmpada
+                  amarela deixa a pele com cores estranhas.
+                </li>
+              </ul>
+            </div>
+            <div class="box">
+              <h4>Luz artificial (à noite ou sem janela)</h4>
+              <ul>
+                <li>
+                  <b>Uma luz à frente basta:</b> ring light de 10" ou softbox, a 1 m de você, um
+                  pouco acima dos olhos e 30° a 45° de lado.
+                </li>
+                <li>
+                  <b>Temperatura de cor:</b> escolha uma (branca "luz do dia", 5000 a 5600 K, ou
+                  amarela 3200 K) e use só ela. Ring lights bicolores têm esse ajuste.
+                </li>
+                <li>
+                  <b>Luz do teto desligada:</b> cria sombras embaixo dos olhos e do nariz
+                  ("olheira").
+                </li>
+                <li>
+                  <b>Óculos:</b> se a luz reflete nas lentes, suba a luminária e incline-a para
+                  baixo, ou afaste-a para o lado.
+                </li>
+                <li>
+                  <b>Imagem piscando (flicker):</b> no celular, use luz LED de qualidade ou troque
+                  30 fps por 25 fps nas configurações; algumas lâmpadas baratas piscam na câmera.
+                </li>
+                <li>
+                  <b>Potência:</b> se a câmera mostrar a imagem granulada, falta luz. Aproxime a
+                  luminária em vez de aumentar o brilho da tela.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="tip">
+            <b>Teste da sombra</b>
+            Olhe seu rosto na tela: a sombra do nariz deve cair pequena e para o lado, nunca para
+            cima (luz de baixo) nem embaixo dos olhos (luz de cima). Mexa a luminária até acertar.
+          </div>
+        </div>
+      </section>
+
+      <section id="som">
+        <div class="wrap">
+          <div class="head">
+            <span class="eyebrow">Capítulo 3</span>
+            <h2>Som: o que o aluno mais percebe</h2>
+            <p>
+              A gente perdoa uma imagem mediana, mas abandona um vídeo com eco ou chiado. Som bom
+              vem de três coisas: microfone perto da boca, cômodo "macio" e silêncio.
+            </p>
+          </div>
+          <div class="figs">
+            <figure>
+              <svg viewBox="0 0 640 300" role="img" aria-labelledby="t-lap">
+                <title id="t-lap">
+                  Posição da lapela: um palmo abaixo do queixo, no centro do peito, cabo escondido
+                </title>
+                <circle cx="200" cy="80" r="40" class="fill" stroke="none" />
+                <circle cx="200" cy="80" r="40" fill="none" class="ok" stroke-width="2.5" />
+                <path
+                  d="M90 290 Q110 150 200 148 Q290 150 310 290"
+                  fill="var(--ill-fill)"
+                  class="ok"
+                  stroke-width="2.5"
+                />
+                <path d="M170 150 L200 190 L230 150" fill="none" class="ok" stroke-width="2" />
+                <circle cx="200" cy="215" r="7" fill="var(--ill-soft)" stroke="none" />
+                <circle cx="200" cy="215" r="7" fill="none" class="ok" stroke-width="2" />
+                <path
+                  d="M200 222 Q205 250 185 290"
+                  fill="none"
+                  class="soft"
+                  stroke-width="1.5"
+                  stroke-dasharray="3 4"
+                />
+                <line x1="340" y1="120" x2="340" y2="215" class="soft" stroke-width="1.5" />
+                <line x1="335" y1="120" x2="345" y2="120" class="soft" stroke-width="1.5" />
+                <line x1="335" y1="215" x2="345" y2="215" class="soft" stroke-width="1.5" />
+                <text x="352" y="160" class="lbl">10 A 20 CM</text>
+                <text x="352" y="173" class="lbl">ABAIXO DO QUEIXO</text>
+                <text x="352" y="222" class="lbl ok">CÁPSULA PARA CIMA, NO CENTRO</text>
+                <text x="352" y="255" class="lbl">CABO POR DENTRO DA ROUPA,</text>
+                <text x="352" y="268" class="lbl">SEM ENCOSTAR EM COLAR OU BARBA</text>
+              </svg>
+              <figcaption>
+                <b>Lapela.</b> Prenda na gola ou no botão do meio, um palmo abaixo do queixo. Cabo
+                por dentro da roupa. Nada roçando nela: colar, cachecol, cabelo, barba.
+              </figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="0 0 640 300" role="img" aria-labelledby="t-eco">
+                <title id="t-eco">
+                  Cômodo com tapete, cortina e sofá absorve o som; cômodo vazio com azulejo faz eco
+                </title>
+                <text x="30" y="30" class="lbl ok">CERTO · CÔMODO "MACIO"</text>
+                <rect
+                  x="40"
+                  y="50"
+                  width="240"
+                  height="220"
+                  rx="6"
+                  fill="none"
+                  class="ok"
+                  stroke-width="2.5"
+                />
+                <rect x="60" y="60" width="50" height="150" rx="4" class="fill" stroke="none" />
+                <path
+                  d="M60 60 v150 M72 60 v150 M85 60 v150 M98 60 v150"
+                  class="ok"
+                  stroke-width="1"
+                />
+                <text x="85" y="228" text-anchor="middle" class="lbl">CORTINA</text>
+                <rect x="130" y="225" width="130" height="30" rx="4" class="fill" stroke="none" />
+                <rect
+                  x="130"
+                  y="225"
+                  width="130"
+                  height="30"
+                  rx="4"
+                  fill="none"
+                  class="ok"
+                  stroke-width="1.5"
+                />
+                <text x="195" y="245" text-anchor="middle" class="lbl">TAPETE</text>
+                <rect x="170" y="110" width="90" height="70" rx="8" class="fill" stroke="none" />
+                <rect
+                  x="170"
+                  y="110"
+                  width="90"
+                  height="70"
+                  rx="8"
+                  fill="none"
+                  class="ok"
+                  stroke-width="1.5"
+                />
+                <text x="215" y="150" text-anchor="middle" class="lbl">SOFÁ / ROUPAS</text>
+                <text x="160" y="290" text-anchor="middle" class="lbl">
+                  SOM SECO, SEM REVERBERAÇÃO
+                </text>
+
+                <line
+                  x1="320"
+                  y1="20"
+                  x2="320"
+                  y2="290"
+                  class="soft"
+                  stroke-width="1"
+                  stroke-dasharray="3 5"
+                />
+
+                <text x="350" y="30" class="lbl bad">ERRADO · CÔMODO VAZIO</text>
+                <rect
+                  x="360"
+                  y="50"
+                  width="240"
+                  height="220"
+                  rx="6"
+                  fill="none"
+                  class="bad"
+                  stroke-width="2.5"
+                />
+                <path
+                  d="M400 110 q20 -20 40 0 q20 20 40 0 q20 -20 40 0 q20 20 40 0"
+                  fill="none"
+                  class="bad"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M400 150 q20 -20 40 0 q20 20 40 0 q20 -20 40 0 q20 20 40 0"
+                  fill="none"
+                  class="bad"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M400 190 q20 -20 40 0 q20 20 40 0 q20 -20 40 0 q20 20 40 0"
+                  fill="none"
+                  class="bad"
+                  stroke-width="1.5"
+                />
+                <text x="480" y="240" text-anchor="middle" class="lbl">
+                  AZULEJO, VIDRO, PAREDE NUA
+                </text>
+                <text x="480" y="290" text-anchor="middle" class="lbl bad">
+                  ECO: SOM DE BANHEIRO
+                </text>
+              </svg>
+              <figcaption>
+                <b>Cômodo.</b> Superfícies macias absorvem o som. Se o cômodo for vazio, traga um
+                edredom, abra o guarda-roupa ou pendure uma manta atrás da câmera.
+              </figcaption>
+            </figure>
+          </div>
+          <div class="two">
+            <div class="box">
+              <h4>Microfone</h4>
+              <ul>
+                <li>
+                  <b>Lapela com fio</b> (Boya BY-M1 ou similar): a melhor relação custo-benefício.
+                  Celulares sem entrada P2 precisam de um adaptador USB-C ou Lightning para P2 com
+                  suporte a microfone (TRRS).
+                </li>
+                <li>
+                  <b>Lapela sem fio</b> (Hollyland Lark M2, Rode Wireless Go): liberdade de
+                  movimento e sem cabo. Carregue antes; pareie e grave 10 s de teste.
+                </li>
+                <li>
+                  <b>Fone de celular com microfone</b> funciona em emergência: deixe o microfone do
+                  cabo perto da boca, preso na gola.
+                </li>
+                <li>
+                  <b>Sem microfone externo:</b> aproxime a câmera (menos de 1 m) e fale um pouco
+                  mais alto. Afaste-se de paredes.
+                </li>
+                <li>
+                  <b>Nunca</b> o microfone do notebook ou da webcam a mais de 60 cm: capta
+                  ventilador, teclado e eco.
+                </li>
+              </ul>
+            </div>
+            <div class="box">
+              <h4>Silêncio e rotina</h4>
+              <ul>
+                <li>
+                  <b>Desligue</b> ar-condicionado, ventilador, purificador, máquina de lavar e a
+                  geladeira se estiver perto (religue depois).
+                </li>
+                <li>
+                  <b>Avise</b> quem está em casa, feche portas e janelas, tire os pets do cômodo (ou
+                  grave na hora que eles dormem).
+                </li>
+                <li>
+                  <b>Celular e computador em silêncio total</b>, inclusive vibração. Relógio
+                  inteligente também.
+                </li>
+                <li>
+                  <b>Tire</b> pulseiras, relógio e anéis que batem na mesa. Não mexa em papéis perto
+                  do microfone.
+                </li>
+                <li>
+                  <b>Fale 10% mais alto e mais devagar</b> que numa conversa. Articule o fim das
+                  frases.
+                </li>
+                <li>
+                  <b>Errou?</b> Pare, respire, repita a frase inteira do começo. A edição corta; não
+                  precisa recomeçar o bloco.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="tip">
+            <b>Teste com fone</b>
+            Assista os 10 segundos de teste com fone de ouvido, não no alto-falante do celular. O
+            alto-falante esconde eco e chiado. Se ouvir "ssss" ou "fffff" fortes, afaste o microfone
+            2 cm da boca ou prenda-o um pouco mais baixo.
+          </div>
+        </div>
+      </section>
+
+      <section id="fundo">
+        <div class="wrap">
+          <div class="head">
+            <span class="eyebrow">Capítulo 4</span>
+            <h2>Fundo e cenário</h2>
+            <p>
+              O fundo diz ao aluno onde você está. Queremos que ele diga "consultório, escritório,
+              biblioteca", nunca "cozinha, quarto, corredor".
+            </p>
+          </div>
+          <div class="figs">
+            <figure>
+              <svg viewBox="0 0 640 260" role="img" aria-labelledby="t-fundo">
+                <title id="t-fundo">
+                  Vista lateral: pessoa a um metro da parede dá profundidade; colada na parede faz
+                  sombra dura
+                </title>
+                <text x="30" y="30" class="lbl ok">CERTO · 1 METRO DA PAREDE</text>
+                <line x1="60" y1="60" x2="60" y2="230" class="ok" stroke-width="3" />
+                <circle cx="190" cy="110" r="22" fill="none" class="ok" stroke-width="2.5" />
+                <path d="M160 230 Q190 140 220 230 Z" fill="none" class="ok" stroke-width="2.5" />
+                <line
+                  x1="64"
+                  y1="215"
+                  x2="156"
+                  y2="215"
+                  class="soft"
+                  stroke-width="1.5"
+                  stroke-dasharray="4 4"
+                />
+                <text x="110" y="208" text-anchor="middle" class="lbl">≥ 1 M</text>
+                <rect
+                  x="256"
+                  y="100"
+                  width="26"
+                  height="16"
+                  rx="3"
+                  fill="none"
+                  class="ok"
+                  stroke-width="2.5"
+                />
+                <text x="269" y="92" text-anchor="middle" class="lbl">CÂMERA</text>
+                <text x="160" y="252" text-anchor="middle" class="lbl">
+                  FUNDO LEVEMENTE DESFOCADO, SEM SOMBRA
+                </text>
+
+                <line
+                  x1="320"
+                  y1="20"
+                  x2="320"
+                  y2="250"
+                  class="soft"
+                  stroke-width="1"
+                  stroke-dasharray="3 5"
+                />
+
+                <text x="350" y="30" class="lbl bad">ERRADO · COLADO NA PAREDE</text>
+                <line x1="400" y1="60" x2="400" y2="230" class="bad" stroke-width="3" />
+                <circle cx="430" cy="110" r="22" fill="none" class="bad" stroke-width="2.5" />
+                <path d="M400 230 Q430 140 460 230 Z" fill="none" class="bad" stroke-width="2.5" />
+                <path d="M402 70 L402 220" class="bad" stroke-width="8" stroke-opacity="0.25" />
+                <rect
+                  x="540"
+                  y="100"
+                  width="26"
+                  height="16"
+                  rx="3"
+                  fill="none"
+                  class="bad"
+                  stroke-width="2.5"
+                />
+                <text x="553" y="92" text-anchor="middle" class="lbl">CÂMERA</text>
+                <text x="480" y="252" text-anchor="middle" class="lbl bad">
+                  SOMBRA DURA E FUNDO CHAPADO
+                </text>
+              </svg>
+              <figcaption>
+                <b>Profundidade.</b> Afastar-se da parede tira a sombra do fundo e dá o leve
+                desfoque que parece "de estúdio". Vale para parede lisa e para estante.
+              </figcaption>
+            </figure>
+          </div>
+          <div class="two">
+            <div class="box">
+              <h4>Fundos que funcionam</h4>
+              <ul>
+                <li>
+                  <b>Parede lisa</b> em tom neutro (branco, bege, cinza claro, verde escuro). Um
+                  quadro ou planta de um lado quebra a monotonia.
+                </li>
+                <li>
+                  <b>Estante organizada</b> com livros e poucos objetos. Tire o que for pessoal
+                  demais ou de marca de terceiros.
+                </li>
+                <li>
+                  <b>Consultório ou clínica</b> fora do horário: ótimo para a identidade Vethis,
+                  desde que arrumado e silencioso.
+                </li>
+                <li><b>Cor da roupa diferente da cor do fundo</b>, senão você some.</li>
+              </ul>
+            </div>
+            <div class="box">
+              <h4>Evite</h4>
+              <ul>
+                <li>
+                  <b>Cozinha, quarto com cama, banheiro, área de serviço</b>, mesmo arrumados.
+                </li>
+                <li><b>Janela, porta aberta, corredor ou espelho</b> atrás de você.</li>
+                <li>
+                  <b>Fundo virtual</b> do Zoom/Teams: recorta cabelo e ombros e parece amador. Se
+                  não houver alternativa, use fundo desfocado e teste antes.
+                </li>
+                <li><b>Logos, marcas de produtos e cartazes</b> de outras empresas ou cursos.</li>
+                <li>
+                  <b>Luz forte apontada para a parede</b>: cria uma mancha clara atrás de você.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="tip warn">
+            <b>Consistência</b>
+            Grave todas as aulas do seu módulo no mesmo lugar, com o mesmo enquadramento e o mesmo
+            estilo de roupa. O aluno percebe quando o cenário muda de aula para aula.
+          </div>
+        </div>
+      </section>
+
+      <section id="voce">
+        <div class="wrap">
+          <div class="head">
+            <span class="eyebrow">Capítulo 5</span>
+            <h2>Você na tela</h2>
+            <p>
+              Roupa, postura, olhar e ritmo. É o que transforma uma gravação correta em uma aula boa
+              de assistir.
+            </p>
+          </div>
+          <div class="two">
+            <div class="box">
+              <h4>Roupa</h4>
+              <ul>
+                <li>
+                  <b>Cor lisa e sólida</b>, tons médios: azul, verde, vinho, cinza. Evite branco
+                  total (estoura) e preto total (vira mancha).
+                </li>
+                <li>
+                  <b>Sem estampas finas:</b> listras, xadrez e padrões miúdos "tremem" na tela.
+                </li>
+                <li>
+                  <b>Jaleco ou pijama cirúrgico</b> são bem-vindos quando fizer sentido para o tema;
+                  jaleco branco pede um pouco menos de luz.
+                </li>
+                <li>
+                  <b>Sem logos</b> de outras marcas. Sem acessórios que balançam ou fazem barulho.
+                </li>
+                <li><b>Óculos:</b> veja a dica de reflexo no capítulo de luz.</li>
+              </ul>
+            </div>
+            <div class="box">
+              <h4>Postura e olhar</h4>
+              <ul>
+                <li>
+                  <b>Coluna reta, ombros abertos</b>, levemente inclinado para a frente: transmite
+                  interesse.
+                </li>
+                <li>
+                  <b>Olhe para a lente</b>, não para a sua imagem. Cole um ponto adesivo ao lado da
+                  câmera, se ajudar.
+                </li>
+                <li>
+                  <b>Mãos livres</b> e gestos naturais dentro do quadro. Não segure caneta nem
+                  celular.
+                </li>
+                <li>
+                  <b>Sorria no começo e no fim</b> de cada bloco: a edição precisa desses segundos.
+                </li>
+              </ul>
+            </div>
+            <div class="box">
+              <h4>Ritmo e fala</h4>
+              <ul>
+                <li>
+                  <b>Um pouco mais devagar</b> que numa conversa e com pausas entre as ideias. O
+                  aluno pode estar dirigindo ou no plantão.
+                </li>
+                <li><b>Abra dizendo o que vem</b> e feche com os 3 pontos principais.</li>
+                <li>
+                  <b>Casos reais</b> funcionam mais que teoria pura. "Chegou um gato de 12 anos
+                  com..." prende mais que "A doença renal crônica é...".
+                </li>
+                <li>
+                  <b>Energia 10% acima do normal.</b> A câmera "rouba" um pouco da sua expressão.
+                </li>
+              </ul>
+            </div>
+            <div class="box">
+              <h4>Roteiro e teleprompter</h4>
+              <ul>
+                <li><b>Tópicos, não texto decorado.</b> Ler na íntegra soa robótico.</li>
+                <li>
+                  <b>Teleprompter de celular</b> (apps gratuitos) colado logo abaixo ou ao lado da
+                  lente serve para vídeos curtos de publicidade.
+                </li>
+                <li>
+                  <b>Aulas:</b> cole os tópicos num papel atrás da câmera, na altura da lente.
+                </li>
+                <li>
+                  <b>Água por perto</b>, sem gelo (menos ruído). Pausa a cada 20 a 30 minutos.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="equipamento">
+        <div class="wrap">
+          <div class="head">
+            <span class="eyebrow">Capítulo 6</span>
+            <h2>Equipamento por faixa de preço</h2>
+            <p>
+              Comece pelo nível que você já tem e suba só o que fizer diferença no seu caso. A ordem
+              de prioridade é sempre a mesma: som, luz, estabilidade, câmera.
+            </p>
+          </div>
+          <div class="tiers">
+            <div class="tier">
+              <span class="eyebrow">Nível 0</span>
+              <h3>Com o que você já tem</h3>
+              <span class="price">R$ 0</span>
+              <ul>
+                <li><b>Celular recente</b> (câmera traseira) ou webcam Full HD.</li>
+                <li>
+                  <b>Fone com microfone</b> do celular, preso na gola, como lapela de emergência.
+                </li>
+                <li><b>Janela</b> de frente, de dia.</li>
+                <li><b>Pilha de livros</b> ou prateleira para a câmera na altura dos olhos.</li>
+                <li><b>Cartolina ou isopor branco</b> como rebatedor.</li>
+                <li><b>Edredom e cortina</b> para abafar o eco.</li>
+              </ul>
+            </div>
+            <div class="tier hl">
+              <span class="eyebrow">Nível 1 · recomendado</span>
+              <h3>Básico que resolve</h3>
+              <span class="price">R$ 250 a R$ 450</span>
+              <ul>
+                <li>
+                  <b>Lapela com fio</b> omnidirecional (Boya BY-M1 ou similar): R$ 90 a R$ 120.
+                  Adaptador USB-C ou Lightning para P2 com microfone, se o celular não tiver
+                  entrada: R$ 20 a R$ 60.
+                </li>
+                <li>
+                  <b>Tripé de 1,6 a 2,1 m com suporte de celular:</b> R$ 60 a R$ 120. Muitos ring
+                  lights já vêm com tripé e suporte.
+                </li>
+                <li>
+                  <b>Ring light de 10" bicolor com tripé:</b> R$ 60 a R$ 100. Serve de luz principal
+                  e de suporte do celular.
+                </li>
+                <li><b>Fone de ouvido</b> para conferir o som (qualquer um).</li>
+              </ul>
+            </div>
+            <div class="tier">
+              <span class="eyebrow">Nível 2</span>
+              <h3>Confortável para muitas horas</h3>
+              <span class="price">R$ 900 a R$ 1.600</span>
+              <ul>
+                <li>
+                  <b>Lapela sem fio</b> (Hollyland Lark M2 ou Rode Wireless Go): R$ 500 a R$ 700.
+                  Liberdade de movimento, sem cabo, dois microfones para entrevistas.
+                </li>
+                <li>
+                  <b>Softbox 50×70 com lâmpada LED e tripé</b> (R$ 150 a R$ 260) ou painel LED
+                  bicolor: luz mais suave e constante que o ring light.
+                </li>
+                <li>
+                  <b>Webcam 1080p ou 4K</b> (R$ 300 a R$ 600) se preferir gravar no computador com
+                  OBS.
+                </li>
+                <li>
+                  <b>Tripé de câmera mais firme</b> e suporte de celular com rosca: R$ 100 a R$ 200.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout">
+            <b>Estúdio Vethis.</b> Quem precisa gravar muitas horas de uma vez (12 h de módulo, por
+            exemplo) ou não tem ambiente silencioso pode usar o estúdio de podcast. Luz, microfone e
+            fundo já montados; você só leva o roteiro. Combine datas com o Fernando pelo grupo.
+          </div>
+          <p class="sources">
+            Faixas de preço aproximadas, observadas em outubro de 2026 em marketplaces brasileiros
+            (<a
+              href="https://www.zoom.com.br/microfone/microfone-de-lapela-sem-fio-hollyland-lark-m2"
+              >Zoom</a
+            >,
+            <a href="https://www.buscape.com.br/microfone/microfone-lapela-boya-by-m1">Buscapé</a>,
+            <a href="https://m.magazineluiza.com.br/busca/ring+light+10+com+tripe/"
+              >Magazine Luiza</a
+            >,
+            <a
+              href="https://www.hardware.com.br/hardware-indica/6-ring-lights-com-tripe-para-gravacao-de-videos-e-chamadas/amp/"
+              >Hardware.com.br</a
+            >). Confira o preço, o frete e se o vendedor é oficial antes de comprar; há cópias
+            piratas de lapelas baratas.
+          </p>
+        </div>
+      </section>
+
+      <section id="gravando">
+        <div class="wrap">
+          <div class="head">
+            <span class="eyebrow">Capítulo 7</span>
+            <h2>Gravando: antes, durante e depois</h2>
+            <p>
+              Uma rotina fixa evita os erros que mais custam tempo: arquivo perdido, áudio sem
+              gravar, take sem identificação.
+            </p>
+          </div>
+          <div class="two">
+            <div class="box">
+              <h4>Antes</h4>
+              <ul>
+                <li>Roteiro ou tópicos revisados; slides exportados em PDF.</li>
+                <li>Celular carregado, com espaço livre e em "Não perturbe".</li>
+                <li>Setup montado pela foto de referência; teste de 10 s assistido com fone.</li>
+                <li>Lapela presa e com bateria (sem fio). Água por perto.</li>
+                <li>Avisou a casa, fechou portas, desligou ventilador e ar.</li>
+              </ul>
+            </div>
+            <div class="box">
+              <h4>Durante</h4>
+              <ul>
+                <li>
+                  <b>Claquete falada:</b> ao começar cada arquivo, olhe para a câmera e diga
+                  "Clínica Médica, módulo 2, aula 3, take 1". Facilita a edição.
+                </li>
+                <li><b>5 segundos de silêncio</b> depois da claquete e no fim de cada bloco.</li>
+                <li>
+                  <b>Blocos de 10 a 20 minutos.</b> Pare, beba água, confira se continua gravando,
+                  siga.
+                </li>
+                <li>
+                  <b>Errou?</b> Pausa de 2 s e repita a frase inteira. Não peça desculpa para a
+                  câmera.
+                </li>
+                <li>
+                  <b>Mudou de bloco?</b> Confira enquadramento e foco de novo; a câmera pode ter
+                  mexido.
+                </li>
+              </ul>
+            </div>
+            <div class="box">
+              <h4>Depois</h4>
+              <ul>
+                <li>
+                  <b>Assista 30 segundos</b> do começo, do meio e do fim de cada arquivo, com fone.
+                </li>
+                <li>
+                  <b>Renomeie</b> no padrão <code>curso_modulo_aula_nome.mp4</code> (ex.:
+                  <code>clinica-medica_m02_aula03_cintia.mp4</code>).
+                </li>
+                <li>
+                  <b>Envie pelo Google Drive</b> no link que o Fernando passar. Nunca por WhatsApp:
+                  ele comprime e estraga a qualidade.
+                </li>
+                <li>
+                  <b>Envie os slides (PDF)</b> e a gravação de tela, se houver, na mesma pasta.
+                </li>
+                <li><b>Só apague do celular</b> depois que o Fernando confirmar que recebeu.</li>
+              </ul>
+            </div>
+            <div class="box">
+              <h4>Arquivo</h4>
+              <ul>
+                <li>
+                  <b>Formato:</b> MP4 (H.264), o padrão de qualquer celular. No iPhone, prefira
+                  "Mais compatível" em Ajustes › Câmera › Formatos, para não gerar HEVC.
+                </li>
+                <li>
+                  <b>Tamanho:</b> 1080p a 30 fps dá perto de 100 MB por minuto. Uma aula de 20 min
+                  tem cerca de 2 GB.
+                </li>
+                <li>
+                  <b>Não edite nem corte</b> no celular antes de enviar; mande o arquivo original.
+                </li>
+                <li>
+                  <b>Áudio separado</b> (gravador ou segundo celular): bata uma palma na frente da
+                  câmera no início, para sincronizar.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="formatos">
+        <div class="wrap">
+          <div class="head">
+            <span class="eyebrow">Capítulo 8</span>
+            <h2>Dois formatos, duas versões</h2>
+            <p>Os fundamentos são os mesmos. O que muda é orientação da tela, duração e ritmo.</p>
+          </div>
+          <div class="two">
+            <div class="box">
+              <h4>Versão A · Aulas do curso</h4>
+              <ul>
+                <li><b>Horizontal (16:9)</b>, 1080p a 30 fps.</li>
+                <li>
+                  <b>Blocos de 10 a 20 minutos.</b> Se a aula for longa, divida em partes numeradas.
+                </li>
+                <li>
+                  <b>Estrutura:</b> o que a aula cobre, desenvolvimento com casos, fechamento com os
+                  3 pontos.
+                </li>
+                <li><b>Slides</b> gravados à parte; não aponte a câmera para o monitor.</li>
+                <li><b>Mesmo cenário e estilo</b> em todas as aulas do módulo.</li>
+                <li>
+                  <b>Checklist antes do REC:</b> altura dos olhos · ombros no quadro · fundo limpo ·
+                  luz na frente · notificações desligadas · teste de 10 s assistido.
+                </li>
+              </ul>
+            </div>
+            <div class="box">
+              <h4>Versão B · Publicidade e redes</h4>
+              <ul>
+                <li>
+                  <b>Vertical (9:16)</b> para Reels e Stories. Deixe margem em cima (cerca de 14% da
+                  tela) e embaixo (20% em Stories, 35% em Reels) livre de texto e rosto cortado; o
+                  app cobre essas áreas.
+                </li>
+                <li><b>30 a 60 segundos, um tema por vídeo.</b></li>
+                <li>
+                  <b>Gancho nos 3 primeiros segundos:</b> "O erro mais comum que eu vejo na rotina
+                  é...". Nada de "oi gente, tudo bem?".
+                </li>
+                <li><b>O quê e por quê, não o como.</b> O como fica na pós.</li>
+                <li>
+                  <b>Fechamento com chamada:</b> "Isso está na pós de Clínica Médica da Vethis, link
+                  na bio".
+                </li>
+                <li>
+                  <b>Roteiro do Fernando</b>, adaptado ao seu jeito de falar sem mudar o sentido.
+                  Energia um pouco acima do normal.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="problemas">
+        <div class="wrap">
+          <div class="head">
+            <span class="eyebrow">Capítulo 9</span>
+            <h2>Problemas comuns e como resolver</h2>
+          </div>
+          <div class="tbl">
+            <table>
+              <thead>
+                <tr>
+                  <th>Sintoma</th>
+                  <th>Causa provável</th>
+                  <th>Solução</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rosto escuro, fundo claro</td>
+                  <td>Luz atrás de você (contraluz)</td>
+                  <td>
+                    Vire-se de frente para a janela; apague luzes atrás; ligue a luminária na frente
+                  </td>
+                </tr>
+                <tr>
+                  <td>Imagem granulada ou "suja"</td>
+                  <td>Pouca luz</td>
+                  <td>Aproxime a luminária ou mude para um horário com mais luz; limpe a lente</td>
+                </tr>
+                <tr>
+                  <td>Sombras fortes embaixo dos olhos</td>
+                  <td>Luz do teto ligada</td>
+                  <td>Apague o teto; luz à frente, um pouco acima dos olhos</td>
+                </tr>
+                <tr>
+                  <td>Reflexo nos óculos</td>
+                  <td>Luz na altura dos olhos, de frente</td>
+                  <td>Suba a luminária e incline para baixo, ou mova para o lado</td>
+                </tr>
+                <tr>
+                  <td>Som com eco</td>
+                  <td>Cômodo vazio, superfícies duras</td>
+                  <td>Tapete, cortina, edredom; aproxime o microfone; mude de cômodo</td>
+                </tr>
+                <tr>
+                  <td>Som baixo ou abafado</td>
+                  <td>Microfone longe ou coberto pela roupa</td>
+                  <td>Lapela a um palmo do queixo, por fora da roupa; fale 10% mais alto</td>
+                </tr>
+                <tr>
+                  <td>Chiado "ssss" forte</td>
+                  <td>Microfone perto demais da boca</td>
+                  <td>Desça a lapela 2 a 3 cm ou afaste-a para o lado</td>
+                </tr>
+                <tr>
+                  <td>Zumbido constante</td>
+                  <td>Ar-condicionado, ventilador, geladeira, carregador</td>
+                  <td>
+                    Desligue o que puder; afaste-se da fonte; grave com a bateria, sem carregador
+                  </td>
+                </tr>
+                <tr>
+                  <td>Imagem piscando (listras ou pulsando)</td>
+                  <td>Lâmpada LED barata ou frequência da rede</td>
+                  <td>Troque a lâmpada; no celular, teste 25 fps; use luz natural</td>
+                </tr>
+                <tr>
+                  <td>Foco pulando durante a fala</td>
+                  <td>Foco automático sem trava</td>
+                  <td>Toque e segure no rosto para travar foco e exposição (AE/AF)</td>
+                </tr>
+                <tr>
+                  <td>Imagem tremida</td>
+                  <td>Celular na mão ou apoio instável</td>
+                  <td>Tripé ou pilha de livros; não encoste na mesa durante a gravação</td>
+                </tr>
+                <tr>
+                  <td>Celular esquentou e parou</td>
+                  <td>4K ou sol direto</td>
+                  <td>Grave em 1080p; tire da capa; não deixe no sol; blocos menores</td>
+                </tr>
+                <tr>
+                  <td>Arquivo gigante ou formato estranho (HEVC/MOV)</td>
+                  <td>Configuração "Alta eficiência" ou 4K</td>
+                  <td>Use "Mais compatível" (H.264) e 1080p a 30 fps</td>
+                </tr>
+                <tr>
+                  <td>Vídeo chegou com qualidade ruim</td>
+                  <td>Enviado por WhatsApp</td>
+                  <td>Reenvie pelo Google Drive, no link do Fernando</td>
+                </tr>
+                <tr>
+                  <td>Gravou na vertical a aula (ou horizontal o Reels)</td>
+                  <td>Orientação errada</td>
+                  <td>Decida o formato antes do REC; a edição não corrige sem perder imagem</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="checklist">
+        <div class="wrap">
+          <div class="head">
+            <span class="eyebrow">Antes de apertar REC</span>
+            <h2>Checklist final</h2>
+            <p>Marque aqui mesmo (fica só no seu aparelho) ou imprima e deixe ao lado da câmera.</p>
+          </div>
+          <ul class="check">
+            <li>
+              <input type="checkbox" id="c01" /><span
+                >Câmera traseira, 1080p a 30 fps, grade ligada, lente limpa</span
+              >
+            </li>
+            <li>
+              <input type="checkbox" id="c02" /><span
+                >Lente na altura dos olhos, a um braço de distância, em tripé ou apoio firme</span
+              >
+            </li>
+            <li>
+              <input type="checkbox" id="c03" /><span
+                >Olhos no terço de cima, ombros no quadro, um palmo de folga</span
+              >
+            </li>
+            <li>
+              <input type="checkbox" id="c04" /><span
+                >Luz na frente (janela ou luminária), luz do teto apagada</span
+              >
+            </li>
+            <li>
+              <input type="checkbox" id="c05" /><span
+                >Nada de janela, porta, espelho ou cama atrás; 1 m da parede</span
+              >
+            </li>
+            <li>
+              <input type="checkbox" id="c06" /><span
+                >Lapela presa a um palmo do queixo, cabo escondido, bateria ok</span
+              >
+            </li>
+            <li>
+              <input type="checkbox" id="c07" /><span
+                >Ar, ventilador e notificações desligados; casa avisada; pets fora</span
+              >
+            </li>
+            <li>
+              <input type="checkbox" id="c08" /><span
+                >Roupa lisa, cor diferente do fundo, sem logos e sem acessórios barulhentos</span
+              >
+            </li>
+            <li>
+              <input type="checkbox" id="c09" /><span>Foco e exposição travados no rosto</span>
+            </li>
+            <li>
+              <input type="checkbox" id="c10" /><span
+                >Teste de 10 segundos gravado e assistido com fone</span
+              >
+            </li>
+            <li>
+              <input type="checkbox" id="c11" /><span
+                >Roteiro ou tópicos à mão; água sem gelo por perto</span
+              >
+            </li>
+            <li>
+              <input type="checkbox" id="c12" /><span
+                >Claquete falada no início: curso, módulo, aula, take</span
+              >
+            </li>
+          </ul>
+          <div class="callout">
+            <b>Ficou com dúvida?</b> Mande uma foto do seu cenário no grupo ou chame o Fernando para
+            um 1:1 por vídeo de 15 minutos. Ele ajusta luz, câmera e som com você antes da primeira
+            gravação. E, se o ambiente não ajudar, o estúdio está disponível.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <span>Vethis · Educação Médica Veterinária</span>
+        <span
+          >Guia de gravação · versão de 22/10/2026 · parte do
+          <a href="/plano-mkt#guia">plano de marketing</a></span
+        >
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        var items = document.querySelectorAll('.check li');
+        var KEY = 'vethis-guia-check';
+        var saved = {};
+        try {
+          saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {};
+        } catch (e) {
+          saved = {};
+        }
+        Array.prototype.forEach.call(items, function (li) {
+          var cb = li.querySelector('input');
+          if (saved[cb.id]) {
+            cb.checked = true;
+            li.classList.add('on');
+          }
+          cb.addEventListener('change', function () {
+            li.classList.toggle('on', cb.checked);
+            saved[cb.id] = cb.checked;
+            try {
+              localStorage.setItem(KEY, JSON.stringify(saved));
+            } catch (e) {
+              /* sem armazenamento: a marcação vale só até recarregar */
+            }
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

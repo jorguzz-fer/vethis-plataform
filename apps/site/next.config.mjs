@@ -10,11 +10,13 @@ const nextConfig = {
     '@vethis/design-tokens',
     '@vethis/shared',
   ],
-  // Plano de marketing (documento interno, noindex) servido como HTML estático de /public.
+  // Páginas estáticas autônomas (HTML pronto em /public) servidas em URL limpa.
   async rewrites() {
     return [
+      // Plano de marketing (documento interno, noindex).
       { source: '/plano-mkt', destination: '/plano-mkt.html' },
-      { source: '/guia-gravacao', destination: '/guia-gravacao.html' },
+      // Guia de gravação (noindex).
+      { source: '/guia-gravacao', destination: '/guia-gravacao/index.html' },
     ];
   },
 };
