@@ -13,6 +13,7 @@ import { CheckoutModule } from './checkout/checkout.module';
 import { MeModule } from './me/me.module';
 import { CrmModule } from './crm/crm.module';
 import { ChannelsModule } from './channels/channels.module';
+import { PlanModule } from './plan/plan.module';
 import { AdminModule } from './admin/admin.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { AiModule } from './ai/ai.module';
@@ -37,6 +38,7 @@ import { OpenApiModule } from './openapi/openapi.module';
     MeModule,
     CrmModule,
     ChannelsModule,
+    PlanModule,
     AdminModule,
     UploadsModule,
     AiModule,

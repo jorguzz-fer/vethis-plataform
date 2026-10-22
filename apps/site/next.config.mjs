@@ -12,7 +12,12 @@ const nextConfig = {
   ],
   // Páginas estáticas autônomas (HTML pronto em /public) servidas em URL limpa.
   async rewrites() {
-    return [{ source: '/guia-gravacao', destination: '/guia-gravacao/index.html' }];
+    return [
+      // Plano de marketing (documento interno, noindex).
+      { source: '/plano-mkt', destination: '/plano-mkt.html' },
+      // Guia de gravação (noindex).
+      { source: '/guia-gravacao', destination: '/guia-gravacao/index.html' },
+    ];
   },
 };
 

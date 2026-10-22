@@ -38,6 +38,7 @@ docs/
   architecture.md# topologia e grafo de dependências
   prototype/     # mockup HTML aprovado (referência visual)
   brand/         # logos
+  marketing/     # plano de marketing e guia de gravação
 ```
 
 Dependências: `apps/*` → `packages/api-client` + `packages/ui`; `ui` → `design-tokens`;

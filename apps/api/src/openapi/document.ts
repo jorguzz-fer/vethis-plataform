@@ -41,6 +41,7 @@ import {
   updateChannelRuleSchema,
 } from '../channels/dto';
 import { aiCourseDraftInputSchema, aiCourseDraftSchema, aiStatusSchema } from '../ai/dto';
+import { planTaskSchema, planTasksSchema, setPlanTaskSchema } from '../plan/dto';
 import {
   adminCourseDetailSchema,
   adminCourseSchema,
@@ -147,6 +148,9 @@ export function buildOpenApiDocument() {
   const AiStatus = registry.register('AiStatus', aiStatusSchema);
   const AiCourseDraftInput = registry.register('AiCourseDraftInput', aiCourseDraftInputSchema);
   const AiCourseDraft = registry.register('AiCourseDraft', aiCourseDraftSchema);
+  const PlanTask = registry.register('PlanTask', planTaskSchema);
+  const PlanTasks = registry.register('PlanTasks', planTasksSchema);
+  const SetPlanTaskInput = registry.register('SetPlanTaskInput', setPlanTaskSchema);
 
   const json = (schema: z.ZodTypeAny) => ({ content: { 'application/json': { schema } } });
 
@@ -764,6 +768,28 @@ export function buildOpenApiDocument() {
       200: { description: 'OK', ...json(AiCourseDraft) },
       422: { description: 'Rascunho inválido' },
       503: { description: 'IA indisponível' },
+    },
+  });
+
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/plan/tasks',
+    tags: ['plan'],
+    summary: 'Estado das tarefas do plano de marketing (público)',
+    responses: { 200: { description: 'OK', ...json(PlanTasks) } },
+  });
+  registry.registerPath({
+    method: 'put',
+    path: '/v1/plan/tasks/{key}',
+    tags: ['plan'],
+    summary: 'Marca ou desmarca uma tarefa do plano de marketing (público, sem identidade)',
+    request: {
+      params: z.object({ key: z.string().regex(/^[a-z0-9-]{2,40}$/) }),
+      body: json(SetPlanTaskInput),
+    },
+    responses: {
+      200: { description: 'OK', ...json(PlanTask) },
+      400: { description: 'Chave ou corpo inválido' },
     },
   });
 
