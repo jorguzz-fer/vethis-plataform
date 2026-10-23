@@ -369,6 +369,48 @@
         color: var(--muted);
         font-size: 15px;
       }
+      /* prints reais do Zoom */
+      .shots {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+        max-width: 680px;
+      }
+      .shots a {
+        display: block;
+        line-height: 0;
+      }
+      .shots img {
+        width: 100%;
+        height: auto;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #111;
+      }
+      .shot-note {
+        font-size: 12.5px;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+
+      .video {
+        margin: 0 0 28px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #000;
+        box-shadow: var(--shadow);
+      }
+      .video video {
+        display: block;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+      }
+      .video-note {
+        margin: 10px 0 0;
+        font-size: 14px;
+        color: var(--muted);
+      }
 
       /* ilustrações */
       figure {
@@ -392,24 +434,6 @@
       }
       figcaption b {
         color: var(--ink);
-      }
-      .video {
-        margin: 0 0 28px;
-        border-radius: 12px;
-        overflow: hidden;
-        background: #000;
-        box-shadow: var(--shadow);
-      }
-      .video video {
-        display: block;
-        width: 100%;
-        height: auto;
-        aspect-ratio: 16 / 9;
-      }
-      .video-note {
-        margin: 10px 0 0;
-        font-size: 14px;
-        color: var(--muted);
       }
       .figs {
         display: grid;
@@ -713,9 +737,9 @@
         <h1>Gravar em casa com a <em>qualidade do estúdio</em></h1>
         <p class="lead">
           Tudo o que você precisa para gravar aulas e vídeos curtos da Vethis com o celular ou a
-          webcam: posição da câmera, luz, som, fundo, roupa, equipamento por faixa de preço e o
-          passo a passo de cada gravação. O objetivo é que todas as aulas tenham a mesma cara,
-          independente de onde foram gravadas.
+          webcam: posição da câmera, luz, som, fundo, roupa, equipamento por faixa de preço, o passo
+          a passo de cada gravação e como gravar a aula com slides pelo Zoom. O objetivo é que todas
+          as aulas tenham a mesma cara, independente de onde foram gravadas.
         </p>
         <div class="meta">
           <span>Celular ou webcam</span>
@@ -737,6 +761,7 @@
         <a href="#voce">Você na tela</a>
         <a href="#equipamento">Equipamento</a>
         <a href="#gravando">Gravando</a>
+        <a href="#zoom">Aula pelo Zoom</a>
         <a href="#formatos">Formatos</a>
         <a href="#problemas">Problemas</a>
         <a href="#checklist">Checklist</a>
@@ -808,6 +833,7 @@
             <video
               controls
               preload="metadata"
+              poster="/guia-gravacao/setup-poster.jpg"
               playsinline
               src="https://d2ol7oe51mr4n9.cloudfront.net/user_30iEq3RiLvig85MUONpnSPIG44p/8231be56-7a50-4093-b227-2bce3a6ba582.mp4"
               title="O setup em 8 passos (vídeo, 2 min)"
@@ -817,6 +843,7 @@
             Vídeo de 2 minutos com os 8 passos do setup, narrado. Os mesmos passos estão detalhados
             abaixo.
           </p>
+
           <div class="figs">
             <figure>
               <svg viewBox="0 0 640 330" role="img" aria-labelledby="t-setup">
@@ -2082,10 +2109,435 @@
         </div>
       </section>
 
-      <section id="formatos">
+      <section id="zoom">
         <div class="wrap">
           <div class="head">
             <span class="eyebrow">Capítulo 8</span>
+            <h2>Gravar a aula pelo Zoom</h2>
+            <p>
+              Para aulas com slides, o Zoom grava a apresentação e a sua câmera juntas, lado a lado,
+              no seu computador. A configuração é feita uma vez; depois é só repetir a parte 2 a
+              cada aula. Os prints são do Zoom no Windows; no Mac os botões são os mesmos. Os nomes
+              dos botões aparecem em inglês e, entre parênteses, como ficam com o Zoom em português.
+            </p>
+          </div>
+          <div class="video">
+            <video
+              controls
+              preload="metadata"
+              playsinline
+              poster="/guia-gravacao/zoom-poster.jpg"
+              src="https://d2ol7oe51mr4n9.cloudfront.net/user_30iEq3RiLvig85MUONpnSPIG44p/2f765519-7c98-480e-a3f2-bb74c9f87729.mp4"
+              title="Gravar a aula pelo Zoom (vídeo, 1 min 15 s)"
+            ></video>
+          </div>
+          <p class="video-note" style="margin-bottom: 26px">
+            Vídeo de 1 minuto com as 3 partes, narrado. Os mesmos passos, com os prints, estão
+            abaixo.
+          </p>
+
+          <div class="summary">
+            <div class="sum">
+              <span class="eyebrow">Parte 1 · uma vez</span>
+              <b>Instalar e configurar</b>
+              <p>Baixar o Zoom, entrar na conta e ajustar as opções de gravação. Leva 5 minutos.</p>
+            </div>
+            <div class="sum">
+              <span class="eyebrow">Parte 2 · toda aula</span>
+              <b>Gravar com os slides</b>
+              <p>
+                Abrir uma reunião só com você, gravar no computador e compartilhar a apresentação.
+              </p>
+            </div>
+            <div class="sum">
+              <span class="eyebrow">Parte 3 · no fim</span>
+              <b>Salvar e enviar</b>
+              <p>Encerrar, esperar a conversão e mandar o arquivo .mp4 pelo Google Drive.</p>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 36px">Parte 1 · Instalar e configurar (só na primeira vez)</h3>
+          <ol class="steps">
+            <li>
+              <div>
+                <b>Baixe o Zoom Workplace</b>
+                <p>
+                  Acesse <code>zoom.us/download</code>, baixe a versão para o seu computador
+                  (Windows ou Mac) e instale. Use o aplicativo, não o navegador: só o aplicativo
+                  grava no computador.
+                </p>
+                <div class="shots">
+                  <a href="/guia-gravacao/zoom/01-download.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/01-download.jpg"
+                      alt="Página de download do Zoom com o botão Baixar destacado"
+                      loading="lazy"
+                  /></a>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Entre com a sua conta</b>
+                <p>
+                  Clique em <strong>Sign in</strong> (Entrar) ou, se não tiver conta, em
+                  <strong>Sign up</strong> (Inscrever-se) e crie uma gratuita.
+                </p>
+                <div class="shots">
+                  <a href="/guia-gravacao/zoom/02-entrar.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/02-entrar.jpg"
+                      alt="Tela inicial do Zoom Workplace com Sign in e Sign up destacados"
+                      loading="lazy"
+                  /></a>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Abra uma reunião só com você</b>
+                <p>
+                  Na tela inicial, clique em <strong>New meeting</strong> (Nova reunião). Ninguém
+                  mais precisa entrar.
+                </p>
+                <div class="shots">
+                  <a href="/guia-gravacao/zoom/03-nova-reuniao.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/03-nova-reuniao.jpg"
+                      alt="Tela inicial do Zoom com o botão New meeting destacado"
+                      loading="lazy"
+                  /></a>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Abra as configurações</b>
+                <p>
+                  Na barra de baixo, clique na setinha ao lado de <strong>Video</strong> (Vídeo) e
+                  escolha <strong>Video settings</strong> (Configurações de vídeo). Na aba de vídeo,
+                  confira se a câmera certa está selecionada e marque <strong>HD</strong>.
+                </p>
+                <div class="shots">
+                  <a href="/guia-gravacao/zoom/04-video-settings.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/04-video-settings.jpg"
+                      alt="Menu da seta ao lado de Video com a opção Video settings destacada"
+                      loading="lazy"
+                  /></a>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Ajuste a gravação</b>
+                <p>
+                  Na lateral esquerda, clique em <strong>Recording</strong> (Gravação) e deixe como
+                  na figura: <strong>Show participants names</strong> desligado,
+                  <strong>Include timestamp</strong> desligado,
+                  <strong>Record video during screen sharing</strong> ligado e
+                  <strong>Show video and screen share side-by-side</strong> marcado. Em
+                  <strong>Storage location</strong> (Local), escolha uma pasta fácil de achar.
+                </p>
+                <div class="shots">
+                  <a href="/guia-gravacao/zoom/05-recording.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/05-recording.jpg"
+                      alt="Configurações do Zoom na aba Recording com as opções de gravação marcadas"
+                      loading="lazy"
+                  /></a>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Ative a opção para edição</b>
+                <p>
+                  Clique em <strong>Advanced</strong> (Avançado), ligue
+                  <strong>Optimize for third-party video editors</strong> (Otimizar para editores de
+                  vídeo de terceiros) e feche as configurações. Isso gera um arquivo que a edição da
+                  Vethis abre sem conversão.
+                </p>
+                <div class="shots">
+                  <a href="/guia-gravacao/zoom/07-otimizar.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/07-otimizar.jpg"
+                      alt="Configurações avançadas com Optimize for third-party video editors ligado"
+                      loading="lazy"
+                  /></a>
+                </div>
+              </div>
+            </li>
+          </ol>
+
+          <h3 style="margin-top: 36px">Parte 2 · Gravar a aula</h3>
+          <ol class="steps">
+            <li>
+              <div>
+                <b>Abra a reunião, a câmera e o microfone</b>
+                <p>
+                  <strong>New meeting</strong> (Nova reunião), depois
+                  <strong>Join with computer audio</strong> (Entrar com áudio do computador). Ligue
+                  o <strong>Video</strong> (Vídeo). Na setinha ao lado de <strong>Audio</strong>,
+                  escolha o seu microfone de lapela, não o do notebook.
+                </p>
+                <div class="shots">
+                  <a href="/guia-gravacao/zoom/08-audio.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/08-audio.jpg"
+                      alt="Reunião aberta com Join with computer audio e os botões de áudio e vídeo destacados"
+                      loading="lazy"
+                  /></a>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Confira câmera, luz e enquadramento</b>
+                <p>
+                  Os capítulos 1 a 5 valem aqui também: webcam na altura dos olhos, luz na frente,
+                  fundo limpo. Se usar o celular como câmera, posicione igual ao das gravações
+                  normais.
+                </p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Comece a gravar</b>
+                <p>
+                  Clique em <strong>Record</strong> (Gravar) ›
+                  <strong>Record to this computer</strong> (Gravar neste computador). O botão vira
+                  <strong>Pause/stop recording</strong> e aparece "Recording..." no topo: enquanto
+                  estiver assim, está gravando.
+                </p>
+                <div class="shots">
+                  <a href="/guia-gravacao/zoom/09-record.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/09-record.jpg"
+                      alt="Barra do Zoom com Record e a opção Record to this computer destacadas"
+                      loading="lazy" /></a
+                  ><a href="/guia-gravacao/zoom/10-gravando.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/10-gravando.jpg"
+                      alt="Barra do Zoom gravando, com o botão Pause/stop recording"
+                      loading="lazy"
+                  /></a>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Compartilhe a apresentação</b>
+                <p>
+                  Clique em <strong>Share</strong> (Compartilhar), escolha a
+                  <strong>tela inteira</strong> (Screen 1) e clique em <strong>Share</strong>. Só
+                  marque <strong>Share sound</strong> (Compartilhar som) se a aula tiver vídeo com
+                  áudio.
+                </p>
+                <div class="shots">
+                  <a href="/guia-gravacao/zoom/11-share.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/11-share.jpg"
+                      alt="Barra do Zoom com o botão Share destacado"
+                      loading="lazy" /></a
+                  ><a href="/guia-gravacao/zoom/12-tela-inteira.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/12-tela-inteira.jpg"
+                      alt="Janela de compartilhamento com a tela inteira selecionada e o botão Share"
+                      loading="lazy"
+                  /></a>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Coloque os slides em tela cheia</b>
+                <p>
+                  No PowerPoint, Keynote ou Google Slides, inicie a apresentação (F5 no PowerPoint).
+                  Feche e-mail, WhatsApp e notificações antes: tudo o que aparecer na tela entra na
+                  gravação.
+                </p>
+                <div class="shots">
+                  <a href="/guia-gravacao/zoom/13-tela-cheia.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/13-tela-cheia.jpg"
+                      alt="PowerPoint com o botão de apresentação em tela cheia destacado"
+                      loading="lazy"
+                  /></a>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Aumente a janela da sua câmera</b>
+                <p>
+                  A miniatura da câmera fica no canto. Segure a borda com o mouse e arraste para
+                  aumentar: câmera maior grava com mais qualidade. Deixe-a num canto onde não cubra
+                  texto dos slides.
+                </p>
+                <div class="shots">
+                  <a
+                    href="/guia-gravacao/zoom/14-aumentar-camera.jpg"
+                    target="_blank"
+                    rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/14-aumentar-camera.jpg"
+                      alt="Slide em tela cheia com a janela da câmera no canto, sendo aumentada"
+                      loading="lazy"
+                  /></a>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Faça um teste de 2 minutos</b>
+                <p>
+                  Antes da aula inteira, grave 2 minutos, encerre (parte 3) e assista ao arquivo. Se
+                  estiver como na figura do resultado, siga para a aula.
+                </p>
+              </div>
+            </li>
+          </ol>
+
+          <figure style="margin: 22px 0; max-width: 680px">
+            <a
+              href="/guia-gravacao/zoom/22-resultado.jpg"
+              target="_blank"
+              rel="noopener"
+              style="display: block; line-height: 0"
+              ><img
+                src="/guia-gravacao/zoom/22-resultado.jpg"
+                alt="Exemplo do vídeo final com os slides à esquerda e a câmera à direita"
+                loading="lazy"
+                style="width: 100%; height: auto; border-radius: 8px"
+            /></a>
+            <figcaption>
+              <b>Resultado: o arquivo deve ficar assim.</b> Slides à esquerda e você à direita, lado
+              a lado. É assim que a edição da Vethis monta a aula. Se vier só a câmera ou só os
+              slides, reveja o passo 5 da parte 1.
+            </figcaption>
+          </figure>
+
+          <h3 style="margin-top: 36px">Parte 3 · Encerrar, salvar e enviar</h3>
+          <ol class="steps">
+            <li>
+              <div>
+                <b>Pare o compartilhamento</b>
+                <p>
+                  No fim da aula, clique em <strong>Stop share</strong> (Parar compartilhamento), no
+                  topo da tela.
+                </p>
+                <div class="shots">
+                  <a href="/guia-gravacao/zoom/17-stop-share.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/17-stop-share.jpg"
+                      alt="Slide em tela cheia com o botão Stop share destacado no topo"
+                      loading="lazy"
+                  /></a>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Pare a gravação e encerre</b>
+                <p>
+                  Clique no quadrado de <strong>stop</strong> (Parar gravação) e depois em
+                  <strong>End</strong> (Encerrar) › <strong>End meeting for all</strong> (Encerrar
+                  reunião para todos).
+                </p>
+                <div class="shots">
+                  <a href="/guia-gravacao/zoom/18-end.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/18-end.jpg"
+                      alt="Reunião com os botões de parar gravação e End destacados"
+                      loading="lazy" /></a
+                  ><a href="/guia-gravacao/zoom/19-end-all.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/19-end-all.jpg"
+                      alt="Opção End meeting for all destacada"
+                      loading="lazy"
+                  /></a>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Espere a conversão</b>
+                <p>
+                  O Zoom converte a gravação ao encerrar (<strong>Convert meeting recording</strong
+                  >). Não desligue o computador nem feche o Zoom até terminar. Se ele perguntar,
+                  escolha a pasta onde salvar.
+                </p>
+                <div class="shots">
+                  <a href="/guia-gravacao/zoom/20-converter.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/20-converter.jpg"
+                      alt="Zoom convertendo a gravação e a janela para escolher a pasta"
+                      loading="lazy"
+                  /></a>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Pegue o arquivo certo</b>
+                <p>
+                  A pasta terá 3 arquivos: um áudio <code>.m4a</code>, um
+                  <code>recording.conf</code> e o vídeo <code>.mp4</code>. Assista ao
+                  <strong>.mp4</strong>, renomeie no padrão do capítulo 7 e envie
+                  <strong>só ele</strong> pelo Google Drive.
+                </p>
+                <div class="shots">
+                  <a href="/guia-gravacao/zoom/21-arquivos.jpg" target="_blank" rel="noopener"
+                    ><img
+                      src="/guia-gravacao/zoom/21-arquivos.jpg"
+                      alt="Os três arquivos gerados, com o vídeo mp4 destacado"
+                      loading="lazy"
+                  /></a>
+                </div>
+              </div>
+            </li>
+          </ol>
+
+          <div class="box" style="margin: 22px 0">
+            <h4>Dicas do Zoom</h4>
+            <ul>
+              <li>
+                <b>Conta gratuita:</b> a reunião pode encerrar sozinha em 40 minutos. Grave em
+                blocos de até 30 minutos (já é o recomendado no capítulo 7) e abra uma reunião nova
+                para cada bloco.
+              </li>
+              <li>
+                <b>Espaço em disco:</b> cada hora de gravação ocupa de 1 a 3 GB. Confira o espaço
+                livre antes de começar.
+              </li>
+              <li>
+                <b>Notebook na tomada</b> e com a tampa aberta durante toda a gravação e a
+                conversão.
+              </li>
+              <li>
+                <b>Claquete falada</b> no início de cada bloco, como no capítulo 7: curso, módulo,
+                aula e parte.
+              </li>
+              <li>
+                <b>Filtros e fundos virtuais desligados:</b> o fundo virtual recorta cabelo e mãos.
+              </li>
+            </ul>
+          </div>
+
+          <div class="tip">
+            <b>Antes da primeira aula</b>
+            Faça uma gravação teste de 2 minutos, encerre e confira o arquivo. Se estiver lado a
+            lado, com som limpo e a câmera nítida, a configuração está pronta para todas as próximas
+            aulas.
+          </div>
+        </div>
+      </section>
+
+      <section id="formatos">
+        <div class="wrap">
+          <div class="head">
+            <span class="eyebrow">Capítulo 9</span>
             <h2>Dois formatos, duas versões</h2>
             <p>Os fundamentos são os mesmos. O que muda é orientação da tela, duração e ritmo.</p>
           </div>
@@ -2101,7 +2553,10 @@
                   <b>Estrutura:</b> o que a aula cobre, desenvolvimento com casos, fechamento com os
                   3 pontos.
                 </li>
-                <li><b>Slides</b> gravados à parte; não aponte a câmera para o monitor.</li>
+                <li>
+                  <b>Slides:</b> grave pelo Zoom, com você e a apresentação lado a lado (capítulo
+                  8). Nunca aponte a câmera para o monitor.
+                </li>
                 <li><b>Mesmo cenário e estilo</b> em todas as aulas do módulo.</li>
                 <li>
                   <b>Checklist antes do REC:</b> altura dos olhos · ombros no quadro · fundo limpo ·
@@ -2140,7 +2595,7 @@
       <section id="problemas">
         <div class="wrap">
           <div class="head">
-            <span class="eyebrow">Capítulo 9</span>
+            <span class="eyebrow">Capítulo 10</span>
             <h2>Problemas comuns e como resolver</h2>
           </div>
           <div class="tbl">
@@ -2226,6 +2681,30 @@
                   <td>Vídeo chegou com qualidade ruim</td>
                   <td>Enviado por WhatsApp</td>
                   <td>Reenvie pelo Google Drive, no link do Fernando</td>
+                </tr>
+                <tr>
+                  <td>Gravação do Zoom só com a câmera, sem os slides</td>
+                  <td>
+                    Compartilhou depois de parar a gravação, ou "Record video during screen sharing"
+                    desligado
+                  </td>
+                  <td>
+                    Ligue a opção em Configurações › Recording; comece a gravar antes de
+                    compartilhar a tela
+                  </td>
+                </tr>
+                <tr>
+                  <td>Reunião do Zoom encerrou sozinha</td>
+                  <td>Limite de 40 minutos da conta gratuita</td>
+                  <td>Grave em blocos de até 30 minutos, uma reunião nova por bloco</td>
+                </tr>
+                <tr>
+                  <td>Não achei o arquivo da gravação do Zoom</td>
+                  <td>Pasta padrão ou conversão interrompida</td>
+                  <td>
+                    Zoom › Meetings › Recorded (Gravadas) › Open; na próxima, espere a conversão
+                    terminar antes de fechar
+                  </td>
                 </tr>
                 <tr>
                   <td>Gravou na vertical a aula (ou horizontal o Reels)</td>
@@ -2318,7 +2797,7 @@
       <div class="wrap">
         <span>Vethis · Educação Médica Veterinária</span>
         <span
-          >Guia de gravação · versão de 22/10/2026 · parte do
+          >Guia de gravação · versão de 23/10/2026 · parte do
           <a href="/plano-mkt#guia">plano de marketing</a></span
         >
       </div>
