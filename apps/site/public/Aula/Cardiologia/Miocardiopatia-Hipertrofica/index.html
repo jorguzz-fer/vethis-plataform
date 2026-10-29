@@ -1,0 +1,947 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Miocardiopatia Hipertrófica</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: palco 16:9 fixo (1600×900) escalado para caber na tela; cada slide = coluna de texto + bancada interativa.
+   Direção: prancha de atlas anatômico sob luz de sala de aula — fundo cor de sangue venoso, tinta cor de osso, acento de miocárdio.
+   Cores Doppler (vermelho = em direção ao transdutor, azul = afastando, mosaico = aliasing) são semânticas, não decorativas. */
+:root{
+  --bg:#130e0e; --bg2:#1b1414; --surface:#211818; --line:#3b2b29; --line2:#57423e;
+  --ink:#f2e9e4; --ink2:#c4b2ab; --muted:#8a7570;
+  --accent:#e8594b; --accent-ink:#ff8a7c; --accent-soft:rgba(232,89,75,.16);
+  --bone:#efe3d3; --gold:#e9b44c;
+  --dop-to:#e0402f; --dop-away:#3b7ce0; --dop-alias1:#f4d63e; --dop-alias2:#43d1a6;
+  --myo:#a8352d; --myo-cut:#d9806f; --blood:#3a0f12; --blood-hi:#56161a; --valve:#f3e6d6;
+  --ok:#5cbf8a; --warn:#e9b44c; --crit:#ef5b4c;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){
+  --bg:#eceeef; --bg2:#e3e6e8; --surface:#ffffff; --line:#d3d7da; --line2:#b9bfc3;
+  --ink:#1c1315; --ink2:#4b3d3f; --muted:#7b6e70;
+  --accent:#b62f26; --accent-ink:#a32a22; --accent-soft:rgba(182,47,38,.10);
+  --bone:#3b2a24; --gold:#a8730f;
+  --myo:#a8352d; --myo-cut:#d9806f; --blood:#5a1a1d; --blood-hi:#6d2125; --valve:#fff7ea;
+  --ok:#2f8a5b; --warn:#a8730f; --crit:#c2382b; color-scheme:light } }
+:root[data-theme="light"]{
+  --bg:#eceeef; --bg2:#e3e6e8; --surface:#ffffff; --line:#d3d7da; --line2:#b9bfc3;
+  --ink:#1c1315; --ink2:#4b3d3f; --muted:#7b6e70;
+  --accent:#b62f26; --accent-ink:#a32a22; --accent-soft:rgba(182,47,38,.10);
+  --bone:#3b2a24; --gold:#a8730f;
+  --myo:#a8352d; --myo-cut:#d9806f; --blood:#5a1a1d; --blood-hi:#6d2125; --valve:#fff7ea;
+  --ok:#2f8a5b; --warn:#a8730f; --crit:#c2382b; color-scheme:light }
+
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);overflow:hidden;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0;box-sizing:border-box}
+*{box-sizing:border-box}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent-ink);outline-offset:2px}
+
+#viewport{position:relative;width:100%;height:100%;display:grid;place-items:center;overflow:hidden}
+#deck{width:1600px;height:900px;position:absolute;left:50%;top:50%;transform-origin:center center;
+  background:var(--bg);overflow:hidden}
+.slide{position:absolute;inset:0 0 64px 0;display:grid;grid-template-columns:540px 1fr;gap:0;
+  opacity:0;visibility:hidden;transition:opacity .45s ease, visibility 0s linear .45s}
+.slide.active{opacity:1;visibility:visible;transition:opacity .45s ease}
+.slide.full{grid-template-columns:1fr}
+.copy{padding:64px 40px 32px 72px;display:flex;flex-direction:column;gap:22px;min-width:0;position:relative;z-index:2}
+.eyebrow{font-family:var(--f-mono);font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);display:flex;gap:12px;align-items:center}
+.eyebrow::before{content:"";width:28px;height:2px;background:var(--accent)}
+h1,h2{font-family:var(--f-display);font-stretch:72%;font-weight:800;text-transform:uppercase;line-height:.92;margin:0;text-wrap:balance;letter-spacing:-.005em}
+h2{font-size:58px}
+.lead{font-size:20px;line-height:1.5;color:var(--ink2);margin:0;max-width:44ch}
+.lead strong{color:var(--ink);font-weight:600}
+.note{font-size:15px;line-height:1.5;color:var(--muted);margin:0;max-width:48ch}
+.bench{position:relative;min-width:0;border-left:1px solid var(--line);background:
+  radial-gradient(ellipse at 60% 45%, var(--bg2), var(--bg) 70%)}
+.mono{font-family:var(--f-mono)}
+.tabnum{font-variant-numeric:tabular-nums}
+
+/* controls */
+.ctrl{display:flex;flex-direction:column;gap:14px}
+.ctrl-row{display:flex;flex-direction:column;gap:6px}
+.ctrl-row label{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;color:var(--ink2);letter-spacing:.02em}
+.ctrl-row label output{font-family:var(--f-mono);font-size:17px;color:var(--ink);font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:28px;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:4px;background:linear-gradient(90deg,var(--accent) var(--p,50%),var(--line2) var(--p,50%));border-radius:2px}
+input[type=range]::-moz-range-track{height:4px;background:var(--line2);border-radius:2px}
+input[type=range]::-moz-range-progress{height:4px;background:var(--accent);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--ink);border:3px solid var(--accent);margin-top:-8px}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--ink);border:3px solid var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line2);background:transparent;border-radius:999px;padding:7px 14px;font-size:14px;cursor:pointer;color:var(--ink2);transition:background .2s,color .2s,border-color .2s}
+.chip:hover{border-color:var(--ink2);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.toggle{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--ink2);cursor:pointer;user-select:none}
+.toggle input{width:18px;height:18px;accent-color:var(--accent)}
+.readout{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.readout div{background:var(--bg);padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.readout span{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-family:var(--f-mono)}
+.readout b{font-family:var(--f-mono);font-weight:500;font-size:24px;font-variant-numeric:tabular-nums;color:var(--ink)}
+.readout b small{font-size:14px;color:var(--muted);font-weight:400;margin-left:4px}
+.status{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:14px;padding:6px 12px;border-radius:4px;border:1px solid currentColor;letter-spacing:.04em}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.status.ok{color:var(--ok)} .status.warn{color:var(--warn)} .status.crit{color:var(--crit)}
+
+/* footer nav */
+#nav{position:absolute;left:0;right:0;bottom:0;height:64px;display:flex;align-items:center;gap:18px;padding:0 28px 0 72px;border-top:1px solid var(--line);background:var(--bg);z-index:10}
+#nav .title{font-family:var(--f-display);font-stretch:80%;font-weight:700;text-transform:uppercase;font-size:15px;letter-spacing:.06em;color:var(--muted);white-space:nowrap}
+#ticks{display:flex;gap:6px;flex:1;align-items:center}
+#ticks button{flex:1;height:22px;border:0;background:transparent;cursor:pointer;position:relative;padding:0}
+#ticks button::after{content:"";position:absolute;left:0;right:0;top:10px;height:3px;background:var(--line2);border-radius:2px;transition:background .3s}
+#ticks button.done::after{background:var(--ink2)}
+#ticks button.on::after{background:var(--accent)}
+#ticks button:hover::after{background:var(--ink)}
+#counter{font-family:var(--f-mono);font-size:14px;color:var(--ink2);min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
+.iconbtn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line2);background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--ink2)}
+.iconbtn:hover{color:var(--ink);border-color:var(--ink2)}
+.iconbtn svg{width:18px;height:18px}
+
+/* 3D hotspots */
+.stage3d{position:absolute;inset:0}
+.stage3d canvas{display:block;width:100%;height:100%;outline:none;cursor:grab}
+.stage3d canvas:active{cursor:grabbing}
+.hot-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.hot{position:absolute;left:0;top:0;pointer-events:auto;transform:translate(-50%,-50%);display:flex;align-items:center;gap:8px;cursor:pointer;transition:opacity .2s}
+.hot .dot{width:26px;height:26px;border-radius:50%;background:var(--bg);border:2px solid var(--gold);color:var(--gold);font:600 12px/22px var(--f-mono);text-align:center;box-shadow:0 0 0 4px rgba(0,0,0,.25)}
+.hot.custom .dot{border-color:var(--accent-ink);color:var(--accent-ink)}
+.hot .lbl{font-size:14px;background:var(--bg);color:var(--ink);padding:4px 9px;border-radius:4px;border:1px solid var(--line2);white-space:nowrap;opacity:0;transform:translateX(-4px);transition:opacity .2s,transform .2s;pointer-events:none}
+.hot.show .lbl,.hot:hover .lbl{opacity:1;transform:none}
+.hot.sel .dot{background:var(--gold);color:var(--bg)}
+.hot.hidden{opacity:0;pointer-events:none}
+.hint{position:absolute;right:24px;bottom:18px;font-family:var(--f-mono);font-size:13px;color:var(--muted);pointer-events:none;text-align:right;line-height:1.6}
+.credit{font-size:12px;color:var(--muted);line-height:1.5}
+.credit a{color:var(--ink2)}
+
+/* lists */
+.structs{display:flex;flex-direction:column;border-top:1px solid var(--line);max-height:330px;overflow:auto}
+.structs button{display:grid;grid-template-columns:34px 1fr auto;align-items:center;text-align:left;gap:8px;padding:8px 4px;border:0;border-bottom:1px solid var(--line);background:transparent;cursor:pointer;font-size:15px;color:var(--ink2)}
+.structs button:hover,.structs button.sel{color:var(--ink);background:var(--accent-soft)}
+.structs .n{font-family:var(--f-mono);font-size:12px;color:var(--gold)}
+.structs .custom .n{color:var(--accent-ink)}
+.structs .x{font-size:13px;color:var(--muted);padding:0 6px}
+.pinform{display:flex;gap:8px}
+.pinform input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line2);border-radius:4px;padding:8px 10px;font-size:15px}
+.btn{border:1px solid var(--line2);background:transparent;border-radius:4px;padding:8px 14px;cursor:pointer;font-size:14px;color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:hover{border-color:var(--ink2)}
+
+/* cover */
+#s1{grid-template-columns:760px 1fr}
+#s1 .copy{justify-content:center;padding-left:96px;gap:28px}
+#s1 h1{font-size:100px;font-stretch:66%;line-height:.86}
+#s1 h1 span{display:block;color:var(--accent)}
+#s1 .bench{border:0;background:radial-gradient(circle at 45% 50%, var(--accent-soft), transparent 60%)}
+.kbd{font-family:var(--f-mono);font-size:13px;border:1px solid var(--line2);border-bottom-width:2px;border-radius:4px;padding:1px 7px;color:var(--ink2)}
+
+/* classification */
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;padding:80px 64px 48px 48px;height:100%;align-content:center}
+.card{border:1px solid var(--line);border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:16px;cursor:pointer;background:transparent;text-align:left;transition:border-color .25s,background .25s,transform .25s}
+.card:hover{border-color:var(--line2);transform:translateY(-3px)}
+.card.focus{border-color:var(--accent);background:var(--accent-soft)}
+.card svg{width:100%;height:auto;aspect-ratio:1}
+.card h3{font-family:var(--f-display);font-stretch:75%;font-weight:800;text-transform:uppercase;font-size:34px;margin:0;line-height:1}
+.card p{margin:0;font-size:16px;line-height:1.5;color:var(--ink2)}
+.card .tag{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);min-height:1em}
+.card dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:14px}
+.card dt{color:var(--muted)} .card dd{margin:0;color:var(--ink)}
+
+/* image viewer */
+.imgv{position:absolute;inset:0;overflow:hidden;cursor:grab;background:#000}
+.imgv img{position:absolute;left:50%;top:50%;max-width:none;height:92%;transform-origin:center;transition:opacity .5s ease;user-select:none;-webkit-user-drag:none}
+.imgv img.off{opacity:0}
+.zoomctl{position:absolute;right:20px;top:20px;display:flex;flex-direction:column;gap:8px}
+.zoomctl .iconbtn{background:rgba(0,0,0,.5);color:#eee;border-color:#555}
+.caption{border-left:2px solid var(--accent);padding-left:16px;font-size:17px;line-height:1.5;color:var(--ink2);min-height:6.2em}
+.caption b{color:var(--ink);display:block;font-family:var(--f-display);font-stretch:80%;text-transform:uppercase;font-size:20px;letter-spacing:.02em;margin-bottom:4px}
+
+/* chain */
+.chain{display:flex;flex-direction:column;gap:6px}
+.step{display:flex;align-items:center;gap:14px;padding:10px 14px;border:1px solid var(--line);border-radius:6px;opacity:.28;transition:opacity .4s,border-color .4s,background .4s;cursor:pointer;background:transparent;text-align:left;font-size:17px;color:var(--ink)}
+.step.on{opacity:1}
+.step.cur{border-color:var(--accent);background:var(--accent-soft)}
+.step .ar{font-family:var(--f-mono);font-size:20px;color:var(--accent-ink);width:22px;text-align:center}
+.step.final{font-family:var(--f-display);font-stretch:80%;font-weight:800;text-transform:uppercase;font-size:22px}
+.join{height:10px;margin-left:24px;border-left:2px dotted var(--line2)}
+
+.svgchart text{font-family:var(--f-mono);fill:var(--muted);font-size:13px}
+.svgchart .ax{stroke:var(--line2);stroke-width:1}
+.svgchart .grid{stroke:var(--line);stroke-width:1}
+.svgchart .lab{fill:var(--ink2);font-size:14px}
+
+/* quiz */
+.quiz{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:64px 64px 40px 48px;align-content:center;height:100%}
+.q{border:1px solid var(--line);border-radius:8px;padding:26px 28px;display:flex;flex-direction:column;gap:14px;cursor:pointer;background:transparent;text-align:left;color:var(--ink);transition:border-color .25s}
+.q:hover{border-color:var(--line2)}
+.q .qn{font-family:var(--f-mono);font-size:13px;color:var(--accent-ink);letter-spacing:.1em}
+.q .qt{font-size:21px;line-height:1.4;font-weight:600}
+.q .qa{font-size:17px;line-height:1.5;color:var(--ink2);border-top:1px dashed var(--line2);padding-top:12px;filter:blur(7px);opacity:.5;transition:filter .4s,opacity .4s;user-select:none}
+.q.open .qa{filter:none;opacity:1;user-select:auto}
+.q .qh{font-size:13px;color:var(--muted);font-family:var(--f-mono)}
+.q.open .qh{visibility:hidden}
+
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink2);font-family:var(--f-mono)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.loading{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--f-mono);font-size:14px;color:var(--muted);pointer-events:none}
+@media (prefers-reduced-motion: reduce){ .slide{transition:none} *{scroll-behavior:auto} }
+</style>
+
+<div id="viewport">
+<div id="deck" role="application" aria-label="Aula: Miocardiopatia hipertrófica">
+
+<!-- 1 · CAPA -->
+<section class="slide active" id="s1" data-name="Capa">
+  <div class="copy">
+    <div class="eyebrow">Aula de cardiologia</div>
+    <h1>Miocardiopatia <span>hipertrófica</span></h1>
+    <p class="lead">Morfologia, histologia, fisiopatologia e obstrução da via de saída do ventrículo esquerdo, com modelos que você gira e manipula ao vivo.</p>
+    <p class="note">Arraste o coração para girar. Use <span class="kbd">←</span> <span class="kbd">→</span> ou <span class="kbd">espaço</span> para avançar e <span class="kbd">F</span> para tela cheia.</p>
+  </div>
+  <div class="bench"><div class="stage3d" id="cover3d"></div><div class="loading" id="coverLoading">carregando modelo 3D…</div></div>
+</section>
+
+<!-- 2 · CLASSIFICAÇÃO -->
+<section class="slide" id="s2" data-name="Classificação">
+  <div class="copy">
+    <div class="eyebrow">Classificação</div>
+    <h2>Cardiomiopatia</h2>
+    <p class="lead">Termo geral para o conjunto de doenças que afetam o <strong>músculo cardíaco, o miocárdio</strong>. A classificação clássica separa três fenótipos pela forma e pela função do ventrículo.</p>
+    <p class="note">Cada desenho é um corte transversal do ventrículo esquerdo (eixo curto), na mesma escala. Clique em um tipo para destacar.</p>
+  </div>
+  <div class="bench"><div class="tri" id="tri"></div></div>
+</section>
+
+<!-- 3 · ANATOMIA 3D -->
+<section class="slide" id="s3" data-name="Anatomia 3D">
+  <div class="copy">
+    <div class="eyebrow">Anatomia externa</div>
+    <h2>O coração em 3D</h2>
+    <div class="chips" role="group" aria-label="Modo das etiquetas">
+      <button class="chip" id="modeLabels" aria-pressed="false">Mostrar nomes</button>
+      <button class="chip" id="modeQuiz" aria-pressed="false">Modo pergunta</button>
+      <button class="chip" id="modePin" aria-pressed="false">+ Marcador</button>
+    </div>
+    <div class="pinform" id="pinForm" hidden>
+      <input id="pinName" placeholder="Nome do marcador" aria-label="Nome do marcador" maxlength="40">
+      <button class="btn primary" id="pinSave">Salvar</button>
+      <button class="btn" id="pinCancel">Cancelar</button>
+    </div>
+    <p class="note" id="anatNote">Clique numa estrutura da lista para o modelo girar até ela. No <b>modo pergunta</b>, os nomes ficam ocultos e aparecem só quando você clica no número.</p>
+    <div class="structs" id="structList"></div>
+    <p class="credit">Modelo 3D: “Realistic Human Heart”, por neshallads (Sketchfab), licença CC BY 4.0.</p>
+  </div>
+  <div class="bench">
+    <div class="stage3d" id="anat3d"></div><div class="hot-layer" id="hotLayer"></div>
+    <div class="loading" id="anatLoading">carregando modelo 3D…</div>
+    <div class="hint">arrastar: girar · rolar: zoom · botão direito: mover<br>duplo clique: vista anterior</div>
+  </div>
+</section>
+
+<!-- 4 · CAMADAS (imagens do professor) -->
+<section class="slide" id="s4" data-name="Por dentro">
+  <div class="copy">
+    <div class="eyebrow">Anatomia interna</div>
+    <h2>Por dentro do coração</h2>
+    <div class="chips" id="layerChips" role="group" aria-label="Camada"></div>
+    <div class="caption" id="layerCap"></div>
+    <p class="note">Role sobre a imagem para aproximar e arraste para mover. Duplo clique volta ao enquadramento inicial.</p>
+  </div>
+  <div class="bench">
+    <div class="imgv" id="imgv"></div>
+    <div class="zoomctl">
+      <button class="iconbtn" id="zin" aria-label="Aproximar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="iconbtn" id="zout" aria-label="Afastar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></button>
+      <button class="iconbtn" id="zreset" aria-label="Enquadrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · HISTOLOGIA -->
+<section class="slide" id="s5" data-name="Histologia">
+  <div class="copy">
+    <div class="eyebrow">Histologia</div>
+    <h2>Hipertrofia celular</h2>
+    <p class="lead">O aumento contínuo do trabalho mecânico, por sobrecarga de pressão, de volume ou sinais tróficos, faz os miócitos <strong>aumentarem de tamanho</strong>. Novos sarcômeros são <strong>adicionados em paralelo</strong>, e a fibra engrossa.</p>
+    <div class="ctrl">
+      <div class="ctrl-row"><label for="hyp">Hipertrofia <output id="hypOut">0%</output></label><input type="range" id="hyp" min="0" max="100" value="0"></div>
+      <label class="toggle"><input type="checkbox" id="disarray"> Desarranjo de fibras (padrão da CMH)</label>
+      <div class="readout">
+        <div><span>Diâmetro do miócito</span><b id="myoD">18<small>µm</small></b></div>
+        <div><span>Miofibrilas no corte</span><b id="myoN">3</b></div>
+      </div>
+    </div>
+    <p class="note">Na miocardiopatia hipertrófica a causa principal é genética (mutações de proteínas do sarcômero, como MYH7 e MYBPC3, de herança autossômica dominante; prevalência de cerca de 1 em 500). O achado típico é o desarranjo dos miócitos com fibrose intersticial.</p>
+  </div>
+  <div class="bench"><svg id="histo" viewBox="0 0 1060 836" style="position:absolute;inset:0;width:100%;height:100%"></svg></div>
+</section>
+
+<!-- 6 · FISIOPATOLOGIA -->
+<section class="slide" id="s6" data-name="Fisiopatologia">
+  <div class="copy">
+    <div class="eyebrow">Fisiopatologia</div>
+    <h2>Disfunção diastólica</h2>
+    <p class="lead" style="font-size:18px">O ventrículo contrai bem, mas <strong>não relaxa nem enche</strong> o suficiente. Siga a cadeia passo a passo.</p>
+    <div class="chain" id="chain">
+      <button class="step" data-i="0"><span class="ar">↑</span><span>Espessura da parede → ↓ área de enchimento</span></button>
+      <button class="step" data-i="1"><span class="ar">↑</span><span>Enrijecimento → ↓ complacência</span></button>
+      <div class="join"></div>
+      <button class="step" data-i="2"><span class="ar">↓</span><span>Enchimento ventricular (volume diastólico final)</span></button>
+      <div class="join"></div>
+      <button class="step" data-i="3"><span class="ar">↓</span><span>Volume sistólico</span></button>
+      <div class="join"></div>
+      <button class="step final" data-i="4"><span class="ar">!</span><span>Insuficiência cardíaca diastólica</span></button>
+    </div>
+    <div class="chips"><button class="chip" id="chainNext">Próximo passo →</button><button class="chip" id="chainReset">Recomeçar</button></div>
+  </div>
+  <div class="bench" style="display:flex;flex-direction:column;justify-content:center;padding:40px 64px 32px 56px;gap:20px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px">
+      <div><div class="eyebrow" style="margin-bottom:8px">Relação pressão–volume diastólica</div>
+      <p class="note" style="max-width:56ch">Com a mesma pressão de enchimento, o ventrículo rígido aceita menos sangue. Arraste a rigidez e veja o volume diastólico final cair.</p></div>
+      <div class="legend"><span><i style="background:var(--ink2)"></i>Normal</span><span><i style="background:var(--accent)"></i>CMH</span></div>
+    </div>
+    <svg class="svgchart" id="pv" viewBox="0 0 900 470" style="width:100%;height:auto"></svg>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:end">
+      <div class="ctrl">
+        <div class="ctrl-row"><label for="stiff">Rigidez do ventrículo <output id="stiffOut">70%</output></label><input type="range" id="stiff" min="0" max="100" value="70"></div>
+        <div class="ctrl-row"><label for="fillP">Pressão de enchimento <output id="fillPOut">12 mmHg</output></label><input type="range" id="fillP" min="6" max="25" value="12"></div>
+      </div>
+      <div class="readout">
+        <div><span>VDF normal → CMH</span><b id="edvOut">126 → 79<small>mL</small></b></div>
+        <div><span>Vol. sistólico</span><b id="svOut">76 → 49<small>mL</small></b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · CRESCIMENTO ASSIMÉTRICO (3D procedural) -->
+<section class="slide" id="s7" data-name="Crescimento assimétrico">
+  <div class="copy">
+    <div class="eyebrow">Morfologia</div>
+    <h2>Crescimento assimétrico</h2>
+    <p class="lead">Na forma clássica, o <strong>septo interventricular</strong> engrossa muito mais do que a <strong>parede livre</strong> do ventrículo esquerdo.</p>
+    <div class="chips" id="asymPresets">
+      <button class="chip" data-s="9" data-f="9">Normal</button>
+      <button class="chip" data-s="15" data-f="14">Concêntrica (HAS)</button>
+      <button class="chip" data-s="26" data-f="11" aria-pressed="true">CMH assimétrica</button>
+    </div>
+    <div class="ctrl">
+      <div class="ctrl-row"><label for="tSept">Septo interventricular <output id="tSeptOut">26 mm</output></label><input type="range" id="tSept" min="7" max="32" value="26"></div>
+      <div class="ctrl-row"><label for="tFree">Parede livre (posterior) <output id="tFreeOut">11 mm</output></label><input type="range" id="tFree" min="7" max="20" value="11"></div>
+      <label class="toggle"><input type="checkbox" id="beat"> Animar ciclo cardíaco</label>
+      <div class="readout">
+        <div><span>Razão septo / parede</span><b id="ratioOut">2,4</b></div>
+        <div><span>Leitura</span><b id="asymVerdict" style="font-size:16px;line-height:1.35;font-family:var(--f-body)">CMH</b></div>
+      </div>
+    </div>
+    <p class="note">Critérios ecocardiográficos: septo ≥ 15 mm sem outra causa (≥ 13 mm com história familiar). Razão septo/parede posterior ≥ 1,3 sugere hipertrofia assimétrica.</p>
+  </div>
+  <div class="bench">
+    <div class="stage3d" id="asym3d"></div><div class="hot-layer" id="asymLabels"></div>
+    <div class="hint">corte longitudinal · VE e VD<br>arraste para girar · rolar: zoom</div>
+  </div>
+</section>
+
+<!-- 8 · OBSTRUÇÃO (simulação 2D) -->
+<section class="slide" id="s8" data-name="Obstrução da via de saída">
+  <div class="copy" style="gap:16px;padding-top:48px">
+    <div class="eyebrow">Hemodinâmica</div>
+    <h2 style="font-size:50px">Obstrução da via de saída</h2>
+    <p class="lead" style="font-size:18px">O septo espesso estreita a via de saída do VE. Na sístole, o fluxo acelera e a queda de pressão (<strong>efeito Venturi</strong>) puxa o folheto anterior da mitral contra o septo (<strong>SAM</strong>).</p>
+    <div class="ctrl">
+      <div class="ctrl-row"><label for="oSept">Septo basal <output id="oSeptOut">25 mm</output></label><input type="range" id="oSept" min="9" max="30" value="25"></div>
+      <div class="ctrl-row"><label for="oSpeed">Velocidade da animação <output id="oSpeedOut">0,35×</output></label><input type="range" id="oSpeed" min="10" max="100" value="35"></div>
+      <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">
+        <label class="toggle"><input type="checkbox" id="valsalva"> Manobra de Valsalva</label>
+        <button class="chip" id="oPlay" aria-pressed="false">Pausar</button>
+      </div>
+      <div class="readout">
+        <div><span>VSVE mínima</span><b id="oGap">—<small>mm</small></b></div>
+        <div><span>Velocidade pico</span><b id="oVel">—<small>m/s</small></b></div>
+        <div><span>Gradiente (4v²)</span><b id="oGrad">—<small>mmHg</small></b></div>
+        <div><span>Fase</span><b id="oPhase" style="font-size:16px;font-family:var(--f-body)">—</b></div>
+      </div>
+      <div id="oStatus" class="status ok">Não obstrutiva</div>
+    </div>
+    <p class="note" style="font-size:14px">Gradiente ≥ 30 mmHg, em repouso ou provocado, define a forma obstrutiva; ≥ 50 mmHg é hemodinamicamente significativo.</p>
+  </div>
+  <div class="bench">
+    <canvas id="flow" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
+    <div class="legend" style="position:absolute;right:28px;bottom:20px;flex-direction:column;gap:6px;align-items:flex-end">
+      <span>Doppler colorido (transdutor no ápice)</span>
+      <span><i style="background:var(--dop-to)"></i>em direção ao ápice <i style="background:var(--dop-away);margin-left:12px"></i>afastando-se <i style="background:linear-gradient(90deg,var(--dop-alias1),var(--dop-alias2));margin-left:12px"></i>aliasing (&gt; 1,6 m/s)</span>
+    </div>
+  </div>
+</section>
+
+<!-- 9 · REVISÃO -->
+<section class="slide full" id="s9" data-name="Revisão">
+  <div style="display:grid;grid-template-columns:540px 1fr;height:100%">
+    <div class="copy">
+      <div class="eyebrow">Revisão</div>
+      <h2>Pergunte à turma</h2>
+      <p class="lead">Leia a pergunta, espere as respostas e clique no cartão para revelar.</p>
+      <p class="credit" style="margin-top:auto">Modelo 3D “Realistic Human Heart”, por neshallads (Sketchfab), CC BY 4.0. Ilustrações 3D da camada interna: material do professor. Simulações e esquemas: construídos para esta aula, com valores didáticos.</p>
+    </div>
+    <div class="bench"><div class="quiz" id="quiz"></div></div>
+  </div>
+</section>
+
+<nav id="nav" aria-label="Navegação dos slides">
+  <span class="title">Miocardiopatia hipertrófica</span>
+  <button class="iconbtn" id="prev" aria-label="Slide anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button>
+  <div id="ticks"></div>
+  <button class="iconbtn" id="next" aria-label="Próximo slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
+  <span id="counter">01 / 09</span>
+  <button class="iconbtn" id="themeBtn" aria-label="Alternar tema claro/escuro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></button>
+  <button class="iconbtn" id="fsBtn" aria-label="Tela cheia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+</nav>
+</div>
+</div>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}
+</script>
+
+<!-- ============ CORE: deck, nav, theme ============ -->
+<script>
+(function(){
+const deck=document.getElementById('deck');
+const slides=[...document.querySelectorAll('.slide')];
+const ticks=document.getElementById('ticks');
+window.DECK={index:0,scale:1,listeners:[],onChange(f){this.listeners.push(f)}};
+slides.forEach((s,i)=>{const b=document.createElement('button');b.title=(i+1)+'. '+s.dataset.name;b.setAttribute('aria-label',b.title);b.onclick=()=>go(i);ticks.appendChild(b)});
+function fit(){const vp=document.getElementById('viewport');const s=Math.min(vp.clientWidth/1600,vp.clientHeight/900);DECK.scale=s;deck.style.transform=`translate(-50%,-50%) scale(${s})`;DECK.listeners.forEach(f=>f('scale'))}
+window.addEventListener('resize',fit);fit();
+function go(i){i=Math.max(0,Math.min(slides.length-1,i));DECK.index=i;
+  slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+  [...ticks.children].forEach((b,k)=>{b.classList.toggle('on',k===i);b.classList.toggle('done',k<i)});
+  document.getElementById('counter').textContent=String(i+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  try{history.replaceState(null,'','#s'+(i+1))}catch(e){}
+  DECK.listeners.forEach(f=>f('slide'));}
+DECK.go=go;
+document.getElementById('prev').onclick=()=>go(DECK.index-1);
+document.getElementById('next').onclick=()=>go(DECK.index+1);
+document.addEventListener('keydown',e=>{
+  const t=e.target, tag=(t.tagName||'').toLowerCase();
+  if(tag==='input'&&(t.type==='text'||t.type==='range'&&/Arrow/.test(e.key)))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'||(e.key===' '&&tag!=='button')){e.preventDefault();go(DECK.index+1)}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(DECK.index-1)}
+  else if(e.key==='Home')go(0); else if(e.key==='End')go(slides.length-1);
+  else if(e.key==='f'||e.key==='F'){toggleFS()}
+});
+function toggleFS(){try{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}}
+document.getElementById('fsBtn').onclick=toggleFS;
+document.getElementById('themeBtn').onclick=()=>{const r=document.documentElement;const cur=r.dataset.theme||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');r.dataset.theme=cur==='dark'?'light':'dark';DECK.listeners.forEach(f=>f('theme'))};
+const m=/^#s(\d+)$/.exec(location.hash);go(m?(+m[1]-1):0);
+window.addEventListener('hashchange',()=>{const m=/^#s(\d+)$/.exec(location.hash);if(m&&(+m[1]-1)!==DECK.index)go(+m[1]-1)});
+window.cssVar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+// range fill
+document.querySelectorAll('input[type=range]').forEach(r=>{const f=()=>r.style.setProperty('--p',((r.value-r.min)/(r.max-r.min)*100)+'%');r.addEventListener('input',f);f();});
+})();
+</script>
+
+<!-- ============ SLIDE 2: classification ============ -->
+<script>
+(function(){
+const data=[
+ {k:'dil',name:'Dilatada',tag:'',p:'Câmaras dilatadas e paredes finas. O ventrículo perde força de contração.',dl:[['Cavidade','aumentada'],['Parede','fina'],['Disfunção','sistólica']],outer:118,inner:100,off:0},
+ {k:'res',name:'Restritiva',tag:'',p:'Paredes rígidas por infiltração ou fibrose, com tamanho quase normal. O enchimento fica restrito.',dl:[['Cavidade','normal'],['Parede','normal ou pouco ↑'],['Disfunção','diastólica']],outer:92,inner:62,off:0,dots:true},
+ {k:'hip',name:'Hipertrófica',tag:'Tema desta aula',p:'Paredes espessas, em geral de forma assimétrica, com cavidade pequena e contração preservada.',dl:[['Cavidade','reduzida'],['Parede','muito espessa'],['Disfunção','diastólica ± obstrução']],outer:100,inner:34,off:-18}
+];
+const tri=document.getElementById('tri');
+data.forEach(d=>{
+  const b=document.createElement('button');b.className='card'+(d.k==='hip'?' focus':'');
+  const cx=130,cy=130;
+  let dots='';if(d.dots){let s=7;for(let i=0;i<70;i++){s=(s*9301+49297)%233280;const a=s/233280*6.283;s=(s*9301+49297)%233280;const r=d.inner+4+(s/233280)*(d.outer-d.inner-8);dots+=`<circle cx="${(cx+Math.cos(a)*r).toFixed(1)}" cy="${(cy+Math.sin(a)*r).toFixed(1)}" r="2.2" fill="var(--bone)" opacity=".55"/>`}}
+  b.innerHTML=`<div class="tag">${d.tag}</div>
+  <svg viewBox="0 0 260 260" aria-hidden="true">
+   <circle cx="${cx}" cy="${cy}" r="124" fill="none" stroke="var(--line)" stroke-dasharray="2 5"/>
+   <circle cx="${cx}" cy="${cy}" r="${d.outer}" fill="var(--myo)"/>
+   ${dots}
+   <circle cx="${cx-d.off}" cy="${cy}" r="${d.inner}" fill="var(--blood)" stroke="var(--myo-cut)" stroke-width="2"/>
+   ${d.k==='hip'?`<text x="${cx-d.outer+8}" y="${cy+4}" font-family="IBM Plex Mono,monospace" font-size="11" fill="var(--valve)">septo</text>`:''}
+  </svg>
+  <h3>${d.name}</h3><p>${d.p}</p>
+  <dl>${d.dl.map(([a,c])=>`<dt>${a}</dt><dd>${c}</dd>`).join('')}</dl>`;
+  b.onclick=()=>{tri.querySelectorAll('.card').forEach(c=>c.classList.remove('focus'));b.classList.add('focus')};
+  tri.appendChild(b);
+});
+})();
+</script>
+
+<!-- ============ SLIDE 4: image layers ============ -->
+<script>
+(function(){
+const layers=[
+ {k:'externa',n:'Face anterior',c:'Vista anterior: aorta ascendente e arco, tronco pulmonar, aurículas direita e esquerda, ventrículos direito e esquerdo.'},
+ {k:'coronarias',n:'Coronárias',c:'Irrigação do miocárdio: artérias coronárias (vermelho) e veias cardíacas (azul). Note o ramo interventricular anterior descendo no sulco.'},
+ {k:'corte',n:'Corte frontal',c:'Câmaras abertas: valvas atrioventriculares com cordas tendíneas e músculos papilares, septo interventricular e paredes ventriculares.'},
+ {k:'conducao',n:'Sistema de condução',c:'Nó sinoatrial, nó atrioventricular, feixe de His e ramos direito e esquerdo, terminando na rede de Purkinje.'}
+];
+const v=document.getElementById('imgv'),chips=document.getElementById('layerChips'),cap=document.getElementById('layerCap');
+let z=1,px=0,py=0;const imgs={};
+layers.forEach((l,i)=>{const im=new Image();im.src='/Aula/Cardiologia/Miocardiopatia-Hipertrofica/img/'+l.k+'.jpg';im.alt=l.n;im.className=i?'off':'';im.draggable=false;v.appendChild(im);imgs[l.k]=im;
+  const b=document.createElement('button');b.className='chip';b.textContent=l.n;b.setAttribute('aria-pressed',i?'false':'true');b.onclick=()=>show(i);chips.appendChild(b)});
+function apply(){Object.values(imgs).forEach(im=>im.style.transform=`translate(calc(-50% + ${px}px), calc(-50% + ${py}px)) scale(${z})`)}
+function show(i){layers.forEach((l,k)=>{imgs[l.k].classList.toggle('off',k!==i);chips.children[k].setAttribute('aria-pressed',k===i)});cap.innerHTML=`<b>${layers[i].n}</b>${layers[i].c}`}
+function zoom(f){z=Math.max(1,Math.min(5,z*f));if(z===1){px=0;py=0}apply()}
+v.addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY<0?1.15:1/1.15)},{passive:false});
+let drag=null;v.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,px,py};v.setPointerCapture(e.pointerId)});
+v.addEventListener('pointermove',e=>{if(!drag)return;const s=DECK.scale||1;px=drag.px+(e.clientX-drag.x)/s;py=drag.py+(e.clientY-drag.y)/s;apply()});
+v.addEventListener('pointerup',()=>drag=null);
+v.addEventListener('dblclick',()=>{z=1;px=0;py=0;apply()});
+document.getElementById('zin').onclick=()=>zoom(1.3);document.getElementById('zout').onclick=()=>zoom(1/1.3);document.getElementById('zreset').onclick=()=>{z=1;px=0;py=0;apply()};
+show(0);apply();
+})();
+</script>
+
+<!-- ============ SLIDE 5: histology ============ -->
+<script>
+(function(){
+const svg=document.getElementById('histo'),hyp=document.getElementById('hyp'),dis=document.getElementById('disarray');
+const NS='http://www.w3.org/2000/svg';
+function rnd(seed){let s=seed;return()=>{s=(s*16807)%2147483647;return(s-1)/2147483646}}
+function draw(){
+  const h=hyp.value/100, d=dis.checked?1:0;
+  document.getElementById('hypOut').textContent=Math.round(h*100)+'%';
+  const diam=Math.round(18+22*h), nFib=3+Math.round(4*h);
+  document.getElementById('myoD').innerHTML=diam+'<small>µm</small>';document.getElementById('myoN').textContent=nFib;
+  const W=1060,H=836, cellH=70+70*h, cellW=330, gap=20;
+  const rows=Math.floor((H-80)/(cellH+gap))+1;
+  const R=rnd(42);let out=`<defs><clipPath id="hc"><rect x="0" y="0" width="${W}" height="${H}"/></clipPath>
+   <pattern id="fib" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><path d="M0 7h14" stroke="var(--line2)" stroke-width="3"/></pattern></defs><g clip-path="url(#hc)">`;
+  const y0=(H-(rows*(cellH+gap)-gap))/2;
+  // fibrosis
+  if(d){for(let i=0;i<9;i++){const fx=R()*W,fy=R()*H;out+=`<ellipse cx="${fx}" cy="${fy}" rx="${60+R()*80}" ry="${20+R()*30}" fill="url(#fib)" opacity=".8" transform="rotate(${R()*180} ${fx} ${fy})"/>`}}
+  for(let r=0;r<rows;r++){
+    const y=y0+r*(cellH+gap), shift=(r%2)*cellW*.5-60;
+    for(let c=-1;c<4;c++){
+      const x=c*(cellW+16)+shift+40;
+      const rot=d?(R()-.5)*80:0, jx=d?(R()-.5)*50:0, jy=d?(R()-.5)*40:0;
+      const cx=x+cellW/2+jx, cy=y+cellH/2+jy;
+      let g=`<g transform="rotate(${rot.toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)}) translate(${jx.toFixed(1)} ${jy.toFixed(1)})">`;
+      g+=`<rect x="${x}" y="${y}" width="${cellW}" height="${cellH}" rx="${cellH*.35}" fill="var(--myo)" stroke="var(--myo-cut)" stroke-width="2"/>`;
+      // myofibrils (parallel strips)
+      const pad=10, fh=(cellH-pad*2)/nFib;
+      for(let k=0;k<nFib;k++){const fy=y+pad+k*fh;
+        g+=`<rect x="${x+cellH*.3}" y="${(fy+1.5).toFixed(1)}" width="${cellW-cellH*.6}" height="${(fh-3).toFixed(1)}" rx="2" fill="var(--blood-hi)" opacity=".55"/>`;
+        for(let zx=x+cellH*.3+6;zx<x+cellW-cellH*.3-4;zx+=20){g+=`<rect x="${zx+5}" y="${(fy+2).toFixed(1)}" width="8" height="${(fh-4).toFixed(1)}" fill="var(--myo-cut)" opacity=".55"/><line x1="${zx}" y1="${(fy+1).toFixed(1)}" x2="${zx}" y2="${(fy+fh-1).toFixed(1)}" stroke="var(--valve)" stroke-width="1.2" opacity=".6"/>`}
+      }
+      // nucleus
+      const nx=x+cellW/2, ny=y+cellH/2, nr=12+10*h;
+      if(d){let p='';const n=9;for(let i=0;i<n;i++){const a=i/n*6.283, rr=nr*(.55+R()*.9);p+=(i?'L':'M')+(nx+Math.cos(a)*rr*1.7).toFixed(1)+' '+(ny+Math.sin(a)*rr*.8).toFixed(1)}g+=`<path d="${p}Z" fill="#5a2f8c" stroke="#c3a6ff" stroke-width="1.5"/>`}
+      else g+=`<ellipse cx="${nx}" cy="${ny}" rx="${nr*1.6}" ry="${nr*.6}" fill="#5a2f8c" stroke="#c3a6ff" stroke-width="1.5"/>`;
+      g+='</g>';out+=g;
+    }
+  }
+  out+='</g>';
+  // annotations
+  const A=(x,y,t,tx,ty)=>`<line x1="${x}" y1="${y}" x2="${tx}" y2="${ty}" stroke="var(--ink)" stroke-width="1.5"/><circle cx="${x}" cy="${y}" r="4" fill="var(--ink)"/><rect x="${tx-6}" y="${ty-22}" width="${t.length*10.2+16}" height="32" rx="4" fill="var(--bg)" stroke="var(--line2)"/><text x="${tx+2}" y="${ty}" font-family="Public Sans,sans-serif" font-size="17" fill="var(--ink)">${t}</text>`;
+  if(h>.35&&!d) out+=A(560,y0+cellH*.25,'Sarcômeros adicionados em paralelo',620,60);
+  if(d){out+=A(300,300,'Fibras desorganizadas',40,60);out+=A(700,520,'Núcleos sem forma definida',640,800);out+=A(520,170,'Fibrose intersticial',720,140)}
+  svg.innerHTML=out;
+}
+hyp.addEventListener('input',draw);dis.addEventListener('change',()=>{if(dis.checked&&hyp.value<60){hyp.value=75;hyp.dispatchEvent(new Event('input'))}draw()});
+draw();
+})();
+</script>
+
+<!-- ============ SLIDE 6: chain + EDPVR ============ -->
+<script>
+(function(){
+const steps=[...document.querySelectorAll('#chain .step')];let cur=-1;
+function set(i){cur=i;steps.forEach((s,k)=>{s.classList.toggle('on',k<=i);s.classList.toggle('cur',k===i)})}
+steps.forEach((s,k)=>s.onclick=()=>set(k));
+document.getElementById('chainNext').onclick=()=>set(Math.min(steps.length-1,cur+1));
+document.getElementById('chainReset').onclick=()=>set(-1);
+set(0);
+const svg=document.getElementById('pv'),stiff=document.getElementById('stiff'),fp=document.getElementById('fillP');
+const W=900,H=470,L=64,R=24,T=16,B=52;const X=v=>L+(v/180)*(W-L-R),Y=p=>H-B-(p/40)*(H-T-B);
+const norm={a:1.2,b:.028,v0:40},esvN=50,esvH=30;
+function hcm(){const s=stiff.value/100;return{a:1.2,b:.028+.042*s,v0:40-6*s}}
+const P=(c,v)=>c.a*(Math.exp(c.b*(v-c.v0))-1);const Vat=(c,p)=>c.v0+Math.log(p/c.a+1)/c.b;
+function path(c){let d='';for(let v=c.v0;v<=180;v+=1){const p=P(c,v);if(p>40){d+=`L${X(Vat(c,40)).toFixed(1)} ${Y(40).toFixed(1)}`;break}d+=(d?'L':'M')+X(v).toFixed(1)+' '+Y(p).toFixed(1)}return d}
+function draw(){
+  const c=hcm(),p=+fp.value;document.getElementById('stiffOut').textContent=stiff.value+'%';document.getElementById('fillPOut').textContent=p+' mmHg';
+  const vn=Vat(norm,p),vh=Vat(c,p);
+  document.getElementById('edvOut').innerHTML=`${Math.round(vn)} → ${Math.round(vh)}<small>mL</small>`;
+  document.getElementById('svOut').innerHTML=`${Math.round(vn-esvN)} → ${Math.max(0,Math.round(vh-esvH))}<small>mL</small>`;
+  let s='';
+  for(let v=0;v<=180;v+=30){s+=`<line class="grid" x1="${X(v)}" x2="${X(v)}" y1="${T}" y2="${H-B}"/><text x="${X(v)}" y="${H-B+22}" text-anchor="middle">${v}</text>`}
+  for(let q=0;q<=40;q+=10){s+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${Y(q)}" y2="${Y(q)}"/><text x="${L-10}" y="${Y(q)+4}" text-anchor="end">${q}</text>`}
+  s+=`<line class="ax" x1="${L}" x2="${W-R}" y1="${H-B}" y2="${H-B}"/><line class="ax" x1="${L}" x2="${L}" y1="${T}" y2="${H-B}"/>`;
+  s+=`<text class="lab" x="${(L+W-R)/2}" y="${H-8}" text-anchor="middle">Volume do VE (mL)</text><text class="lab" transform="translate(16 ${(T+H-B)/2}) rotate(-90)" text-anchor="middle">Pressão (mmHg)</text>`;
+  s+=`<line x1="${L}" x2="${W-R}" y1="${Y(p)}" y2="${Y(p)}" stroke="var(--gold)" stroke-dasharray="6 6" stroke-width="1.5"/><text x="${L+10}" y="${Y(p)+22}" style="fill:var(--gold)">pressão de enchimento ${p} mmHg</text>`;
+  s+=`<path d="${path(norm)}" fill="none" stroke="var(--ink2)" stroke-width="2.5" stroke-linecap="round"/>`;
+  s+=`<path d="${path(c)}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>`;
+  // drops
+  [[vn,'var(--ink2)','normal'],[vh,'var(--accent)','CMH']].forEach(([v,col,n],i)=>{if(v>180)return;
+    s+=`<line x1="${X(v)}" x2="${X(v)}" y1="${Y(p)}" y2="${H-B}" stroke="${col}" stroke-width="1.5" stroke-dasharray="3 4"/><circle cx="${X(v)}" cy="${Y(p)}" r="7" fill="${col}" stroke="var(--bg)" stroke-width="2"/>
+    <text x="${X(v)+(i?-10:10)}" y="${Y(p)+(i?-14:28)}" text-anchor="${i?'end':'start'}" style="fill:var(--ink);font-size:14px">VDF ${n} ${Math.round(v)} mL</text>`});
+  // direct labels on curves
+  const lvN=165,lvH=Math.min(Vat(c,34),170);
+  s+=`<text x="${X(lvN)}" y="${Y(P(norm,lvN))-12}" text-anchor="end" style="fill:var(--ink2);font-size:14px">Normal</text>`;
+  s+=`<text x="${X(lvH)-12}" y="${Y(34)}" text-anchor="end" style="fill:var(--accent-ink);font-size:14px">CMH (rígido)</text>`;
+  svg.innerHTML=s;
+}
+stiff.addEventListener('input',draw);fp.addEventListener('input',draw);DECK.onChange(k=>{if(k==='theme')draw()});draw();
+})();
+</script>
+
+<!-- ============ SLIDE 9: quiz ============ -->
+<script>
+(function(){
+const qs=[
+ ['Qual disfunção predomina na miocardiopatia hipertrófica?','Diastólica. A parede espessa e rígida perde complacência, o ventrículo enche mal e a fração de ejeção costuma estar preservada.'],
+ ['Que estrutura se move em direção ao septo na sístole e causa obstrução?','O folheto anterior da valva mitral, no movimento anterior sistólico (SAM), puxado pelo fluxo acelerado na via de saída (efeito Venturi).'],
+ ['Por que a manobra de Valsalva aumenta o sopro e o gradiente?','Ela reduz o retorno venoso (pré-carga). O VE fica menor, o septo e a mitral se aproximam e a obstrução piora.'],
+ ['Qual é o achado histológico típico da CMH?','Desarranjo dos miócitos (fibras desorganizadas, núcleos bizarros) com fibrose intersticial.']
+];
+const q=document.getElementById('quiz');
+qs.forEach(([t,a],i)=>{const b=document.createElement('button');b.className='q';b.innerHTML=`<span class="qn">PERGUNTA ${i+1}</span><span class="qt">${t}</span><span class="qa">${a}</span><span class="qh">clique para revelar a resposta</span>`;b.onclick=()=>b.classList.toggle('open');q.appendChild(b)});
+})();
+</script>
+
+<!-- ============ SLIDE 8: LVOT obstruction simulation ============ -->
+<script>
+(function(){
+const cv=document.getElementById('flow'),ctx=cv.getContext('2d');
+const sept=document.getElementById('oSept'),spd=document.getElementById('oSpeed'),vals=document.getElementById('valsalva'),play=document.getElementById('oPlay');
+const VW=1060,VH=836; // logical drawing space
+const OX=40,OY=40; // offset of anatomy inside space
+const MM=3; // px per mm
+let running=true,phase=0.3,last=performance.now();
+const ss=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t)};
+const lerp=(a,b,t)=>a+(b-a)*t;const L2=(p,q,t)=>[lerp(p[0],q[0],t),lerp(p[1],q[1],t)];
+function cr(pts,t){ // catmull-rom over points, t in [0,1]
+  const n=pts.length-1,f=t*n,i=Math.min(n-1,Math.floor(f)),u=f-i;
+  const p0=pts[Math.max(0,i-1)],p1=pts[i],p2=pts[i+1],p3=pts[Math.min(n,i+2)];
+  const u2=u*u,u3=u2*u;return[0,1].map(k=>.5*((2*p1[k])+(-p0[k]+p2[k])*u+(2*p0[k]-5*p1[k]+4*p2[k]-p3[k])*u2+(-p0[k]+3*p1[k]-3*p2[k]+p3[k])*u3))}
+const SI=[[330,250],[318,340],[330,450],[375,560],[450,640]]; // septum inner (normal)
+const FI=[[640,312],[658,420],[628,530],[552,610],[450,640]]; // free wall inner (normal)
+const A1=[330,250],A2=[400,240],M2=[652,302];
+function normalAt(pts,t,side){const a=cr(pts,Math.max(0,t-.01)),b=cr(pts,Math.min(1,t+.01));let dx=b[0]-a[0],dy=b[1]-a[1];const l=Math.hypot(dx,dy)||1;return side*1?[-dy/l*side,dx/l*side]:[0,0]}
+// septum: outward normal points left. for SI direction downwards, normal (-dy,dx) -> ... compute & fix sign by test
+function contour(pts,thickFn,inwardSign,sys,samp=40){ // returns {outer:[], inner:[]}
+  const outer=[],inner=[];
+  for(let i=0;i<=samp;i++){const t=i/samp,p=cr(pts,t);let n=normalAt(pts,t,1);
+    // make n point into cavity (toward x≈490)
+    if((490-p[0])*n[0]+(430-p[1])*n[1]<0)n=[-n[0],-n[1]];
+    const base=10*MM; // normal wall thickness
+    const o=[p[0]-n[0]*base,p[1]-n[1]*base];
+    const th=thickFn(t)+sys*(22*(1-.4*t))*ss(0,.08,t)*(1-ss(.9,1,t));
+    inner.push([o[0]+n[0]*th,o[1]+n[1]*th]);outer.push(o);}
+  return{outer,inner};
+}
+function state(ts,p,valsOn,forPeak){
+  const tsE=ts+(valsOn?3:0);
+  const mitralOpen=ss(.08,.16,p)*(1-ss(.5,.56,p));
+  const aorticOpen=ss(.6,.65,p)*(1-ss(.92,.97,p));
+  const sys=ss(.55,.75,p)*(1-ss(.88,1,p))+(valsOn?.25:0);
+  const s0=Math.max(0,Math.min(1,(tsE-15)/11))*(valsOn?1.25:1);
+  const samA=forPeak?Math.min(1,s0):Math.min(1,s0*ss(.66,.76,p)*(1-ss(.86,.94,p)));
+  const sThick=t=>(10+(ts-10)*(.3+.7*Math.exp(-(((t-.3)/.2)**2)))*(1-.5*ss(.75,1,t))*ss(0,.12,t))*MM;
+  const fThick=t=>(10+(ts>18?1.5:0))*MM;
+  const S=contour(SI,sThick,1,sys),F=contour(FI,fThick,1,sys*.9);
+  // septal bulge point (most protruding near LVOT)
+  let SB=S.inner[8];for(let i=3;i<16;i++){if(S.inner[i][0]>SB[0])SB=S.inner[i]}
+  // mitral leaflets
+  const amlOpen=[425,352],amlClosed=[528,306],pmlOpen=[618,368],pmlClosed=[536,311];
+  let aml=L2(amlClosed,amlOpen,mitralOpen);const pml=L2(pmlClosed,pmlOpen,mitralOpen);
+  const dir=[amlClosed[0]-SB[0],amlClosed[1]-SB[1]],dl=Math.hypot(...dir);const target=[SB[0]+dir[0]/dl*7,SB[1]+dir[1]/dl*7];
+  // SAM: belly of AML moves toward septum; tip drawn toward target
+  aml=L2(aml,target,samA*.92);
+  const ctrl=L2(L2(A2,aml,.5),[SB[0]+30,SB[1]+10],samA*.6);
+  // aortic cusps
+  const c1=L2([363,262],[336,168],aorticOpen),c2=L2([367,257],[404,164],aorticOpen);
+  // LVOT gap: min distance septum inner (t .05-.45) to AML curve
+  const amlPts=[];for(let i=0;i<=20;i++){const u=i/20;amlPts.push([(1-u)*(1-u)*A2[0]+2*u*(1-u)*ctrl[0]+u*u*aml[0],(1-u)*(1-u)*A2[1]+2*u*(1-u)*ctrl[1]+u*u*aml[1]])}
+  let gap=1e9,gp=null;for(let i=4;i<19;i++){for(const q of amlPts.slice(5)){const d=Math.hypot(S.inner[i][0]-q[0],S.inner[i][1]-q[1]);if(d<gap){gap=d;gp=[S.inner[i],q]}}}
+  return{S,F,SB,aml,pml,ctrl,c1,c2,mitralOpen,aorticOpen,sys,samA,gap,gp,amlPts};
+}
+const ref=state(10,.8,false,true);const gapRef=ref.gap;
+function metrics(ts,v){const st=state(ts,.8,v,true);const g=Math.max(6,st.gap);const vel=Math.min(5.5,1.0*Math.pow(gapRef/g,1.25));return{gapMM:20*st.gap/gapRef,vel,grad:4*vel*vel}}
+// particles
+const N=520;const parts=[];for(let i=0;i<N;i++)parts.push({path:i%2,d:Math.random()*900,o:(Math.random()*2-1)*Math.random()**.3,al:Math.random()<.5,prev:null});
+function buildPath(pts,hw){const c=[0];for(let i=1;i<pts.length;i++)c.push(c[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));return{pts,hw,c,len:c[c.length-1]}}
+function at(P,d){let i=1;while(i<P.c.length-1&&P.c[i]<d)i++;const t=(d-P.c[i-1])/((P.c[i]-P.c[i-1])||1);const a=P.pts[i-1],b=P.pts[i];const dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy)||1;return{p:[lerp(a[0],b[0],t),lerp(a[1],b[1],t)],n:[-dy/l,dx/l],h:lerp(P.hw[i-1],P.hw[i],t)}}
+function size(){const r=cv.parentElement;const w=r.clientWidth,h=r.clientHeight;const dpr=Math.min(2,(window.devicePixelRatio||1)*(DECK.scale||1)*1.2);cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);cv._k=Math.min(w/VW,h/VH)*dpr;cv._ox=(w*dpr-VW*cv._k)/2;cv._oy=(h*dpr-VH*cv._k)/2}
+DECK.onChange(k=>{if(k==='scale')size()});new ResizeObserver(size).observe(cv.parentElement);
+function poly(pts){ctx.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1])}
+function phaseName(p){if(p<.08)return'Relaxamento isovolumétrico';if(p<.55)return'Diástole · enchimento';if(p<.62)return'Contração isovolumétrica';if(p<.95)return'Sístole · ejeção';return'Fim da sístole'}
+let colors={};function readColors(){['--myo','--myo-cut','--blood','--blood-hi','--valve','--ink','--ink2','--muted','--bg','--dop-to','--dop-away','--dop-alias1','--dop-alias2','--gold','--line2','--accent-ink'].forEach(k=>colors[k]=cssVar(k))}
+readColors();DECK.onChange(k=>{if(k==='theme')readColors()});try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',readColors)}catch(e){}
+function updReadouts(){const ts=+sept.value;document.getElementById('oSeptOut').textContent=ts+' mm';document.getElementById('oSpeedOut').textContent=(spd.value/100).toFixed(2).replace('.',',')+'×';
+  const m=metrics(ts,vals.checked);document.getElementById('oGap').innerHTML=m.gapMM.toFixed(1).replace('.',',')+'<small>mm</small>';document.getElementById('oVel').innerHTML=m.vel.toFixed(1).replace('.',',')+'<small>m/s</small>';document.getElementById('oGrad').innerHTML=Math.round(m.grad)+'<small>mmHg</small>';
+  const st=document.getElementById('oStatus');st.className='status '+(m.grad>=50?'crit':m.grad>=30?'warn':'ok');st.textContent=m.grad>=50?'Obstrução significativa (≥ 50 mmHg)':m.grad>=30?'Forma obstrutiva (≥ 30 mmHg)':'Não obstrutiva (< 30 mmHg)';return m}
+let M=updReadouts();[sept,spd].forEach(e=>e.addEventListener('input',()=>{M=updReadouts()}));vals.addEventListener('change',()=>{M=updReadouts()});
+play.onclick=()=>{running=!running;play.textContent=running?'Pausar':'Continuar';play.setAttribute('aria-pressed',!running)};
+function dop(vm,toward,alias){if(vm>1.6)return alias?colors['--dop-alias1']:colors['--dop-alias2'];return toward?colors['--dop-to']:colors['--dop-away']}
+function frame(now){
+  const dt=Math.min(.05,(now-last)/1000);last=now;
+  if(DECK.index!==7){return}
+  const sp=spd.value/100; if(running)phase=(phase+dt*sp/0.9)%1;
+  const ts=+sept.value,st=state(ts,phase,vals.checked,false);
+  document.getElementById('oPhase').textContent=phaseName(phase);
+  const k=cv._k||1;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);ctx.setTransform(k,0,0,k,cv._ox+OX*k,cv._oy+OY*k);
+  const light=document.documentElement.dataset.theme==='light'||(!document.documentElement.dataset.theme&&matchMedia('(prefers-color-scheme: light)').matches);
+  // cavities path
+  const cav=new Path2D();
+  // LV cavity
+  const lv=[A1,...st.S.inner.slice(1),...st.F.inner.slice().reverse(),M2,A2];
+  cav.moveTo(lv[0][0],lv[0][1]);lv.slice(1).forEach(p=>cav.lineTo(p[0],p[1]));cav.closePath();
+  const ao=[A1,[322,150],[330,-40],[405,-40],[410,140],A2];cav.moveTo(ao[0][0],ao[0][1]);ao.slice(1).forEach(p=>cav.lineTo(p[0],p[1]));cav.closePath();
+  const la=[A2,[420,150],[500,92],[655,92],[728,150],[730,250],M2];cav.moveTo(la[0][0],la[0][1]);la.slice(1).forEach(p=>cav.lineTo(p[0],p[1]));cav.closePath();
+  ctx.fillStyle=colors['--blood'];ctx.fill(cav);
+  // vessel/atrial walls
+  ctx.lineJoin='round';ctx.lineCap='round';
+  ctx.strokeStyle=colors['--myo'];ctx.lineWidth=14;
+  ctx.beginPath();poly([A1,[322,150],[330,-40]]);ctx.stroke();ctx.beginPath();poly([A2,[410,140],[405,-40]]);ctx.stroke();
+  ctx.lineWidth=12;ctx.beginPath();poly([[420,150],[500,92],[655,92],[728,150],[730,250],M2]);ctx.stroke();
+  // ventricular walls
+  const wall=(c)=>{ctx.beginPath();poly(c.outer);for(let i=c.inner.length-1;i>=0;i--)ctx.lineTo(c.inner[i][0],c.inner[i][1]);ctx.closePath();const g=ctx.createLinearGradient(300,200,640,680);g.addColorStop(0,colors['--myo']);g.addColorStop(1,colors['--myo']);ctx.fillStyle=colors['--myo'];ctx.fill();ctx.strokeStyle=colors['--myo-cut'];ctx.lineWidth=2;ctx.beginPath();poly(c.inner);ctx.stroke()};
+  wall(st.S);wall(st.F);
+  // apex join
+  ctx.fillStyle=colors['--myo'];ctx.beginPath();ctx.moveTo(st.S.outer[40][0],st.S.outer[40][1]);ctx.quadraticCurveTo(452,690,st.F.outer[40][0],st.F.outer[40][1]);ctx.lineTo(st.F.inner[40][0],st.F.inner[40][1]);ctx.closePath();ctx.fill();
+  // particles
+  ctx.save();ctx.clip(cav);
+  ctx.globalCompositeOperation=light?'source-over':'lighter';
+  const lvotMid=st.gp?L2(st.gp[0],st.gp[1],.5):[400,330];
+  const sysP=buildPath([[488,585],[455,470],[lvotMid[0]+8,lvotMid[1]+40],lvotMid,[366,250],[367,140],[367,-30]],[60,62,Math.max(5,st.gap/2+6),Math.max(3,st.gap/2),32,36,36]);
+  const morif=L2(st.aml,st.pml,.5);const ow=Math.hypot(st.aml[0]-st.pml[0],st.aml[1]-st.pml[1])/2;
+  const diaP=buildPath([[600,140],[590,230],morif,[530,460],[490,585]],[70,55,Math.max(6,ow),75,45]);
+  const ew=ss(.1,.2,phase)*(1-ss(.28,.36,phase))+.55*ss(.42,.47,phase)*(1-ss(.5,.55,phase)); // E and A waves
+  const flowS=st.aorticOpen*(1-.0*phase),flowD=st.mitralOpen*Math.max(.12,ew);
+  const vScale=Math.min(5.5,Math.pow(gapRef/Math.max(6,st.gap),1.25)); // instantaneous m/s at narrowest point
+  for(const q of parts){const P=q.path?sysP:diaP;const flow=q.path?flowS:flowD;
+    let a=at(P,q.d);const hNarrow=q.path?Math.max(3,st.gap/2):Math.max(6,ow);
+    const vm=q.path?Math.max(.35,vScale*hNarrow/Math.max(hNarrow,a.h)):Math.min(1.2,.35+.6*ew*Math.max(6,ow)/Math.max(6,a.h));
+    const pxs=150*vm*flow*(sp/.35);
+    q.d+=pxs*dt*(running?1:0);
+    if(q.d>P.len||q.d<0){q.d=Math.random()*P.len*(q.path?.55:.45);q.o=(Math.random()*2-1)*Math.random()**.3;q.prev=null;a=at(P,q.d)}
+    const pos=[a.p[0]+a.n[0]*q.o*a.h*.9,a.p[1]+a.n[1]*q.o*a.h*.9];
+    if(flow>.04){ctx.strokeStyle=dop(vm,!q.path,q.al);ctx.globalAlpha=Math.min(1,.25+flow)*(vm>1.6?1:.85);ctx.lineWidth=vm>1.6?3.2:2.6;ctx.beginPath();
+      const tl=5+9*Math.min(vm,4)*flow;const tail=[pos[0]-a.n[1]*tl,pos[1]+a.n[0]*tl];ctx.moveTo(tail[0],tail[1]);ctx.lineTo(pos[0],pos[1]);ctx.stroke()}
+    q.prev=pos;}
+  ctx.restore();ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
+  // valves
+  ctx.strokeStyle=colors['--valve'];ctx.lineWidth=6;
+  ctx.beginPath();ctx.moveTo(A2[0],A2[1]);ctx.quadraticCurveTo(st.ctrl[0],st.ctrl[1],st.aml[0],st.aml[1]);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(M2[0],M2[1]);ctx.quadraticCurveTo(lerp(M2[0],st.pml[0],.5)+6,lerp(M2[1],st.pml[1],.5)+8,st.pml[0],st.pml[1]);ctx.stroke();
+  ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(A1[0]+6,A1[1]);ctx.lineTo(st.c1[0],st.c1[1]);ctx.stroke();ctx.beginPath();ctx.moveTo(A2[0]-6,A2[1]);ctx.lineTo(st.c2[0],st.c2[1]);ctx.stroke();
+  // chordae
+  ctx.lineWidth=1.2;ctx.globalAlpha=.55;ctx.beginPath();ctx.moveTo(st.aml[0],st.aml[1]);ctx.lineTo(560,520);ctx.moveTo(st.pml[0],st.pml[1]);ctx.lineTo(572,525);ctx.stroke();ctx.globalAlpha=1;
+  ctx.fillStyle=colors['--myo'];ctx.beginPath();ctx.ellipse(568,535,16,26,-.4,0,6.283);ctx.fill();
+  // labels
+  ctx.font='600 22px "Archivo","Arial Narrow",sans-serif';ctx.fillStyle=colors['--valve'];ctx.textAlign='center';
+  ctx.fillText('Ao',367,20);ctx.fillText('AE',630,170);ctx.fillText('VE',520,520);
+  ctx.font='500 17px "Public Sans",sans-serif';ctx.fillStyle=colors['--ink2'];
+  ctx.textAlign='right';ctx.fillText('Septo interventricular',st.S.outer[18][0]-14,st.S.outer[18][1]);
+  ctx.textAlign='left';ctx.fillText('Parede livre',st.F.outer[20][0]+14,st.F.outer[20][1]);
+  // measurement of septum
+  const mi=12,o=st.S.outer[mi],ii=st.S.inner[mi];
+  ctx.strokeStyle=colors['--gold'];ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(o[0],o[1]);ctx.lineTo(ii[0],ii[1]);ctx.stroke();
+  ctx.fillStyle=colors['--gold'];ctx.font='500 16px "IBM Plex Mono",monospace';ctx.textAlign='right';ctx.fillText(ts+' mm',o[0]-12,o[1]+30);
+  // LVOT gap marker
+  if(st.gp&&phase>.6&&phase<.95){ctx.setLineDash([4,4]);ctx.strokeStyle=colors['--ink'];ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(st.gp[0][0],st.gp[0][1]);ctx.lineTo(st.gp[1][0],st.gp[1][1]);ctx.stroke();ctx.setLineDash([]);
+    ctx.font='500 15px "IBM Plex Mono",monospace';ctx.fillStyle=colors['--ink'];ctx.textAlign='left';ctx.fillText('VSVE '+(20*st.gap/gapRef).toFixed(1).replace('.',',')+' mm',st.gp[1][0]+18,st.gp[1][1]+6);}
+  if(st.samA>.15){ctx.fillStyle=colors['--accent-ink'];ctx.font='700 20px "Archivo",sans-serif';ctx.textAlign='left';ctx.fillText('SAM',st.aml[0]+24,st.aml[1]+44);
+    ctx.strokeStyle=colors['--accent-ink'];ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(st.aml[0]+20,st.aml[1]+36);ctx.lineTo(st.aml[0]+6,st.aml[1]+10);ctx.stroke()}
+  if(vScale>2&&st.aorticOpen>.5){ctx.fillStyle=colors['--gold'];ctx.font='700 18px "Archivo",sans-serif';ctx.textAlign='right';ctx.fillText('Efeito Venturi',300,220);ctx.font='400 14px "Public Sans",sans-serif';ctx.fillStyle=colors['--ink2'];ctx.fillText('jato acelerado → queda de pressão',300,242)}
+}
+function loop(now){frame(now);requestAnimationFrame(loop)}requestAnimationFrame(loop);
+window.__flow={set:p=>{phase=p}};
+DECK.onChange(k=>{if(k==='slide'){last=performance.now();size()}});size();
+})();
+</script>
+
+<!-- ============ 3D: cover, anatomy, asymmetric section ============ -->
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+
+function makeView(el,{fov=30,near=.01,far=100}={}){
+  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
+  el.appendChild(renderer.domElement);
+  const scene=new THREE.Scene();
+  const pm=new THREE.PMREMGenerator(renderer);scene.environment=pm.fromScene(new RoomEnvironment(),.04).texture;scene.environmentIntensity=.7;
+  const key=new THREE.DirectionalLight(0xfff1ea,2.2);key.position.set(2,3,4);scene.add(key);
+  const rim=new THREE.DirectionalLight(0xff9a8a,1.4);rim.position.set(-3,1,-3);scene.add(rim);
+  const camera=new THREE.PerspectiveCamera(fov,1,near,far);
+  const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.08;
+  const v={el,renderer,scene,camera,controls,w:1,h:1};
+  v.resize=()=>{const w=el.clientWidth||1,h=el.clientHeight||1;v.w=w;v.h=h;renderer.setPixelRatio(Math.min(2.5,(window.devicePixelRatio||1)*Math.max(.6,DECK.scale||1)));renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()};
+  new ResizeObserver(v.resize).observe(el);v.resize();DECK.onChange(k=>{if(k==='scale')v.resize()});
+  return v;
+}
+function project(v,p){const q=p.clone().project(v.camera);return[(q.x+1)/2*v.w,(1-q.y)/2*v.h,q.z]}
+
+// ---------- shared heart model ----------
+const gltfP=fetch('/Aula/Cardiologia/Miocardiopatia-Hipertrofica/models/heart.txt').then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text()}).then(t=>{const bin=atob(t.trim());const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new GLTFLoader().parseAsync(u.buffer,'')});
+function prepHeart(scene){const root=scene;const box=new THREE.Box3().setFromObject(root);root.position.sub(box.getCenter(new THREE.Vector3()));
+  root.traverse(o=>{if(o.isMesh&&o.material){o.material.envMapIntensity=.8;if(o.material.roughness!==undefined)o.material.roughness=Math.max(.35,o.material.roughness)}});const g=new THREE.Group();g.add(root);return g}
+
+// ---------- COVER ----------
+const cover=makeView(document.getElementById('cover3d'));
+cover.camera.position.set(0,.05,4.1);cover.controls.enableZoom=false;cover.controls.enablePan=false;cover.controls.autoRotate=true;cover.controls.autoRotateSpeed=1.2;
+// ---------- ANATOMY ----------
+const anat=makeView(document.getElementById('anat3d'));
+anat.camera.position.set(0,0,4.2);anat.controls.minDistance=1.6;anat.controls.maxDistance=7;
+const HOT=[
+ ['vcs','Veia cava superior',[-0.263,0.658,0.18]],['aoasc','Aorta ascendente',[-0.128,0.42,0.278]],['arco','Arco aórtico',[-0.012,0.588,0.169]],
+ ['tbc','Tronco braquiocefálico',[0.101,0.757,-0.039]],['acce','A. carótida comum esquerda',[0.229,0.74,-0.162]],['asce','A. subclávia esquerda',[0.307,0.694,-0.283]],
+ ['tp','Tronco pulmonar',[0.069,0.263,0.353]],['ape','A. pulmonar esquerda',[0.462,0.353,0.112]],['ad','Átrio direito',[-0.44,0.047,0.265]],
+ ['aue','Aurícula esquerda',[0.334,0.167,0.193]],['vd','Ventrículo direito',[-0.158,-0.249,0.406]],['ve','Ventrículo esquerdo',[0.317,-0.352,0.259]],
+ ['dai','Ramo interventricular anterior',[0.063,-0.248,0.407]],['apice','Ápice',[0.18,-0.707,0.172]],
+ ['ae','Átrio esquerdo (face posterior)',[0,0.224,-0.397]],['siv','Sulco interventricular posterior',[-0.011,-0.328,-0.374]]
+];
+let pins=[];try{pins=JSON.parse(localStorage.getItem('cmh-pins')||'[]')}catch(e){}
+const savePins=()=>{try{localStorage.setItem('cmh-pins',JSON.stringify(pins))}catch(e){}};
+const layer=document.getElementById('hotLayer'),list=document.getElementById('structList');
+let mode='none',selected=null,heartMesh=null,pending=null;
+const items=[];
+function rebuild(){
+  layer.innerHTML='';list.innerHTML='';items.length=0;
+  const all=[...HOT.map((h,i)=>({id:h[0],name:h[1],p:new THREE.Vector3(...h[2]),n:i+1,custom:false})),...pins.map((p,i)=>({id:'pin'+i,name:p.name,p:new THREE.Vector3(...p.p),n:'+'+(i+1),custom:true,pi:i}))];
+  all.forEach(it=>{
+    const el=document.createElement('div');el.className='hot'+(it.custom?' custom':'');el.innerHTML=`<span class="dot">${it.n}</span><span class="lbl">${it.name}</span>`;
+    el.onclick=(e)=>{e.stopPropagation();select(it,mode!=='quiz');if(mode==='quiz')el.classList.toggle('show')};layer.appendChild(el);it.el=el;
+    const b=document.createElement('button');b.className=it.custom?'custom':'';b.innerHTML=`<span class="n">${it.n}</span><span>${it.name}</span>${it.custom?'<span class="x" title="Remover">remover</span>':'<span></span>'}`;
+    b.onclick=(e)=>{if(e.target.classList.contains('x')){pins.splice(it.pi,1);savePins();rebuild();return}select(it,true)};list.appendChild(b);it.btn=b;items.push(it)});
+  applyMode();
+}
+function applyMode(){items.forEach(it=>{it.el.classList.toggle('show',mode==='labels'||(it===selected&&mode!=='quiz'));it.btn.querySelector('span:nth-child(2)').style.filter=mode==='quiz'?'blur(5px)':'none'})}
+let fly=null;
+function select(it,doFly){selected=it;items.forEach(i=>{i.el.classList.toggle('sel',i===it);i.btn.classList.toggle('sel',i===it)});applyMode();
+  if(doFly){const dir=it.p.clone().normalize();const dist=anat.camera.position.length();fly={t:0,from:anat.camera.position.clone(),to:dir.multiplyScalar(Math.min(dist,3.6)).add(new THREE.Vector3(0,.15,0)),tf:anat.controls.target.clone(),tt:it.p.clone().multiplyScalar(.35)}}}
+const btnL=document.getElementById('modeLabels'),btnQ=document.getElementById('modeQuiz'),btnP=document.getElementById('modePin'),pinForm=document.getElementById('pinForm'),pinName=document.getElementById('pinName');
+function setMode(m){mode=m;btnL.setAttribute('aria-pressed',m==='labels');btnQ.setAttribute('aria-pressed',m==='quiz');btnP.setAttribute('aria-pressed',m==='pin');
+  document.getElementById('anatNote').innerHTML=m==='pin'?'Clique sobre o modelo para posicionar um novo marcador. Os marcadores ficam salvos neste navegador.':'Clique numa estrutura da lista para o modelo girar até ela. No <b>modo pergunta</b>, os nomes ficam ocultos e aparecem só quando você clica no número.';
+  items.forEach(i=>i.el.classList.remove('show'));applyMode()}
+btnL.onclick=()=>setMode(mode==='labels'?'none':'labels');btnQ.onclick=()=>setMode(mode==='quiz'?'labels':'quiz');btnP.onclick=()=>setMode(mode==='pin'?'labels':'pin');
+const ray=new THREE.Raycaster();
+function hit(e){const r=anat.renderer.domElement.getBoundingClientRect();const v=new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height)*2+1);ray.setFromCamera(v,anat.camera);return heartMesh?ray.intersectObject(heartMesh,true)[0]:null}
+let down=null;anat.renderer.domElement.addEventListener('pointerdown',e=>down=[e.clientX,e.clientY]);
+anat.renderer.domElement.addEventListener('pointerup',e=>{if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>5)return;if(mode!=='pin')return;const h=hit(e);if(!h)return;pending=h.point.toArray().map(v=>+v.toFixed(3));pinForm.hidden=false;pinName.value='';pinName.focus()});
+anat.renderer.domElement.addEventListener('dblclick',()=>{fly={t:0,from:anat.camera.position.clone(),to:new THREE.Vector3(0,0,4.2),tf:anat.controls.target.clone(),tt:new THREE.Vector3()}});
+document.getElementById('pinSave').onclick=()=>{if(!pending)return;pins.push({name:pinName.value.trim()||('Marcador '+(pins.length+1)),p:pending});pending=null;savePins();pinForm.hidden=true;rebuild();setMode('labels')};
+document.getElementById('pinCancel').onclick=()=>{pending=null;pinForm.hidden=true};
+pinName.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('pinSave').click();if(e.key==='Escape')document.getElementById('pinCancel').click()});
+rebuild();
+
+gltfP.then(g=>{
+  const a=prepHeart(g.scene);anat.scene.add(a);a.traverse(o=>{if(o.isMesh)heartMesh=a});
+  const c=prepHeart(g.scene.clone(true));c.rotation.y=-.5;cover.scene.add(c);
+  document.getElementById('coverLoading').remove();document.getElementById('anatLoading').remove();
+}).catch(err=>{['coverLoading','anatLoading'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='Não foi possível carregar o modelo 3D: '+err.message})});
+
+let frameN=0;const tmpV=new THREE.Vector3();
+function tickAnat(){
+  if(fly){fly.t=Math.min(1,fly.t+.035);const e=1-Math.pow(1-fly.t,3);anat.camera.position.lerpVectors(fly.from,fly.to,e);anat.controls.target.lerpVectors(fly.tf,fly.tt,e);if(fly.t>=1)fly=null}
+  anat.controls.update();anat.renderer.render(anat.scene,anat.camera);frameN++;
+  const doOcc=heartMesh&&frameN%4===0;
+  items.forEach(it=>{const [x,y,z]=project(anat,it.p);it.el.style.transform=`translate(${x}px,${y}px) translate(-13px,-13px)`;
+    if(doOcc){tmpV.copy(it.p).sub(anat.camera.position);const d=tmpV.length();ray.set(anat.camera.position,tmpV.normalize());const h=ray.intersectObject(heartMesh,true)[0];it.occ=h&&h.distance<d-.03}
+    it.el.classList.toggle('hidden',!!it.occ||z>1)});
+}
+
+// ---------- ASYMMETRIC SECTION (procedural) ----------
+const asym=makeView(document.getElementById('asym3d'),{fov:28,near:1,far:2000});
+asym.camera.position.set(-40,30,230);asym.controls.target.set(0,-40,0);asym.controls.minDistance=120;asym.controls.maxDistance=420;
+asym.renderer.toneMappingExposure=.78;asym.scene.environmentIntensity=.45;
+const secG=new THREE.Group();secG.rotation.y=-.25;asym.scene.add(secG);
+const M={outer:new THREE.MeshStandardMaterial({color:0x7a221e,roughness:.55,metalness:0,side:THREE.DoubleSide}),
+ inner:new THREE.MeshStandardMaterial({color:0xd0786a,roughness:.7,side:THREE.DoubleSide}),
+ cut:new THREE.MeshStandardMaterial({color:0xb4594b,roughness:.9,side:THREE.DoubleSide}),
+ rv:new THREE.MeshStandardMaterial({color:0x9a3830,roughness:.55,side:THREE.DoubleSide})};
+const meshes={};
+const R0=33,H0=90,NU=56,NP=56;
+const sm=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t)};
+function surf(fn,nu,np){const pos=[],idx=[];for(let i=0;i<=nu;i++)for(let j=0;j<=np;j++){pos.push(...fn(i/nu,j/np))}
+  for(let i=0;i<nu;i++)for(let j=0;j<np;j++){const a=i*(np+1)+j,b=a+np+1;idx.push(a,b,a+1,b,b+1,a+1)}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();return g}
+function setMesh(k,geo,mat){if(meshes[k]){meshes[k].geometry.dispose();meshes[k].geometry=geo}else{meshes[k]=new THREE.Mesh(geo,mat);secG.add(meshes[k])}}
+let beatPhase=0;
+function buildSection(ts,tf,sys=0){
+  const Ro=u=>R0*Math.sqrt(Math.max(0,1-u*u))*(1-.04*sys);
+  const w=phi=>Math.pow(Math.cos((Math.abs(phi-Math.PI))/2),6);
+  const g=u=>1-.45*sm(.45,1,u);
+  const T=(phi,u)=>(tf+(ts-tf)*w(phi)*g(u))*(1+.35*sys);
+  const Ri=(phi,u)=>Math.max(0,Ro(u)-T(phi,u));
+  const Y=u=>-H0*u*(1-.06*sys);
+  const P=(r,phi,u)=>[r*Math.cos(phi),Y(u),r*Math.sin(phi)];
+  const U=s=>Math.min(.999,s);
+  const PH=s=>Math.PI+s*Math.PI;
+  setMesh('outer',surf((s,t)=>P(Ro(U(s)),PH(t),U(s)),NU,NP),M.outer);
+  setMesh('inner',surf((s,t)=>{const u=U(s),ph=PH(t);return P(Ri(ph,u),ph,u)},NU,NP),M.inner);
+  // caps on the cut plane (phi=pi and phi=2pi) + base rim
+  const cap=(ph)=>surf((s,t)=>{const u=U(s);const r=lerp(Ri(ph,u),Ro(u),t);return P(r,ph,u)},NU,4);
+  setMesh('capS',cap(Math.PI),M.cut);setMesh('capF',cap(2*Math.PI),M.cut);
+  setMesh('rim',surf((s,t)=>{const ph=PH(s);return P(lerp(Ri(ph,0),Ro(0),t),ph,0)},NP,3),M.cut);
+  // RV: crescent wrapping the septum (phi near pi)
+  const D=24,tRV=4;
+  const h=u=>1-sm(.5,.82,u);const wr=phi=>Math.pow(Math.max(0,Math.cos((Math.abs(phi-Math.PI))/2)),3);
+  const dmax=1.95;const PHr=s=>Math.PI+s*dmax;const UR=s=>s*.82;
+  const rvOut=(ph,u)=>Ro(u)+.4+D*wr(ph)*h(u);const rvIn=(ph,u)=>Ro(u)+.4+Math.max(0,D*wr(ph)*h(u)-tRV);
+  setMesh('rvO',surf((s,t)=>{const u=UR(s),ph=PHr(t);return P(rvOut(ph,u),ph,u)},40,40),M.rv);
+  setMesh('rvI',surf((s,t)=>{const u=UR(s),ph=PHr(t);return P(rvIn(ph,u),ph,u)},40,40),M.inner);
+  setMesh('rvCap',surf((s,t)=>{const u=UR(s);return P(lerp(rvIn(Math.PI,u),rvOut(Math.PI,u),t),Math.PI,u)},40,3),M.cut);
+  setMesh('rvRim',surf((s,t)=>{const ph=PHr(s);return P(lerp(rvIn(ph,0),rvOut(ph,0),t),ph,0)},40,3),M.cut);
+  // measurement anchors (u=.3)
+  const um=.3;return{sIn:P(Ri(Math.PI,um),Math.PI,um),sOut:P(Ro(um),Math.PI,um),fIn:P(Ri(2*Math.PI,um),2*Math.PI,um),fOut:P(Ro(um),2*Math.PI,um),lv:P(0,0,.35),rv:P(Ro(.3)+D*.55,Math.PI,.3)};
+}
+function lerp(a,b,t){return a+(b-a)*t}
+const barMat=new THREE.MeshBasicMaterial({color:0xe9b44c,depthTest:false,transparent:true});
+const mLines=new THREE.Group();mLines.renderOrder=10;secG.add(mLines);
+function bar(p,q,r=.7){const d=new THREE.Vector3().subVectors(q,p);const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,d.length(),10),barMat);m.position.copy(p).addScaledVector(d,.5);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().normalize());m.renderOrder=10;return m}
+const aLab=document.getElementById('asymLabels');
+const labs={};['s','f','lv','rv'].forEach(k=>{const d=document.createElement('div');d.className='hot show';d.style.pointerEvents='none';d.innerHTML='<span class="lbl" style="opacity:1;transform:none"></span>';aLab.appendChild(d);labs[k]=d});
+let anchors=null;
+const tS=document.getElementById('tSept'),tF=document.getElementById('tFree'),beat=document.getElementById('beat');
+function updAsym(){const ts=+tS.value,tf=+tF.value;document.getElementById('tSeptOut').textContent=ts+' mm';document.getElementById('tFreeOut').textContent=tf+' mm';
+  const r=ts/tf;document.getElementById('ratioOut').textContent=r.toFixed(1).replace('.',',');
+  let v;if(ts<13&&tf<13)v='Espessura normal';else if(ts>=15&&r>=1.3)v='Hipertrofia septal assimétrica (sugere CMH)';else if(ts>=13)v='Hipertrofia concêntrica';else v='Parede livre espessada';
+  document.getElementById('asymVerdict').textContent=v;
+  document.querySelectorAll('#asymPresets .chip').forEach(c=>c.setAttribute('aria-pressed',+c.dataset.s===ts&&+c.dataset.f===tf));
+  if(!beat.checked)rebuildSec(0)}
+function rebuildSec(sys){const ts=+tS.value,tf=+tF.value;anchors=buildSection(ts,tf,sys);const a=anchors,z=.8;
+  const pts=[a.sIn,a.sOut,a.fIn,a.fOut].map(p=>new THREE.Vector3(p[0],p[1],z));
+  const tick=(p,q)=>{const d=new THREE.Vector3(0,3.5,0);return[p.clone().add(d),p.clone().sub(d),q.clone().add(d),q.clone().sub(d)]};
+  mLines.children.slice().forEach(c=>{c.geometry.dispose();mLines.remove(c)});
+  const tk=tick(pts[0],pts[1]).concat(tick(pts[2],pts[3]));mLines.add(bar(pts[0],pts[1]),bar(pts[2],pts[3]),bar(tk[0],tk[1],.5),bar(tk[2],tk[3],.5),bar(tk[4],tk[5],.5),bar(tk[6],tk[7],.5));
+  labs.s.querySelector('.lbl').textContent='Septo '+ts+' mm';labs.f.querySelector('.lbl').textContent='Parede livre '+tf+' mm';labs.lv.querySelector('.lbl').textContent='VE';labs.rv.querySelector('.lbl').textContent='VD';}
+[tS,tF].forEach(e=>e.addEventListener('input',updAsym));beat.addEventListener('change',updAsym);
+document.querySelectorAll('#asymPresets .chip').forEach(c=>c.onclick=()=>{tS.value=c.dataset.s;tF.value=c.dataset.f;[tS,tF].forEach(r=>r.dispatchEvent(new Event('input')))});
+updAsym();
+function tickAsym(dt){
+  if(beat.checked){beatPhase=(beatPhase+dt*.8)%1;const s=Math.max(0,Math.sin(beatPhase*Math.PI*2))**1.5;rebuildSec(s)}
+  asym.controls.update();asym.renderer.render(asym.scene,asym.camera);
+  if(!anchors)return;const wp=a=>secG.localToWorld(new THREE.Vector3(a[0],a[1],a[2]));
+  const place=(el,p,dx,dy,anchor)=>{const [x,y]=project(asym,p);el.style.transform=`translate(${x+dx}px,${y+dy}px) translate(${anchor},-50%)`};
+  const mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2,1];
+  place(labs.s,wp(mid(anchors.sIn,anchors.sOut)),0,-34,'-50%');place(labs.f,wp(mid(anchors.fIn,anchors.fOut)),0,-34,'-50%');
+  place(labs.lv,wp(anchors.lv),0,0,'-50%');place(labs.rv,wp(anchors.rv),0,0,'-50%');
+}
+
+// ---------- loop ----------
+let last=performance.now();
+function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;const i=DECK.index;
+  if(i===0){cover.controls.update();cover.renderer.render(cover.scene,cover.camera)}
+  else if(i===2)tickAnat();
+  else if(i===6)tickAsym(dt);
+  requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+window.__ready3d=true;
+</script>
+
+</body></html>

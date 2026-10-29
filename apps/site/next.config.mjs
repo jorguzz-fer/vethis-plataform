@@ -17,6 +17,11 @@ const nextConfig = {
       { source: '/plano-mkt', destination: '/plano-mkt.html' },
       // Guia de gravação (noindex).
       { source: '/guia-gravacao', destination: '/guia-gravacao/index.html' },
+      // Aulas interativas (HTML autônomo + assets em /public/Aula/...).
+      {
+        source: '/Aula/Cardiologia/Miocardiopatia-Hipertrofica',
+        destination: '/Aula/Cardiologia/Miocardiopatia-Hipertrofica/index.html',
+      },
     ];
   },
 };
