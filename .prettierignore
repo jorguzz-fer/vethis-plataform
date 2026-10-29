@@ -12,3 +12,5 @@ packages/api-client/src/schema.ts
 **/next-env.d.ts
 *.min.js
 *.min.css
+# Aulas interativas importadas prontas (HTML autônomo, não editado no repo)
+apps/site/public/Aula
