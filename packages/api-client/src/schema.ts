@@ -515,6 +515,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/checkout/config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Provedor de cada meio de pagamento e teto do carnê (público) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CheckoutConfig"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/checkout": {
         parameters: {
             query?: never;
@@ -684,6 +720,47 @@ export interface paths {
             responses: {
                 /** @description Recebido */
                 200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/webhooks/stripe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Webhook da Stripe (assinatura stripe-signature sobre o corpo bruto) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Recebido */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Assinatura inválida */
+                400: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -2930,6 +3007,8 @@ export interface components {
                 addressNumber?: string;
             };
             card?: {
+                paymentMethodId: string;
+            } | {
                 number: string;
                 holderName: string;
                 expMonth: number;
@@ -2970,6 +3049,15 @@ export interface components {
             boletoUrl: string | null;
             simulatable: boolean;
             createdAt: string;
+            cardClientSecret: string | null;
+        };
+        CheckoutConfig: {
+            providers: {
+                pix: string;
+                card: string;
+                boleto: string;
+            };
+            boletoMaxInstallments: number;
         };
         PaymentWebhookInput: {
             event: string;

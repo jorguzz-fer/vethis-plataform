@@ -137,6 +137,62 @@ Endpoints relevantes: `POST /v1/webhooks/asaas` (produção, autenticado pelo he
 `asaas-access-token`); `POST /v1/webhooks/payments` e `simulate-payment` só
 funcionam com `PAYMENT_GATEWAY=fake` fora de produção.
 
+## Stripe (cartão e Pix)
+
+Com `PAYMENT_GATEWAY=stripe`, **cartão e Pix** passam pela Stripe e o **boleto
+parcelado (carnê, até 15x)** continua no Asaas — a Stripe só emite boleto à
+vista. Cada meio pode ser trocado isoladamente com `PAYMENT_GATEWAY_PIX`,
+`PAYMENT_GATEWAY_CARD` e `PAYMENT_GATEWAY_BOLETO` (ex.: `PAYMENT_GATEWAY_PIX=asaas`
+enquanto o Pix não for liberado na conta Stripe).
+
+**Recurso API-Vethis:**
+
+```
+PAYMENT_GATEWAY=stripe
+STRIPE_SECRET_KEY=sk_live_...     # Desenvolvedores → Chaves de API
+STRIPE_WEBHOOK_SECRET=whsec_...   # do endpoint abaixo
+# Manter as do Asaas: atendem o carnê e confirmam cobranças antigas.
+ASAAS_API_KEY=...
+ASAAS_WEBHOOK_TOKEN=...
+```
+
+**Recurso vethis-Site (build variable, rebuild ao alterar):**
+
+```
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
+```
+
+**Webhook (painel Stripe → Desenvolvedores → Webhooks → Adicionar destino):**
+
+- URL: `https://api.vethis.com.br/v1/webhooks/stripe`
+- Eventos: `payment_intent.succeeded` e `payment_intent.payment_failed`
+- Copie o "Segredo de assinatura" (`whsec_`) para `STRIPE_WEBHOOK_SECRET`.
+
+Teste e produção são contas separadas: `pk_test_`/`sk_test_` usam o `whsec_` do
+webhook criado no modo de teste; `pk_live_`/`sk_live_`, o do modo de produção.
+
+**Como funciona:**
+
+- **Cartão**: o número, a validade e o CVV ficam num campo seguro da Stripe
+  (iframe); a API recebe só o token `pm_...`. Parcelado: a API pede à Stripe os
+  planos aceitos por aquele cartão e só confirma se o nº de parcelas escolhido
+  estiver entre eles (senão, mensagem "Este cartão aceita até Nx"). Se o banco
+  exigir 3D Secure, o desafio abre no próprio checkout.
+- **Pix**: QR + copia-e-cola válidos por 24h; confirma pelo webhook.
+- **Reconciliação**: a mesma rotina consulta Stripe e Asaas, cada cobrança no
+  provedor que a emitiu.
+
+**Ordem segura para ligar:**
+
+1. Cadastre as variáveis acima (API e site).
+2. Faça o deploy de **API-Vethis** e **vethis-Site** (o site precisa de rebuild
+   para assar a chave publicável).
+3. Crie o webhook de produção na Stripe e faça uma compra real de valor baixo
+   em cartão e em Pix.
+
+> Se a API não subir, o log mostra exatamente qual variável falta (ex.:
+> `STRIPE_WEBHOOK_SECRET é obrigatório: a Stripe atende pix, card`).
+
 ## E-mails transacionais (Brevo)
 
 A API envia três e-mails ao aluno (bem-vindo ao criar a conta, pedido criado

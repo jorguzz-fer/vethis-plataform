@@ -5,6 +5,14 @@ import { z } from 'zod';
  * boot — a aplicação falha rápido se algo obrigatório estiver ausente/ inválido.
  * Segredos vêm do ambiente/cofre, nunca do repositório.
  */
+/** Provedores de pagamento suportados (adapters do port `PaymentGateway`). */
+const gatewayName = z.enum(['fake', 'asaas', 'stripe']);
+export type GatewayName = z.infer<typeof gatewayName>;
+
+/** Meios de pagamento do checkout (espelha `paymentMethodSchema`). */
+export const PAYMENT_METHODS = ['pix', 'card', 'boleto'] as const;
+export type PaymentMethodName = (typeof PAYMENT_METHODS)[number];
+
 const EnvSchema = z
   .object({
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
@@ -45,9 +53,15 @@ const EnvSchema = z
     // URL pública da área do aluno (links dos e-mails).
     ALUNO_URL: z.string().url().default('http://localhost:5173'),
 
-    // Pagamentos (port PaymentGateway, ADR 0004). `fake` em dev; `asaas` quando as
-    // credenciais estiverem no ambiente. Base URL: sandbox por padrão.
-    PAYMENT_GATEWAY: z.enum(['fake', 'asaas']).default('fake'),
+    // Pagamentos (port PaymentGateway, ADR 0004). `fake` em dev; `asaas`/`stripe`
+    // em produção. `PAYMENT_GATEWAY` vale para todos os meios; `PAYMENT_GATEWAY_PIX|
+    // CARD|BOLETO` sobrescrevem por meio (ver `gatewayForMethod`).
+    PAYMENT_GATEWAY: gatewayName.default('fake'),
+    PAYMENT_GATEWAY_PIX: gatewayName.optional(),
+    PAYMENT_GATEWAY_CARD: gatewayName.optional(),
+    PAYMENT_GATEWAY_BOLETO: gatewayName.optional(),
+    STRIPE_SECRET_KEY: z.string().min(1).optional(),
+    STRIPE_WEBHOOK_SECRET: z.string().min(1).optional(),
     ASAAS_API_KEY: z.string().min(1).optional(),
     ASAAS_BASE_URL: z.string().url().default('https://api-sandbox.asaas.com/v3'),
     ASAAS_WEBHOOK_TOKEN: z.string().min(1).optional(),
@@ -72,26 +86,73 @@ const EnvSchema = z
         });
       }
     }
-    if (env.PAYMENT_GATEWAY === 'asaas' && !env.ASAAS_API_KEY) {
+    const used = new Set(PAYMENT_METHODS.map((m) => gatewayForMethod(env, m)));
+    const usedBy = (g: GatewayName) =>
+      PAYMENT_METHODS.filter((m) => gatewayForMethod(env, m) === g).join(', ');
+    if (used.has('asaas') && !env.ASAAS_API_KEY) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['ASAAS_API_KEY'],
-        message: 'ASAAS_API_KEY é obrigatória quando PAYMENT_GATEWAY=asaas',
+        message: `ASAAS_API_KEY é obrigatória: o Asaas atende ${usedBy('asaas')}`,
       });
     }
     // Sem o token, todo webhook é recusado (401) e Pix/boleto nunca confirmam —
     // falha silenciosa em produção. Melhor não subir.
-    if (env.PAYMENT_GATEWAY === 'asaas' && !env.ASAAS_WEBHOOK_TOKEN) {
+    if (used.has('asaas') && !env.ASAAS_WEBHOOK_TOKEN) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['ASAAS_WEBHOOK_TOKEN'],
-        message:
-          'ASAAS_WEBHOOK_TOKEN é obrigatório quando PAYMENT_GATEWAY=asaas (mesmo valor cadastrado no webhook do painel Asaas)',
+        message: `ASAAS_WEBHOOK_TOKEN é obrigatório: o Asaas atende ${usedBy('asaas')} (mesmo valor cadastrado no webhook do painel Asaas)`,
+      });
+    }
+    if (used.has('stripe') && !env.STRIPE_SECRET_KEY) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['STRIPE_SECRET_KEY'],
+        message: `STRIPE_SECRET_KEY é obrigatória: a Stripe atende ${usedBy('stripe')}`,
+      });
+    }
+    // Mesma lógica do Asaas: sem o segredo, o webhook é recusado e Pix/3DS não confirmam.
+    if (used.has('stripe') && !env.STRIPE_WEBHOOK_SECRET) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['STRIPE_WEBHOOK_SECRET'],
+        message: `STRIPE_WEBHOOK_SECRET é obrigatório: a Stripe atende ${usedBy('stripe')} (segredo whsec_ do webhook no painel Stripe)`,
+      });
+    }
+    // A Stripe só emite boleto à vista; o carnê (boleto parcelado) é do Asaas.
+    if (gatewayForMethod(env, 'boleto') === 'stripe') {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['PAYMENT_GATEWAY_BOLETO'],
+        message: 'A Stripe não emite carnê (boleto parcelado): use PAYMENT_GATEWAY_BOLETO=asaas',
       });
     }
   });
 
 export type AppConfig = Readonly<z.infer<typeof EnvSchema>>;
+
+type GatewayEnv = Pick<
+  AppConfig,
+  'PAYMENT_GATEWAY' | 'PAYMENT_GATEWAY_PIX' | 'PAYMENT_GATEWAY_CARD' | 'PAYMENT_GATEWAY_BOLETO'
+>;
+
+/**
+ * Gateway que atende cada meio de pagamento. A sobrescrita por meio vence; sem
+ * ela, vale `PAYMENT_GATEWAY` — exceto boleto com `stripe`, que cai no Asaas
+ * (a Stripe não parcela boleto, e o checkout vende carnê).
+ */
+export function gatewayForMethod(env: GatewayEnv, method: PaymentMethodName): GatewayName {
+  const override =
+    method === 'pix'
+      ? env.PAYMENT_GATEWAY_PIX
+      : method === 'card'
+        ? env.PAYMENT_GATEWAY_CARD
+        : env.PAYMENT_GATEWAY_BOLETO;
+  if (override) return override;
+  if (method === 'boleto' && env.PAYMENT_GATEWAY === 'stripe') return 'asaas';
+  return env.PAYMENT_GATEWAY;
+}
 
 /** Token de injeção da configuração (evita ConfigService-por-tipo). */
 export const APP_CONFIG = 'APP_CONFIG';

@@ -4,10 +4,12 @@ import {
   useCallback,
   useEffect,
   useId,
+  useRef,
   useState,
   type FormEvent,
   type InputHTMLAttributes,
 } from 'react';
+import type { Stripe, StripeCardElement } from '@stripe/stripe-js';
 import Link from 'next/link';
 import { formatBRL } from '@vethis/shared';
 import { Badge, Button, Field } from '@vethis/ui';
@@ -24,9 +26,11 @@ import {
   alunoUrl,
   browserApi,
   type AuthUser,
+  type CheckoutConfig,
   type OrderDto,
   type PaymentMethod,
 } from '@/lib/browser-api';
+import { getStripe, stripeConfigured } from '@/lib/stripe';
 
 /** Valor cobrado para o meio escolhido (Pix à vista tem desconto; cartão/boleto, o plano). */
 function netPriceCents(method: PaymentMethod, course: Priced, installments: number): number {
@@ -35,9 +39,10 @@ function netPriceCents(method: PaymentMethod, course: Priced, installments: numb
     : cardAmountCents(course, installments);
 }
 
-/** Opções de parcelamento até o teto do curso, com o total do plano correspondente. */
-function installmentOptions(course: Priced): { n: number; label: string }[] {
-  return Array.from({ length: maxInstallmentsOf(course) }, (_, i) => {
+/** Opções de parcelamento até o teto (do curso ou do meio), com o total do plano. */
+function installmentOptions(course: Priced, max?: number): { n: number; label: string }[] {
+  const limit = Math.min(maxInstallmentsOf(course), max ?? Number.POSITIVE_INFINITY);
+  return Array.from({ length: Math.max(1, limit) }, (_, i) => {
     const n = i + 1;
     return { n, label: `${n}x de ${formatBRL(Math.round(cardAmountCents(course, n) / n))}` };
   });
@@ -48,10 +53,13 @@ function InstallmentsField({
   course,
   value,
   onChange,
+  max,
 }: {
   course: Priced;
   value: number;
   onChange: (n: number) => void;
+  /** Teto do meio de pagamento (ex.: carnê), abaixo do teto do curso. */
+  max?: number;
 }) {
   const hasPlans = (course.installmentPlans ?? []).length > 0;
   return (
@@ -62,7 +70,7 @@ function InstallmentsField({
         onChange={(e) => onChange(Number(e.target.value))}
         className="rounded-[10px] border-[1.5px] border-border px-3.5 py-3 text-[15px]"
       >
-        {installmentOptions(course).map((o) => (
+        {installmentOptions(course, max).map((o) => (
           <option key={o.n} value={o.n}>
             {o.label}
           </option>
@@ -144,6 +152,15 @@ export function CheckoutClient({ course }: { course: CourseDetail }) {
   // Meio/parcelas ficam aqui em cima para o resumo espelhar preço e parcela.
   const [method, setMethod] = useState<PaymentMethod>('pix');
   const [installments, setInstallments] = useState(1);
+  // Provedor de cada meio (Stripe/Asaas) e teto do carnê — define o formulário.
+  const [checkoutConfig, setCheckoutConfig] = useState<CheckoutConfig | null>(null);
+
+  useEffect(() => {
+    browserApi
+      .GET('/v1/checkout/config')
+      .then(({ data }) => setCheckoutConfig(data ?? null))
+      .catch(() => setCheckoutConfig(null));
+  }, []);
 
   // Descobre a sessão atual (login-antes-de-pagar).
   useEffect(() => {
@@ -194,6 +211,7 @@ export function CheckoutClient({ course }: { course: CourseDetail }) {
             setMethod={setMethod}
             installments={installments}
             setInstallments={setInstallments}
+            config={checkoutConfig}
           />
         ) : (
           <AuthPanel onAuthed={setMe} />
@@ -315,11 +333,21 @@ function AuthPanel({ onAuthed }: { onAuthed: (u: AuthUser) => void }) {
 /* Passo 2 — pagamento (Pix-first, cartão, boleto)                     */
 /* ------------------------------------------------------------------ */
 
-const METHODS: { key: PaymentMethod; label: string; hint: string }[] = [
-  { key: 'pix', label: 'Pix', hint: `${PIX_DISCOUNT_PERCENT}% de desconto` },
-  { key: 'card', label: 'Cartão', hint: 'Até 24x' },
-  { key: 'boleto', label: 'Boleto', hint: 'Em até 24x' },
-];
+/** Teto do carnê quando a API ainda não respondeu (espelha BOLETO_MAX_INSTALLMENTS). */
+const DEFAULT_BOLETO_MAX = 15;
+
+function paymentMethods(
+  course: Priced,
+  boletoMax: number,
+): { key: PaymentMethod; label: string; hint: string }[] {
+  const cardMax = maxInstallmentsOf(course);
+  const boletoCap = Math.min(cardMax, boletoMax);
+  return [
+    { key: 'pix', label: 'Pix', hint: `${PIX_DISCOUNT_PERCENT}% de desconto` },
+    { key: 'card', label: 'Cartão', hint: cardMax > 1 ? `Até ${cardMax}x` : 'À vista' },
+    { key: 'boleto', label: 'Boleto', hint: boletoCap > 1 ? `Em até ${boletoCap}x` : 'À vista' },
+  ];
+}
 
 function PaymentPanel({
   course,
@@ -331,6 +359,7 @@ function PaymentPanel({
   setMethod,
   installments,
   setInstallments,
+  config,
 }: {
   course: CourseDetail;
   me: AuthUser;
@@ -341,9 +370,25 @@ function PaymentPanel({
   setMethod: (m: PaymentMethod) => void;
   installments: number;
   setInstallments: (n: number) => void;
+  config: CheckoutConfig | null;
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const boletoMax = config?.boletoMaxInstallments ?? DEFAULT_BOLETO_MAX;
+  // Cartão pela Stripe: número/validade/CVV ficam num campo seguro da Stripe
+  // (iframe) e nunca passam pela nossa API — chega só o token `pm_...`.
+  const stripeCard = config?.providers.card === 'stripe';
+  const stripeRef = useRef<{ stripe: Stripe; card: StripeCardElement } | null>(null);
+  const onStripeReady = useCallback((stripe: Stripe, card: StripeCardElement) => {
+    stripeRef.current = { stripe, card };
+  }, []);
+
+  function chooseMethod(m: PaymentMethod) {
+    setMethod(m);
+    // O carnê tem teto menor que o cartão: não deixa passar parcelas a mais.
+    if (m === 'boleto' && installments > boletoMax) setInstallments(boletoMax);
+  }
 
   // Dados do comprador (nome + CPF sempre; endereço/telefone só no cartão).
   const [fullName, setFullName] = useState(defaultName);
@@ -363,16 +408,32 @@ function PaymentPanel({
     setBusy(true);
     setError(null);
     try {
-      const card =
-        method === 'card'
-          ? {
-              number: number.replace(/\s+/g, ''),
-              holderName,
-              expMonth: Number(exp.split('/')[0]),
-              expYear: normalizeYear(exp.split('/')[1]),
-              cvv,
-            }
-          : undefined;
+      let card:
+        | { paymentMethodId: string }
+        | { number: string; holderName: string; expMonth: number; expYear: number; cvv: string }
+        | undefined;
+      if (method === 'card' && stripeCard) {
+        const ready = stripeRef.current;
+        if (!ready)
+          throw new Error('O campo do cartão ainda está carregando. Aguarde um instante.');
+        const { paymentMethod, error: pmError } = await ready.stripe.createPaymentMethod({
+          type: 'card',
+          card: ready.card,
+          billing_details: { name: holderName.trim() || fullName.trim(), email: me.email },
+        });
+        if (pmError || !paymentMethod) {
+          throw new Error(pmError?.message ?? 'Confira os dados do cartão.');
+        }
+        card = { paymentMethodId: paymentMethod.id };
+      } else if (method === 'card') {
+        card = {
+          number: number.replace(/\s+/g, ''),
+          holderName,
+          expMonth: Number(exp.split('/')[0]),
+          expYear: normalizeYear(exp.split('/')[1]),
+          cvv,
+        };
+      }
       const customer = {
         name: fullName.trim(),
         cpfCnpj: cpfCnpj.replace(/\D/g, ''),
@@ -400,6 +461,18 @@ function PaymentPanel({
             ? `Não foi possível iniciar o pagamento: ${detail}`
             : 'Não foi possível iniciar o pagamento. Confira seus dados e tente novamente.',
         );
+      }
+      // Banco pediu autenticação (3D Secure): o Stripe.js abre o desafio aqui
+      // mesmo. Concluído, o pedido segue pendente até o webhook confirmar.
+      if (data.cardClientSecret && stripeRef.current) {
+        const { error: actionError } = await stripeRef.current.stripe.handleNextAction({
+          clientSecret: data.cardClientSecret,
+        });
+        if (actionError) {
+          throw new Error(
+            `Autenticação do cartão não concluída: ${actionError.message ?? 'tente novamente.'}`,
+          );
+        }
       }
       onOrder(data);
     } catch (err) {
@@ -448,11 +521,11 @@ function PaymentPanel({
       </div>
 
       <div className="mt-5 grid grid-cols-3 gap-2">
-        {METHODS.map((m) => (
+        {paymentMethods(course, boletoMax).map((m) => (
           <button
             key={m.key}
             type="button"
-            onClick={() => setMethod(m.key)}
+            onClick={() => chooseMethod(m.key)}
             className={`rounded-xl border p-3 text-left transition-colors ${
               method === m.key
                 ? 'border-green-700 bg-green-50'
@@ -466,7 +539,26 @@ function PaymentPanel({
       </div>
 
       <form onSubmit={pay} className="mt-5 flex flex-col gap-4">
-        {method === 'card' ? (
+        {method === 'card' && stripeCard ? (
+          stripeConfigured ? (
+            <>
+              <Field
+                label="Nome impresso no cartão"
+                value={holderName}
+                onChange={(e) => setHolderName(e.target.value)}
+                autoComplete="cc-name"
+                required
+              />
+              <StripeCardField onReady={onStripeReady} />
+              <InstallmentsField course={course} value={installments} onChange={setInstallments} />
+            </>
+          ) : (
+            <p className="rounded-xl bg-paper px-4 py-3 text-sm text-muted">
+              Pagamento com cartão indisponível no momento. Use Pix ou boleto, ou fale com a nossa
+              equipe.
+            </p>
+          )
+        ) : method === 'card' ? (
           <>
             <Field
               label="Número do cartão"
@@ -534,7 +626,12 @@ function PaymentPanel({
           </>
         ) : method === 'boleto' ? (
           <>
-            <InstallmentsField course={course} value={installments} onChange={setInstallments} />
+            <InstallmentsField
+              course={course}
+              value={installments}
+              onChange={setInstallments}
+              max={boletoMax}
+            />
             <p className="rounded-xl bg-paper px-4 py-3 text-sm text-muted">
               {installments > 1
                 ? `Ao confirmar, geramos um carnê de ${installments}x. A matrícula é liberada após a compensação da 1ª parcela (1–2 dias úteis).`
@@ -550,7 +647,12 @@ function PaymentPanel({
 
         {error ? <p className="text-sm text-error">{error}</p> : null}
 
-        <Button type="submit" variant="gold" disabled={busy} className="mt-1 w-full">
+        <Button
+          type="submit"
+          variant="gold"
+          disabled={busy || (method === 'card' && stripeCard && !stripeConfigured)}
+          className="mt-1 w-full"
+        >
           {busy
             ? 'Processando…'
             : method === 'pix'
@@ -566,6 +668,68 @@ function PaymentPanel({
         </p>
       </form>
     </section>
+  );
+}
+
+/**
+ * Campo de cartão da Stripe (iframe seguro: número, validade e CVV). O cartão
+ * nunca toca nosso código — só o token criado a partir dele.
+ */
+function StripeCardField({
+  onReady,
+}: {
+  onReady: (stripe: Stripe, card: StripeCardElement) => void;
+}) {
+  const mountRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(true);
+  const [fieldError, setFieldError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let card: StripeCardElement | undefined;
+    let cancelled = false;
+    getStripe()
+      .then((stripe) => {
+        if (cancelled || !mountRef.current) return;
+        if (!stripe) {
+          setFieldError('Pagamento com cartão indisponível no momento.');
+          setLoading(false);
+          return;
+        }
+        card = stripe.elements({ locale: 'pt-BR' }).create('card', {
+          hidePostalCode: true,
+          style: {
+            base: {
+              fontSize: '15px',
+              color: '#16201B',
+              '::placeholder': { color: '#5C665F' },
+            },
+            invalid: { color: '#B42318' },
+          },
+        });
+        card.on('ready', () => setLoading(false));
+        card.on('change', (e) => setFieldError(e.error?.message ?? null));
+        card.mount(mountRef.current);
+        onReady(stripe, card);
+      })
+      .catch(() => {
+        setFieldError('Não foi possível carregar o pagamento com cartão. Recarregue a página.');
+        setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+      card?.destroy();
+    };
+  }, [onReady]);
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <span className="text-sm font-semibold text-ink">Dados do cartão</span>
+      <div className="rounded-[10px] border-[1.5px] border-border px-3.5 py-3.5">
+        <div ref={mountRef} />
+        {loading ? <span className="text-sm text-muted">Carregando campo seguro…</span> : null}
+      </div>
+      {fieldError ? <span className="text-sm text-error">{fieldError}</span> : null}
+    </div>
   );
 }
 
@@ -607,7 +771,11 @@ function PaymentPendingPanel({
   return (
     <section className="rounded-2xl border border-border bg-white p-6 shadow-sm sm:p-8">
       <h1 className="font-serif text-2xl font-semibold text-green-800">
-        {order.method === 'pix' ? 'Pague com Pix para liberar o curso' : 'Boleto gerado'}
+        {order.method === 'pix'
+          ? 'Pague com Pix para liberar o curso'
+          : order.method === 'card'
+            ? 'Confirmando o pagamento do cartão'
+            : 'Boleto gerado'}
       </h1>
       <p className="mt-1 flex items-center gap-2 text-sm text-muted">
         <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-gold-500" />
@@ -619,7 +787,11 @@ function PaymentPendingPanel({
           <div className="grid place-items-center rounded-xl border border-border bg-paper p-6">
             {order.pixQrCode ? (
               <img
-                src={`data:image/png;base64,${order.pixQrCode}`}
+                src={
+                  /^https?:\/\//.test(order.pixQrCode)
+                    ? order.pixQrCode
+                    : `data:image/png;base64,${order.pixQrCode}`
+                }
                 alt="QR Code Pix"
                 className="h-48 w-48 rounded-lg bg-white p-2 shadow-inner"
               />
@@ -667,7 +839,7 @@ function PaymentPendingPanel({
       {order.simulatable ? (
         <div className="mt-6 rounded-xl border border-dashed border-gold-500/60 bg-gold-50/50 p-4">
           <p className="text-xs text-muted">
-            Ambiente de demonstração (gateway fake). Em produção, o Asaas confirma automaticamente
+            Ambiente de demonstração (gateway fake). Em produção, o gateway confirma automaticamente
             via webhook.
           </p>
           <Button

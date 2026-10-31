@@ -17,6 +17,10 @@ COPY pnpm-lock.yaml package.json ./
 RUN pnpm fetch
 COPY . .
 RUN pnpm install --frozen-lockfile --prefer-offline
+# Chave publicável da Stripe (pública) — assada no bundle do checkout. Vem do
+# Coolify como build variable; sem ela, o cartão via Stripe fica indisponível.
+ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+ENV NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=$NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 RUN pnpm --filter @vethis/site build
 
 FROM node:22-alpine AS runner

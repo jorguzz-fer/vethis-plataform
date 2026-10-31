@@ -10,6 +10,7 @@
     "test": "echo \"(site) coberto por build/typecheck\" && exit 0"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^10.2.0",
     "@vethis/api-client": "workspace:*",
     "@vethis/shared": "workspace:*",
     "@vethis/ui": "workspace:*",
