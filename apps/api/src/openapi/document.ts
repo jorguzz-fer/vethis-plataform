@@ -22,7 +22,12 @@ import {
   secretariaRequestSchema,
   updateProfileSchema,
 } from '../me/dto';
-import { createCheckoutSchema, orderSchema, paymentWebhookSchema } from '../checkout/dto';
+import {
+  checkoutConfigSchema,
+  createCheckoutSchema,
+  orderSchema,
+  paymentWebhookSchema,
+} from '../checkout/dto';
 import {
   createLeadSchema,
   createOpportunitySchema,
@@ -100,6 +105,7 @@ export function buildOpenApiDocument() {
   const Certificate = registry.register('Certificate', certificateSchema);
   const CreateCheckoutInput = registry.register('CreateCheckoutInput', createCheckoutSchema);
   const Order = registry.register('Order', orderSchema);
+  const CheckoutConfig = registry.register('CheckoutConfig', checkoutConfigSchema);
   const PaymentWebhookInput = registry.register('PaymentWebhookInput', paymentWebhookSchema);
   const CreateLeadInput = registry.register('CreateLeadInput', createLeadSchema);
   const Lead = registry.register('Lead', leadSchema);
@@ -271,6 +277,13 @@ export function buildOpenApiDocument() {
   });
 
   registry.registerPath({
+    method: 'get',
+    path: '/v1/checkout/config',
+    tags: ['checkout'],
+    summary: 'Provedor de cada meio de pagamento e teto do carnê (público)',
+    responses: { 200: { description: 'OK', ...json(CheckoutConfig) } },
+  });
+  registry.registerPath({
     method: 'post',
     path: '/v1/checkout',
     tags: ['checkout'],
@@ -311,6 +324,16 @@ export function buildOpenApiDocument() {
     summary: 'Webhook de confirmação do gateway de pagamento',
     request: { body: json(PaymentWebhookInput) },
     responses: { 200: { description: 'Recebido' } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/webhooks/stripe',
+    tags: ['checkout'],
+    summary: 'Webhook da Stripe (assinatura stripe-signature sobre o corpo bruto)',
+    responses: {
+      200: { description: 'Recebido' },
+      400: { description: 'Assinatura inválida' },
+    },
   });
 
   registry.registerPath({

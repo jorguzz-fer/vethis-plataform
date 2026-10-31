@@ -7,14 +7,14 @@ import {
 } from '@nestjs/common';
 import { APP_CONFIG, type AppConfig } from '../config/configuration';
 import { CheckoutService } from './checkout.service';
-import { PAYMENT_GATEWAY, type PaymentGateway } from './payment-gateway';
+import { PAYMENT_GATEWAYS, type PaymentGateways } from './payment-gateway';
 
 /**
  * Reconciliação periódica de pagamentos: consulta no provedor os pedidos ainda
  * pendentes e confirma os que já foram pagos. Cobre webhook não cadastrado,
  * fila pausada ou API fora do ar na hora do evento. Primeira rodada logo após o
  * boot (pega o que ficou para trás durante um deploy); depois a cada
- * `PAYMENT_RECONCILE_INTERVAL_SEC` (0 desliga). Não roda com o gateway fake.
+ * `PAYMENT_RECONCILE_INTERVAL_SEC` (0 desliga). Não roda só com o gateway fake.
  */
 @Injectable()
 export class PaymentReconcilerService implements OnModuleInit, OnModuleDestroy {
@@ -25,14 +25,17 @@ export class PaymentReconcilerService implements OnModuleInit, OnModuleDestroy {
 
   constructor(
     @Inject(CheckoutService) private readonly checkout: CheckoutService,
-    @Inject(PAYMENT_GATEWAY) private readonly gateway: PaymentGateway,
+    @Inject(PAYMENT_GATEWAYS) private readonly gateways: PaymentGateways,
     @Inject(APP_CONFIG) private readonly config: AppConfig,
   ) {}
 
   onModuleInit(): void {
     const seconds = this.config.PAYMENT_RECONCILE_INTERVAL_SEC;
-    if (seconds <= 0 || this.gateway.simulatable) return;
-    this.logger.log(`Reconciliação de pagamentos a cada ${seconds}s (${this.gateway.provider}).`);
+    const real = this.gateways.all().filter((g) => !g.simulatable);
+    if (seconds <= 0 || real.length === 0) return;
+    this.logger.log(
+      `Reconciliação de pagamentos a cada ${seconds}s (${real.map((g) => g.provider).join(', ')}).`,
+    );
     this.kickoff = setTimeout(() => void this.run(), 20_000);
     this.kickoff.unref();
     this.timer = setInterval(() => void this.run(), seconds * 1000);

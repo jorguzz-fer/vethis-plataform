@@ -9,7 +9,12 @@ import { AppModule } from './app.module';
 import { APP_CONFIG, type AppConfig } from './config/configuration';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, { bufferLogs: false });
+  // rawBody: o webhook da Stripe valida a assinatura sobre o corpo original
+  // (req.rawBody); o JSON parseado continua disponível normalmente.
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bufferLogs: false,
+    rawBody: true,
+  });
   const config = app.get<AppConfig>(APP_CONFIG);
 
   // Atrás do proxy do Coolify (Traefik): sem isto, req.ip é o IP interno do

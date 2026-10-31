@@ -8,8 +8,11 @@ import {
   Ip,
   Param,
   Post,
+  Req,
   UseGuards,
+  type RawBodyRequest,
 } from '@nestjs/common';
+import type { Request } from 'express';
 import { CurrentUser, type AuthUser } from '../common/auth-user';
 import { SkipThrottle } from '@nestjs/throttler';
 import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
@@ -23,6 +26,7 @@ import {
   createCheckoutSchema,
   paymentWebhookSchema,
   type AsaasWebhookDto,
+  type CheckoutConfigDto,
   type CreateCheckoutDto,
   type OrderDto,
   type PaymentWebhookDto,
@@ -47,6 +51,12 @@ export class CheckoutController {
   @Roles('staff', 'admin')
   reconcile(): Promise<{ checked: number; confirmed: number }> {
     return this.reconciler.run();
+  }
+
+  /** Público: provedor de cada meio (o site escolhe Stripe.js ou campos próprios). */
+  @Get('checkout/config')
+  config(): CheckoutConfigDto {
+    return this.checkout.getCheckoutConfig();
   }
 
   @Post('checkout')
@@ -91,5 +101,16 @@ export class CheckoutController {
     @Body(new ZodValidationPipe(asaasWebhookSchema)) dto: AsaasWebhookDto,
   ): Promise<{ ok: true }> {
     return this.checkout.handleAsaasWebhook(token, dto);
+  }
+
+  /** Webhook da Stripe. Autenticidade pela assinatura `stripe-signature`. */
+  @Post('webhooks/stripe')
+  @HttpCode(200)
+  @SkipThrottle()
+  webhookStripe(
+    @Req() req: RawBodyRequest<Request>,
+    @Headers('stripe-signature') signature: string | undefined,
+  ): Promise<{ ok: true }> {
+    return this.checkout.handleStripeWebhook(req.rawBody, signature);
   }
 }
