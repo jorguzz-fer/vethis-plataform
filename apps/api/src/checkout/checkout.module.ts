@@ -1,18 +1,17 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { APP_CONFIG, type AppConfig } from '../config/configuration';
 import { CheckoutController } from './checkout.controller';
 import { CheckoutService } from './checkout.service';
 import { PaymentReconcilerService } from './payment-reconciler.service';
-import { FakePaymentGateway } from './fake-gateway';
-import { AsaasPaymentGateway } from './asaas-gateway';
-import { PAYMENT_GATEWAY, type PaymentGateway } from './payment-gateway';
+import { buildPaymentGateways } from './gateway-registry';
+import { PAYMENT_GATEWAYS } from './payment-gateway';
 
 /**
- * Domínio de comércio (checkout → pagamento → matrícula). O gateway ativo é
- * escolhido por DI a partir de `PAYMENT_GATEWAY`: `fake` em dev, `asaas` quando
- * as credenciais estão no ambiente (ADR 0004) — sem tocar no serviço.
+ * Domínio de comércio (checkout → pagamento → matrícula). Os gateways ativos
+ * vêm de `PAYMENT_GATEWAY` (+ sobrescritas por meio): `fake` em dev; `stripe`
+ * e/ou `asaas` em produção (ADR 0004) — sem tocar no serviço.
  */
 @Module({
   imports: [AuthModule, UsersModule],
@@ -21,21 +20,9 @@ import { PAYMENT_GATEWAY, type PaymentGateway } from './payment-gateway';
     CheckoutService,
     PaymentReconcilerService,
     {
-      provide: PAYMENT_GATEWAY,
+      provide: PAYMENT_GATEWAYS,
       inject: [APP_CONFIG],
-      useFactory: (config: AppConfig): PaymentGateway => {
-        if (config.PAYMENT_GATEWAY === 'asaas') {
-          const logger = new Logger('CheckoutModule');
-          logger.log(`Gateway de pagamento: asaas (${config.ASAAS_BASE_URL})`);
-          if (config.NODE_ENV === 'production' && /sandbox/i.test(config.ASAAS_BASE_URL)) {
-            logger.warn(
-              'ATENÇÃO: NODE_ENV=production com ASAAS_BASE_URL de SANDBOX — as cobranças NÃO são reais. Em produção use https://api.asaas.com/v3 com a chave de produção.',
-            );
-          }
-          return new AsaasPaymentGateway(config);
-        }
-        return new FakePaymentGateway();
-      },
+      useFactory: (config: AppConfig) => buildPaymentGateways(config),
     },
   ],
 })

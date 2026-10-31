@@ -8,7 +8,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { and, eq, gte, isNotNull, isNull } from 'drizzle-orm';
+import { and, eq, gte, inArray, isNotNull, isNull } from 'drizzle-orm';
 import { DB, type Database } from '../db/client';
 import { courses } from '../db/schema/catalog';
 import { enrollments } from '../db/schema/enrollment';
@@ -17,10 +17,22 @@ import { crmInteractions, leads } from '../db/schema/crm';
 import { users } from '../db/schema/identity';
 import { APP_CONFIG, type AppConfig } from '../config/configuration';
 import type { AuthUser } from '../common/auth-user';
-import type { AsaasWebhookDto, CreateCheckoutDto, OrderDto, PaymentWebhookDto } from './dto';
-import { PAYMENT_GATEWAY, type PaymentGateway } from './payment-gateway';
+import type {
+  AsaasWebhookDto,
+  CheckoutConfigDto,
+  CreateCheckoutDto,
+  OrderDto,
+  PaymentWebhookDto,
+} from './dto';
+import { PAYMENT_GATEWAYS, type PaymentGateways } from './payment-gateway';
+import { StripePaymentGateway } from './stripe-gateway';
 import { asaasEventToStatus } from './asaas-gateway';
-import { courseMaxInstallments, effectiveInstallments, netAmountCents } from './pricing';
+import {
+  BOLETO_MAX_INSTALLMENTS,
+  courseMaxInstallments,
+  effectiveInstallments,
+  netAmountCents,
+} from './pricing';
 import { MailerService } from '../mail/mailer.service';
 import { orderCreatedMail, paymentConfirmedMail, salesNoticeMail } from '../mail/templates';
 
@@ -30,10 +42,22 @@ export class CheckoutService {
 
   constructor(
     @Inject(DB) private readonly db: Database,
-    @Inject(PAYMENT_GATEWAY) private readonly gateway: PaymentGateway,
+    @Inject(PAYMENT_GATEWAYS) private readonly gateways: PaymentGateways,
     @Inject(APP_CONFIG) private readonly config: AppConfig,
     @Inject(MailerService) private readonly mailer: MailerService,
   ) {}
+
+  /** Como o checkout deve se comportar: provedor de cada meio e teto do carnê. */
+  getCheckoutConfig(): CheckoutConfigDto {
+    return {
+      providers: {
+        pix: this.gateways.forMethod('pix').provider,
+        card: this.gateways.forMethod('card').provider,
+        boleto: this.gateways.forMethod('boleto').provider,
+      },
+      boletoMaxInstallments: BOLETO_MAX_INSTALLMENTS,
+    };
+  }
 
   /** Inicia o checkout: cria o pedido, cobra no gateway e (se já aprovado) matricula. */
   async createCheckout(
@@ -94,9 +118,24 @@ export class CheckoutService {
       .returning();
     if (!order) throw new BadRequestException('Falha ao criar pedido');
 
+    const gateway = this.gateways.forMethod(dto.method);
+    // Cartão em claro só serve a gateways que tokenizam no servidor (Asaas); na
+    // Stripe o navegador tokeniza e manda só o `pm_...`.
+    const rawCard = dto.card && 'number' in dto.card ? dto.card : undefined;
+    const cardPaymentMethodId =
+      dto.card && 'paymentMethodId' in dto.card ? dto.card.paymentMethodId : undefined;
+    if (dto.method === 'card' && gateway.provider === 'stripe' && !cardPaymentMethodId) {
+      throw new BadRequestException(
+        'Pagamento com cartão atualizado. Recarregue a página e tente novamente.',
+      );
+    }
+    if (dto.method === 'card' && gateway.provider !== 'stripe' && !rawCard) {
+      throw new BadRequestException('Dados do cartão ausentes.');
+    }
+
     let charge;
     try {
-      charge = await this.gateway.createCharge({
+      charge = await gateway.createCharge({
         orderId: order.id,
         amountCents: order.amountCents,
         method: dto.method,
@@ -110,15 +149,16 @@ export class CheckoutService {
           addressNumber: dto.customer.addressNumber,
           remoteIp,
         },
-        card: dto.card
+        card: rawCard
           ? {
-              number: dto.card.number,
-              holderName: dto.card.holderName,
-              expMonth: dto.card.expMonth,
-              expYear: dto.card.expYear,
-              cvv: dto.card.cvv,
+              number: rawCard.number,
+              holderName: rawCard.holderName,
+              expMonth: rawCard.expMonth,
+              expYear: rawCard.expYear,
+              cvv: rawCard.cvv,
             }
           : undefined,
+        cardPaymentMethodId,
       });
     } catch (err) {
       // Cobrança falhou → não deixa o pedido órfão em `pending`.
@@ -133,7 +173,7 @@ export class CheckoutService {
       .insert(payments)
       .values({
         orderId: order.id,
-        provider: this.gateway.provider,
+        provider: gateway.provider,
         method: dto.method,
         status: charge.status,
         amountCents: order.amountCents,
@@ -149,6 +189,12 @@ export class CheckoutService {
     if (charge.status === 'paid') {
       await this.confirmOrderPaid(order.id);
       return this.loadOrderDto(order.id, user.id);
+    }
+
+    // Cartão aguardando o 3D Secure no navegador: sem e-mail de "aguardando
+    // pagamento" — o aluno conclui em segundos e recebe a confirmação.
+    if (charge.clientSecret) {
+      return { ...this.toOrderDto(order, payment, course), cardClientSecret: charge.clientSecret };
     }
 
     // Pedido aguardando pagamento (Pix/boleto): e-mail com o código/boleto.
@@ -179,7 +225,7 @@ export class CheckoutService {
    * do webhook real. Bloqueado em produção e quando o gateway não é o fake.
    */
   async simulatePayment(user: AuthUser, orderId: string): Promise<OrderDto> {
-    if (this.config.NODE_ENV === 'production' || !this.gateway.simulatable) {
+    if (this.config.NODE_ENV === 'production' || !this.anySimulatable()) {
       throw new ForbiddenException('Simulação de pagamento indisponível');
     }
     const [order] = await this.db
@@ -188,9 +234,21 @@ export class CheckoutService {
       .where(and(eq(orders.id, orderId), eq(orders.userId, user.id)))
       .limit(1);
     if (!order) throw new NotFoundException('Pedido não encontrado');
+    const [payment] = await this.db
+      .select({ provider: payments.provider })
+      .from(payments)
+      .where(eq(payments.orderId, order.id))
+      .limit(1);
+    if (!payment || !this.gateways.byProvider(payment.provider)?.simulatable) {
+      throw new ForbiddenException('Simulação de pagamento indisponível');
+    }
 
     await this.confirmOrderPaid(order.id);
     return this.loadOrderDto(order.id, user.id);
+  }
+
+  private anySimulatable(): boolean {
+    return this.gateways.all().some((g) => g.simulatable);
   }
 
   /**
@@ -199,7 +257,7 @@ export class CheckoutService {
    * o Asaas, a confirmação vem exclusivamente de `handleAsaasWebhook`.
    */
   async handleWebhook(dto: PaymentWebhookDto): Promise<{ ok: true }> {
-    if (this.config.NODE_ENV === 'production' || !this.gateway.simulatable) {
+    if (this.config.NODE_ENV === 'production' || !this.anySimulatable()) {
       throw new ForbiddenException('Webhook genérico indisponível');
     }
     const [payment] = await this.db
@@ -261,21 +319,79 @@ export class CheckoutService {
   }
 
   /**
-   * Reconciliação: para cada pedido pendente recente com cobrança no gateway
-   * ativo, consulta o provedor e confirma os já pagos (matrícula + e-mails).
+   * Webhook da Stripe. Autenticidade pela assinatura `stripe-signature` sobre o
+   * corpo bruto (`STRIPE_WEBHOOK_SECRET`). Confirma em `payment_intent.succeeded`
+   * casando por id do PaymentIntent ou pelo `metadata.orderId`.
+   */
+  async handleStripeWebhook(
+    rawBody: Buffer | undefined,
+    signature: string | undefined,
+  ): Promise<{ ok: true }> {
+    const stripe = this.gateways.byProvider('stripe');
+    if (!(stripe instanceof StripePaymentGateway)) {
+      this.logger.warn('Webhook Stripe recebido com a Stripe desligada — ignorado.');
+      throw new UnauthorizedException();
+    }
+    const event = stripe.parseWebhook(rawBody, signature);
+    if (event.type !== 'payment_intent.succeeded') {
+      if (event.type === 'payment_intent.payment_failed') {
+        const intent = event.data.object;
+        this.logger.log(
+          `Stripe: pagamento recusado (${intent.id}, pedido ${intent.metadata?.orderId ?? '?'}).`,
+        );
+      }
+      return { ok: true };
+    }
+
+    const intent = event.data.object;
+    const [payment] = await this.db
+      .select({ orderId: payments.orderId })
+      .from(payments)
+      .where(eq(payments.providerChargeId, intent.id))
+      .limit(1);
+    let orderId = payment?.orderId;
+    const metaOrderId = intent.metadata?.orderId;
+    if (!orderId && metaOrderId && /^[0-9a-f-]{36}$/i.test(metaOrderId)) {
+      const [order] = await this.db
+        .select({ id: orders.id })
+        .from(orders)
+        .where(eq(orders.id, metaOrderId))
+        .limit(1);
+      orderId = order?.id;
+    }
+    if (!orderId) {
+      this.logger.warn(`Webhook Stripe para cobrança desconhecida: ${intent.id}`);
+      return { ok: true };
+    }
+    await this.confirmOrderPaid(orderId);
+    return { ok: true };
+  }
+
+  /**
+   * Reconciliação: para cada pedido pendente recente com cobrança em um gateway
+   * real, consulta o provedor e confirma os já pagos (matrícula + e-mails).
    * Idempotente e tolerante: erro em um pedido não interrompe os demais.
    */
   async reconcilePendingPayments(): Promise<{ checked: number; confirmed: number }> {
     const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const providers = this.gateways
+      .all()
+      .filter((g) => !g.simulatable)
+      .map((g) => g.provider);
+    if (providers.length === 0) return { checked: 0, confirmed: 0 };
     const rows = await this.db
-      .select({ orderId: orders.id, chargeId: payments.providerChargeId })
+      .select({
+        orderId: orders.id,
+        chargeId: payments.providerChargeId,
+        provider: payments.provider,
+      })
       .from(orders)
       .innerJoin(payments, eq(payments.orderId, orders.id))
       .where(
         and(
           eq(orders.status, 'pending'),
           gte(orders.createdAt, since),
-          eq(payments.provider, this.gateway.provider),
+          inArray(payments.provider, providers),
           isNotNull(payments.providerChargeId),
         ),
       )
@@ -283,9 +399,10 @@ export class CheckoutService {
 
     let confirmed = 0;
     for (const row of rows) {
-      if (!row.chargeId) continue;
+      const gateway = this.gateways.byProvider(row.provider);
+      if (!row.chargeId || !gateway) continue;
       try {
-        const status = await this.gateway.getChargeStatus(row.chargeId);
+        const status = await gateway.getChargeStatus(row.chargeId);
         if (status === 'paid') {
           await this.confirmOrderPaid(row.orderId);
           confirmed += 1;
@@ -481,8 +598,11 @@ export class CheckoutService {
       pixQrCode: payment.pixQrCode,
       pixCopyPaste: payment.pixCopyPaste,
       boletoUrl: payment.boletoUrl,
-      simulatable: this.gateway.simulatable && order.status === 'pending',
+      simulatable:
+        Boolean(this.gateways.byProvider(payment.provider)?.simulatable) &&
+        order.status === 'pending',
       createdAt: order.createdAt.toISOString(),
+      cardClientSecret: null,
     };
   }
 }

@@ -1187,40 +1187,56 @@
             ]
           },
           "card": {
-            "type": "object",
-            "properties": {
-              "number": {
-                "type": "string",
-                "minLength": 12,
-                "maxLength": 19
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "paymentMethodId": {
+                    "type": "string",
+                    "pattern": "^pm_[A-Za-z0-9_]+$"
+                  }
+                },
+                "required": [
+                  "paymentMethodId"
+                ]
               },
-              "holderName": {
-                "type": "string",
-                "minLength": 2,
-                "maxLength": 120
-              },
-              "expMonth": {
-                "type": "integer",
-                "minimum": 1,
-                "maximum": 12
-              },
-              "expYear": {
-                "type": "integer",
-                "minimum": 2024,
-                "maximum": 2100
-              },
-              "cvv": {
-                "type": "string",
-                "minLength": 3,
-                "maxLength": 4
+              {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "string",
+                    "minLength": 12,
+                    "maxLength": 19
+                  },
+                  "holderName": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 120
+                  },
+                  "expMonth": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 12
+                  },
+                  "expYear": {
+                    "type": "integer",
+                    "minimum": 2024,
+                    "maximum": 2100
+                  },
+                  "cvv": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 4
+                  }
+                },
+                "required": [
+                  "number",
+                  "holderName",
+                  "expMonth",
+                  "expYear",
+                  "cvv"
+                ]
               }
-            },
-            "required": [
-              "number",
-              "holderName",
-              "expMonth",
-              "expYear",
-              "cvv"
             ]
           },
           "installments": {
@@ -1355,6 +1371,12 @@
           },
           "createdAt": {
             "type": "string"
+          },
+          "cardClientSecret": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "required": [
@@ -1369,7 +1391,39 @@
           "pixCopyPaste",
           "boletoUrl",
           "simulatable",
-          "createdAt"
+          "createdAt",
+          "cardClientSecret"
+        ]
+      },
+      "CheckoutConfig": {
+        "type": "object",
+        "properties": {
+          "providers": {
+            "type": "object",
+            "properties": {
+              "pix": {
+                "type": "string"
+              },
+              "card": {
+                "type": "string"
+              },
+              "boleto": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "pix",
+              "card",
+              "boleto"
+            ]
+          },
+          "boletoMaxInstallments": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "providers",
+          "boletoMaxInstallments"
         ]
       },
       "PaymentWebhookInput": {
@@ -3674,6 +3728,26 @@
         }
       }
     },
+    "/v1/checkout/config": {
+      "get": {
+        "tags": [
+          "checkout"
+        ],
+        "summary": "Provedor de cada meio de pagamento e teto do carnê (público)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutConfig"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/checkout": {
       "post": {
         "tags": [
@@ -3793,6 +3867,22 @@
         "responses": {
           "200": {
             "description": "Recebido"
+          }
+        }
+      }
+    },
+    "/v1/webhooks/stripe": {
+      "post": {
+        "tags": [
+          "checkout"
+        ],
+        "summary": "Webhook da Stripe (assinatura stripe-signature sobre o corpo bruto)",
+        "responses": {
+          "200": {
+            "description": "Recebido"
+          },
+          "400": {
+            "description": "Assinatura inválida"
           }
         }
       }

@@ -15,6 +15,9 @@ export const PIX_DISCOUNT_PERCENT = 5;
  */
 export const MAX_INSTALLMENTS = 24;
 
+/** Teto do carnê (boleto parcelado), abaixo do teto do cartão. */
+export const BOLETO_MAX_INSTALLMENTS = 15;
+
 /** Planos válidos, ordenados por nº de parcelas (sem duplicatas, até o teto global). */
 export function normalizePlans(
   plans: readonly InstallmentPlan[] | null | undefined,
@@ -77,7 +80,8 @@ export function netAmountCents(
 
 /**
  * Parcelas efetivas: Pix é sempre à vista; cartão/boleto respeitam o teto do
- * curso (`courseMax`, quando informado) limitado ao teto global.
+ * curso (`courseMax`, quando informado) limitado ao teto global — e o boleto,
+ * também ao teto do carnê (`BOLETO_MAX_INSTALLMENTS`).
  */
 export function effectiveInstallments(
   method: PaymentMethodDto,
@@ -87,7 +91,7 @@ export function effectiveInstallments(
   if (method === 'pix') return 1;
   const cap = Math.min(
     Number.isFinite(courseMax) && courseMax >= 1 ? Math.trunc(courseMax) : MAX_INSTALLMENTS,
-    MAX_INSTALLMENTS,
+    method === 'boleto' ? BOLETO_MAX_INSTALLMENTS : MAX_INSTALLMENTS,
   );
   if (!Number.isFinite(requested) || requested < 1) return 1;
   return Math.min(Math.trunc(requested), cap);

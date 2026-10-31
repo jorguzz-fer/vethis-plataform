@@ -6,16 +6,24 @@ export const paymentMethodSchema = z.enum(['pix', 'card', 'boleto']);
 export type PaymentMethodDto = z.infer<typeof paymentMethodSchema>;
 
 /**
- * Dados do cartão — trafegam só para o gateway, nunca são persistidos (PCI).
- * Na fase 1 (adapter fake) servem apenas para simular a autorização.
+ * Cartão em claro — só para gateways que tokenizam no servidor (Asaas/fake).
+ * Trafega só para o gateway, nunca é persistido.
  */
-export const cardSchema = z.object({
+export const rawCardSchema = z.object({
   number: z.string().min(12).max(19),
   holderName: z.string().min(2).max(120),
   expMonth: z.coerce.number().int().min(1).max(12),
   expYear: z.coerce.number().int().min(2024).max(2100),
   cvv: z.string().min(3).max(4),
 });
+
+/** Cartão tokenizado no navegador pelo Stripe.js: só o id `pm_...` chega à API. */
+export const tokenizedCardSchema = z.object({
+  paymentMethodId: z.string().regex(/^pm_[A-Za-z0-9_]+$/, 'Cartão inválido'),
+});
+
+/** Cartão do checkout: tokenizado (Stripe) ou em claro (Asaas), conforme o gateway. */
+export const cardSchema = z.union([tokenizedCardSchema, rawCardSchema]);
 export type CardDto = z.infer<typeof cardSchema>;
 
 /** Só dígitos, 11 (CPF) ou 14 (CNPJ). */
@@ -52,9 +60,12 @@ export const createCheckoutSchema = z
     message: 'Dados do cartão são obrigatórios para pagamento com cartão',
     path: ['card'],
   })
+  // Antifraude do Asaas: cartão em claro exige telefone, CEP e número. Com a
+  // Stripe (cartão tokenizado), o antifraude dela dispensa esses campos.
   .refine(
     (v) =>
       v.method !== 'card' ||
+      (v.card != null && 'paymentMethodId' in v.card) ||
       (Boolean(v.customer.phone) &&
         Boolean(v.customer.postalCode) &&
         Boolean(v.customer.addressNumber)),
@@ -89,8 +100,24 @@ export const orderSchema = z.object({
   boletoUrl: z.string().nullable(),
   simulatable: z.boolean(),
   createdAt: z.string(),
+  /**
+   * Cartão aguardando 3D Secure: o navegador conclui com o Stripe.js usando este
+   * segredo. Só vem na resposta do checkout; `null` nas consultas do pedido.
+   */
+  cardClientSecret: z.string().nullable(),
 });
 export type OrderDto = z.infer<typeof orderSchema>;
+
+/** Provedor que atende cada meio + teto do carnê (o site adapta o formulário). */
+export const checkoutConfigSchema = z.object({
+  providers: z.object({
+    pix: z.string(),
+    card: z.string(),
+    boleto: z.string(),
+  }),
+  boletoMaxInstallments: z.number().int(),
+});
+export type CheckoutConfigDto = z.infer<typeof checkoutConfigSchema>;
 
 /** Payload de webhook genérico (dev/testes). */
 export const paymentWebhookSchema = z.object({
