@@ -13,9 +13,9 @@ export const PIX_DISCOUNT_PERCENT = 5;
  * Teto global de parcelas (cartão e boleto/carnê). Cada curso pode oferecer
  * menos (`courses.max_installments`), nunca mais do que isto.
  */
-export const MAX_INSTALLMENTS = 24;
+export const MAX_INSTALLMENTS = 15;
 
-/** Teto do carnê (boleto parcelado), abaixo do teto do cartão. */
+/** Teto do carnê (boleto parcelado). Hoje igual ao do cartão; pode ficar abaixo. */
 export const BOLETO_MAX_INSTALLMENTS = 15;
 
 /** Planos válidos, ordenados por nº de parcelas (sem duplicatas, até o teto global). */
@@ -48,7 +48,7 @@ export function courseMaxInstallments(
 /**
  * Total cobrado no cartão/boleto para `installments` parcelas. Sem planos, é o
  * preço cheio. Com planos, vale o total do menor plano que comporta o nº de
- * parcelas (ex.: 12x de 725 cobre 1–12x; 24x de 577 cobre 13–24x).
+ * parcelas (ex.: 12x de 725 cobre 1–12x; 15x de 923,20 cobre 13–15x).
  */
 export function cardAmountCents(
   priceCents: number,

@@ -32,9 +32,9 @@ export const courseFaqItemSchema = z.object({
 });
 export type CourseFaqItem = z.infer<typeof courseFaqItemSchema>;
 
-/** Plano de parcelamento com total próprio (ex.: 24x de R$ 577,00). */
+/** Plano de parcelamento com total próprio (ex.: 15x de R$ 923,20). */
 export const installmentPlanSchema = z.object({
-  installments: z.number().int().min(1).max(24),
+  installments: z.number().int().min(1).max(15),
   installmentCents: z.number().int().positive(),
 });
 export type InstallmentPlanDto = z.infer<typeof installmentPlanSchema>;

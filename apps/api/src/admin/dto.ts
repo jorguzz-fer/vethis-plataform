@@ -57,8 +57,8 @@ const courseFieldsSchema = z.object({
   description: z.string().max(8000).nullable().optional(),
   priceCents: z.number().int().nonnegative().default(0),
   /** Teto de parcelas sem juros (usado quando não há planos). */
-  maxInstallments: z.number().int().min(1).max(24).default(24),
-  /** Planos com total próprio (ex.: 12x de 725 e 24x de 577). Vazio = preço único. */
+  maxInstallments: z.number().int().min(1).max(15).default(15),
+  /** Planos com total próprio (ex.: 12x de 725 e 15x de 923,20). Vazio = preço único. */
   installmentPlans: z.array(installmentPlanSchema).max(6).optional(),
   level: z.enum(levelValues).default('iniciante'),
   status: z.enum(statusValues).default('draft'),
@@ -89,7 +89,7 @@ export const updateCourseSchema = z
     subtitle: z.string().max(300).nullable().optional(),
     description: z.string().max(8000).nullable().optional(),
     priceCents: z.number().int().nonnegative().optional(),
-    maxInstallments: z.number().int().min(1).max(24).optional(),
+    maxInstallments: z.number().int().min(1).max(15).optional(),
     installmentPlans: z.array(installmentPlanSchema).max(6).optional(),
     level: z.enum(levelValues).optional(),
     status: z.enum(statusValues).optional(),

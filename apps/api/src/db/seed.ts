@@ -115,7 +115,7 @@ interface SeedCourse {
   /** Teto de parcelas sem juros deste curso. Padrão 24 (teto global). */
   maxInstallments?: number;
   /**
-   * Planos com total próprio (ex.: 12x de 725 ou 24x de 577). Quando presentes,
+   * Planos com total próprio (ex.: 12x de 725 ou 15x de 923,20). Quando presentes,
    * `priceCents` é o total do menor plano (base do Pix à vista com desconto).
    */
   installmentPlans?: { installments: number; installmentCents: number }[];
@@ -155,9 +155,9 @@ const COURSES: SeedCourse[] = [
       'Mais segurança para diagnosticar, mais clareza para decidir, mais confiança para atender.',
     description:
       'A Pós-graduação em Clínica Médica de Cães e Gatos foi criada para o médico-veterinário que deseja atender com mais segurança desde a primeira consulta. A formação começa pela semiologia, interpretação de exames e vacinação, avança pelas doenças infecciosas e parasitárias e percorre as principais áreas da clínica médica, sempre com foco no que realmente aparece na rotina: cardiologia e sistema respiratório, endocrinologia, nefrologia e urologia, dermatologia, neurologia, oncologia, gastroenterologia e hepatologia, hematologia e medicina transfusional e nutrição clínica. Mais do que apresentar doenças, o curso desenvolve o raciocínio clínico: o aluno aprende a construir listas de problemas, interpretar exames, estabelecer diagnósticos diferenciais, elaborar planos terapêuticos e monitorar a evolução dos pacientes. São 360 horas, com duração de até 12 meses, na modalidade EaD, combinando videoaulas gravadas, leitura dirigida, casos clínicos, exercícios de interpretação de exames, quizzes, fóruns, encontros síncronos quinzenais e projeto aplicado.',
-    // Oferta: 24x de R$ 1.277,00 (boleto ou cartão).
+    // Oferta: 15x de R$ 2.043,20 (boleto ou cartão).
     priceCents: 3064800,
-    maxInstallments: 24,
+    maxInstallments: 15,
     level: 'avancado',
     specialty: 'clinica-medica',
     instructor: 'dra-cintia-ghorayeb',
@@ -189,7 +189,7 @@ const COURSES: SeedCourse[] = [
       {
         question: 'Como funciona o pagamento?',
         answer:
-          'Em até 24x de R$ 1.277,00 no boleto ou no cartão, ou no Pix à vista com 5% de desconto (R$ 29.115,60).',
+          'Em até 15x de R$ 2.043,20 no boleto ou no cartão, ou no Pix à vista com 5% de desconto (R$ 29.115,60).',
       },
       {
         question: 'Como funciona a metodologia?',
@@ -436,11 +436,11 @@ const COURSES: SeedCourse[] = [
       'Atenda gatos com mais segurança, raciocínio clínico e confiança, do ambulatório à emergência.',
     description:
       'Pós-graduação 100% online e aplicada à rotina, com 360 horas e certificação. O gato não é um cão pequeno: aqui você desenvolve o raciocínio clínico orientado por problemas e domina as principais afecções da espécie: nefrologia e urologia, doenças infecciosas (PIF, FeLV, FIV, esporotricose), cardiologia, neurologia, gastroenterologia e hepatologia, endocrinologia, oncologia, dermatologia, oftalmologia, emergência, anestesia e analgesia, comportamento, cirurgia e odontologia felina. São 80 horas de videoaulas somadas a leituras dirigidas, quatro casos clínicos por módulo (52 no total), fóruns, quizzes e projeto aplicado.',
-    // Oferta: 12x de R$ 725,00 ou 24x de R$ 577,00 (boleto ou cartão).
+    // Oferta: 12x de R$ 725,00 ou 15x de R$ 923,20 (boleto ou cartão).
     priceCents: 870000,
     installmentPlans: [
       { installments: 12, installmentCents: 72500 },
-      { installments: 24, installmentCents: 57700 },
+      { installments: 15, installmentCents: 92320 },
     ],
     level: 'avancado',
     specialty: 'medicina-felina',
@@ -475,7 +475,7 @@ const COURSES: SeedCourse[] = [
       {
         question: 'Como funciona o pagamento?',
         answer:
-          'Em 12x de R$ 725,00 ou 24x de R$ 577,00 no boleto ou no cartão, ou no Pix à vista com 5% de desconto (R$ 8.265,00).',
+          'Em 12x de R$ 725,00 ou 15x de R$ 923,20 no boleto ou no cartão, ou no Pix à vista com 5% de desconto (R$ 8.265,00).',
       },
       {
         question: 'Como funciona a metodologia?',
@@ -691,11 +691,11 @@ const COURSES: SeedCourse[] = [
       'Da fisiopatologia renal à tomada de decisão clínica, à cirurgia e às terapias renais substitutivas.',
     description:
       'Pós-graduação 100% online, com 360 horas e certificação, para quem quer investigar e conduzir o paciente renal e urinário com segurança. O curso parte das bases anatômicas, fisiológicas e fisiopatológicas do sistema urinário e avança para urinálise e biomarcadores, diagnóstico por imagem, hemogasometria e eletrólitos, injúria renal aguda, doença renal crônica, infecções urinárias, urolitíases, hipertensão, proteinúria e glomerulopatias, doenças do trato urinário inferior, cirurgia e técnicas dialíticas. São 80 horas de videoaulas gravadas somadas a leituras dirigidas, quatro casos clínicos por módulo (48 no total), exercícios de interpretação de exames, quizzes, fóruns, encontros síncronos e projeto aplicado.',
-    // Oferta: 12x de R$ 725,00 ou 24x de R$ 577,00 (boleto ou cartão).
+    // Oferta: 12x de R$ 725,00 ou 15x de R$ 923,20 (boleto ou cartão).
     priceCents: 870000,
     installmentPlans: [
       { installments: 12, installmentCents: 72500 },
-      { installments: 24, installmentCents: 57700 },
+      { installments: 15, installmentCents: 92320 },
     ],
     level: 'avancado',
     specialty: 'nefrologia',
@@ -730,7 +730,7 @@ const COURSES: SeedCourse[] = [
       {
         question: 'Como funciona o pagamento?',
         answer:
-          'Em 12x de R$ 725,00 ou 24x de R$ 577,00 no boleto ou no cartão, ou no Pix à vista com 5% de desconto (R$ 8.265,00).',
+          'Em 12x de R$ 725,00 ou 15x de R$ 923,20 no boleto ou no cartão, ou no Pix à vista com 5% de desconto (R$ 8.265,00).',
       },
       {
         question: 'Como funciona a metodologia?',
@@ -1187,11 +1187,11 @@ const COURSES: SeedCourse[] = [
       'Do reconhecimento celular ao diagnóstico hematopatológico avançado, com leitura orientada de lâminas e casos.',
     description:
       'Formação em Mielograma e Hematopatologia Medular em Cães e Gatos: uma trilha teórico-prática com 60 horas, organizada em três módulos independentes e progressivos de 20 horas cada, do reconhecimento celular ao diagnóstico hematopatológico avançado. O diferencial pedagógico é começar pelo reconhecimento citomorfológico e pela leitura básica da medula óssea antes de avançar para alterações complexas, neoplasias hematopoiéticas, leucemias, síndromes mielodisplásicas e introdução à biópsia medular. O Módulo 1 (Básico) ensina a reconhecer as populações celulares da medula, organizar as sequências de maturação, avaliar a amostra, fazer a contagem diferencial e interpretar a relação mieloide:eritroide. O Módulo 2 (Intermediário) aprofunda a interpretação das alterações das linhagens, displasias, pancitopenias e a elaboração do laudo. O Módulo 3 (Avançado) aborda leucemias, doenças linfoides e plasmocitárias, síndromes mielodisplásicas, exames complementares (citometria de fluxo, imuno-histoquímica, PARR e técnicas moleculares) e a leitura inicial da biópsia de medula óssea. Cada módulo combina 12 horas teóricas e 8 horas práticas, com leitura orientada de lâminas e discussão de casos.',
-    // Oferta (completo): 10x de R$ 1.125,00 ou 24x de R$ 625,00 (boleto ou cartão).
+    // Oferta (completo): 10x de R$ 1.125,00 ou 15x de R$ 1.000,00 (boleto ou cartão).
     priceCents: 1125000,
     installmentPlans: [
       { installments: 10, installmentCents: 112500 },
-      { installments: 24, installmentCents: 62500 },
+      { installments: 15, installmentCents: 100000 },
     ],
     level: 'intermediario',
     specialty: 'hematologia',
@@ -1235,7 +1235,7 @@ const COURSES: SeedCourse[] = [
       {
         question: 'Como funciona o pagamento?',
         answer:
-          'Formação completa em 10x de R$ 1.125,00 ou 24x de R$ 625,00 no boleto ou no cartão, ou no Pix à vista com 5% de desconto (R$ 10.687,50).',
+          'Formação completa em 10x de R$ 1.125,00 ou 15x de R$ 1.000,00 no boleto ou no cartão, ou no Pix à vista com 5% de desconto (R$ 10.687,50).',
       },
       {
         question: 'Como funciona a metodologia?',
@@ -1678,7 +1678,7 @@ async function main(): Promise<void> {
       subtitle: c.subtitle,
       description: c.description,
       priceCents: c.priceCents,
-      maxInstallments: c.maxInstallments ?? 24,
+      maxInstallments: c.maxInstallments ?? 15,
       installmentPlans: c.installmentPlans ?? [],
       level: c.level,
       status: 'published' as const,

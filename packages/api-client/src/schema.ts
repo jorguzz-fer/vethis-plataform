@@ -3324,7 +3324,7 @@ export interface components {
             description?: string | null;
             /** @default 0 */
             priceCents: number;
-            /** @default 24 */
+            /** @default 15 */
             maxInstallments: number;
             installmentPlans?: {
                 installments: number;

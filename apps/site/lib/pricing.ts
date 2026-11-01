@@ -5,11 +5,11 @@
  */
 
 /** Teto global de parcelas (fallback quando o curso não define o seu). */
-export const INSTALLMENTS = 24;
+export const INSTALLMENTS = 15;
 /** Desconto do Pix à vista (%). */
 export const PIX_DISCOUNT_PERCENT = 5;
 
-/** Plano de parcelamento com total próprio (ex.: 24x de R$ 577,00). */
+/** Plano de parcelamento com total próprio (ex.: 15x de R$ 923,20). */
 export interface InstallmentPlan {
   installments: number;
   installmentCents: number;
@@ -42,7 +42,7 @@ export function normalizePlans(plans?: readonly InstallmentPlan[] | null): Insta
 
 /**
  * Condições exibidas na vitrine: os planos do curso ou, sem planos, o preço
- * cheio dividido sem juros até o teto (ex.: [{ 24, 127700 }]).
+ * cheio dividido sem juros até o teto (ex.: [{ 15, 204320 }]).
  */
 export function offerPlans(course: Priced): InstallmentPlan[] {
   const plans = normalizePlans(course.installmentPlans);

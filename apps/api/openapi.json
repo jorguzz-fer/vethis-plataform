@@ -481,7 +481,7 @@
                 "installments": {
                   "type": "integer",
                   "minimum": 1,
-                  "maximum": 24
+                  "maximum": 15
                 },
                 "installmentCents": {
                   "type": "integer",
@@ -611,7 +611,7 @@
                 "installments": {
                   "type": "integer",
                   "minimum": 1,
-                  "maximum": 24
+                  "maximum": 15
                 },
                 "installmentCents": {
                   "type": "integer",
@@ -2318,7 +2318,7 @@
                 "installments": {
                   "type": "integer",
                   "minimum": 1,
-                  "maximum": 24
+                  "maximum": 15
                 },
                 "installmentCents": {
                   "type": "integer",
@@ -2527,8 +2527,8 @@
           "maxInstallments": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 24,
-            "default": 24
+            "maximum": 15,
+            "default": 15
           },
           "installmentPlans": {
             "type": "array",
@@ -2538,7 +2538,7 @@
                 "installments": {
                   "type": "integer",
                   "minimum": 1,
-                  "maximum": 24
+                  "maximum": 15
                 },
                 "installmentCents": {
                   "type": "integer",
@@ -3236,7 +3236,7 @@
           "maxInstallments": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 24
+            "maximum": 15
           },
           "installmentPlans": {
             "type": "array",
@@ -3246,7 +3246,7 @@
                 "installments": {
                   "type": "integer",
                   "minimum": 1,
-                  "maximum": 24
+                  "maximum": 15
                 },
                 "installmentCents": {
                   "type": "integer",

@@ -52,7 +52,8 @@ export const createCheckoutSchema = z
     method: paymentMethodSchema,
     customer: checkoutCustomerSchema,
     card: cardSchema.optional(),
-    // Parcelas para cartão e boleto/carnê (Pix é sempre à vista). Teto 24x.
+    // Parcelas para cartão e boleto/carnê (Pix é sempre à vista). O teto real
+    // (15x) é aplicado no pricing; aqui só barra valores absurdos.
     installments: z.coerce.number().int().min(1).max(24).default(1),
     attribution: attributionInputSchema.optional(),
   })
