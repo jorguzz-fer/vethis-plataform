@@ -17,7 +17,7 @@ export interface CourseFaqItem {
 }
 
 /**
- * Plano de parcelamento com total próprio (ex.: 12x de R$ 725 ou 24x de R$ 577).
+ * Plano de parcelamento com total próprio (ex.: 12x de R$ 725 ou 15x de R$ 923,20).
  * Cada plano vale para pagamentos de até `installments` parcelas.
  */
 export interface InstallmentPlan {
@@ -61,7 +61,7 @@ export const courses = pgTable('courses', {
   // Teto de parcelas sem juros DESTE curso (a oferta varia por produto: pós em
   // 24x, cursos livres em menos). É o teto exibido na vitrine e o limite
   // aplicado no checkout.
-  maxInstallments: integer('max_installments').notNull().default(24),
+  maxInstallments: integer('max_installments').notNull().default(15),
   // Planos com total próprio (parcelamento com acréscimo). Vazio = preço único
   // dividido sem juros até `maxInstallments`. Quando há planos, o maior define o teto.
   installmentPlans: jsonb('installment_plans').$type<InstallmentPlan[]>().notNull().default([]),

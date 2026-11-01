@@ -45,7 +45,7 @@ export function CourseEditorPage() {
     subtitle: '',
     description: '',
     price: '0,00',
-    maxInstallments: '24',
+    maxInstallments: '15',
     plans: [] as PlanRow[],
     level: 'iniciante' as Level,
     status: 'draft' as Status,
@@ -81,7 +81,7 @@ export function CourseEditorPage() {
           subtitle: data.subtitle ?? '',
           description: data.description ?? '',
           price: centsToReal(data.priceCents),
-          maxInstallments: String(data.maxInstallments ?? 24),
+          maxInstallments: String(data.maxInstallments ?? 15),
           plans: (data.installmentPlans ?? []).map((p) => ({
             installments: String(p.installments),
             value: centsToReal(p.installmentCents),
@@ -115,13 +115,13 @@ export function CourseEditorPage() {
       subtitle: form.subtitle || null,
       description: form.description || null,
       priceCents: realToCents(form.price),
-      maxInstallments: Math.min(24, Math.max(1, Math.round(Number(form.maxInstallments) || 24))),
+      maxInstallments: Math.min(15, Math.max(1, Math.round(Number(form.maxInstallments) || 15))),
       installmentPlans: form.plans
         .map((p) => ({
           installments: Math.round(Number(p.installments) || 0),
           installmentCents: realToCents(p.value),
         }))
-        .filter((p) => p.installments >= 1 && p.installments <= 24 && p.installmentCents > 0),
+        .filter((p) => p.installments >= 1 && p.installments <= 15 && p.installmentCents > 0),
       level: form.level,
       status: form.status,
       comingSoon: form.comingSoon,
@@ -293,7 +293,7 @@ export function CourseEditorPage() {
           <p className="text-sm font-semibold text-ink">Parcelamento</p>
           <p className="mt-1 text-xs text-muted">
             Sem planos: o preço é dividido sem juros até o teto abaixo. Com planos (ex.: 12x de
-            725,00 e 24x de 577,00), cada plano tem o próprio total e o preço acima deve ser o total
+            725,00 e 15x de 923,20), cada plano tem o próprio total e o preço acima deve ser o total
             do menor plano. O Pix à vista dá 5% de desconto sobre o preço.
           </p>
           <div className="mt-3 grid grid-cols-3 gap-4">

@@ -88,9 +88,9 @@ describe('buildPaymentGateways', () => {
 });
 
 describe('effectiveInstallments', () => {
-  it('limita o carnê a 15x e o cartão a 24x', () => {
+  it('limita carnê e cartão a 15x', () => {
     expect(effectiveInstallments('boleto', 24, 24)).toBe(15);
-    expect(effectiveInstallments('card', 24, 24)).toBe(24);
+    expect(effectiveInstallments('card', 24, 24)).toBe(15);
     expect(effectiveInstallments('boleto', 10, 12)).toBe(10);
     expect(effectiveInstallments('pix', 12, 24)).toBe(1);
   });
@@ -296,7 +296,7 @@ describe('StripePaymentGateway', () => {
       ),
     });
     const gw = new StripePaymentGateway(cfg, client);
-    await expect(gw.createCharge(input({ installments: 24 }))).rejects.toThrow(/até 12x/);
+    await expect(gw.createCharge(input({ installments: 15 }))).rejects.toThrow(/até 12x/);
     expect(client.paymentIntents.cancel).toHaveBeenCalledWith('pi_1');
     expect(client.paymentIntents.confirm).not.toHaveBeenCalled();
   });
