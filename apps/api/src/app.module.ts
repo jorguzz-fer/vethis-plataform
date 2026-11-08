@@ -14,6 +14,7 @@ import { MeModule } from './me/me.module';
 import { CrmModule } from './crm/crm.module';
 import { ChannelsModule } from './channels/channels.module';
 import { PlanModule } from './plan/plan.module';
+import { CreativesModule } from './creatives/creatives.module';
 import { AdminModule } from './admin/admin.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { AiModule } from './ai/ai.module';
@@ -39,6 +40,7 @@ import { OpenApiModule } from './openapi/openapi.module';
     CrmModule,
     ChannelsModule,
     PlanModule,
+    CreativesModule,
     AdminModule,
     UploadsModule,
     AiModule,

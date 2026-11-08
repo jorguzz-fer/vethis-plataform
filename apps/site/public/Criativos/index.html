@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Aprovação Q4 · Vethis</title>
+    <link rel="icon" href="/vethis-mark.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    />
+    <style>
+      /* Layout: sticky summary bar, then one section per conjunto; each peça is a card with its 3 formats at equal height */
+      :root {
+        --bg: #f3f6f9;
+        --surface: #ffffff;
+        --ink: #0b2545;
+        --muted: #5b6b7f;
+        --line: #dce4ec;
+        --navy: #002b49;
+        --teal: #00a896;
+        --teal-ink: #007a6d;
+        --cyan: #028090;
+        --ok: #0e8f5b;
+        --ok-bg: #e3f5ec;
+        --warn: #b45309;
+        --warn-bg: #fdf0dc;
+        --idle-bg: #edf1f5;
+        --font: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+          --bg: #06172b;
+          --surface: #0c2240;
+          --ink: #e6eef6;
+          --muted: #9aaec4;
+          --line: #1d3758;
+          --navy: #e6eef6;
+          --teal: #22c4ae;
+          --teal-ink: #5fe0cc;
+          --cyan: #3fb7c6;
+          --ok: #4ade9b;
+          --ok-bg: #0f3a2b;
+          --warn: #f5b35a;
+          --warn-bg: #3e2a0e;
+          --idle-bg: #132c4d;
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme='dark'] {
+        --bg: #06172b;
+        --surface: #0c2240;
+        --ink: #e6eef6;
+        --muted: #9aaec4;
+        --line: #1d3758;
+        --navy: #e6eef6;
+        --teal: #22c4ae;
+        --teal-ink: #5fe0cc;
+        --cyan: #3fb7c6;
+        --ok: #4ade9b;
+        --ok-bg: #0f3a2b;
+        --warn: #f5b35a;
+        --warn-bg: #3e2a0e;
+        --idle-bg: #132c4d;
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--font);
+        font-size: 15px;
+        line-height: 1.5;
+      }
+      body {
+        margin: 0;
+      }
+      .wrap {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding-left: max(16px, env(safe-area-inset-left, 0px));
+        padding-right: max(16px, env(safe-area-inset-right, 0px));
+      }
+      header.top {
+        padding-block: 28px 8px;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--teal-ink);
+      }
+      h1 {
+        font-size: clamp(24px, 4vw, 34px);
+        font-weight: 800;
+        color: var(--navy);
+        margin: 4px 0 6px;
+        text-wrap: balance;
+        letter-spacing: -0.01em;
+      }
+      .lede {
+        color: var(--muted);
+        max-width: 62ch;
+        margin: 0;
+      }
+      .bar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: var(--surface);
+        border-bottom: 1px solid var(--line);
+        margin-top: 18px;
+      }
+      .bar .wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        align-items: center;
+        padding-block: 10px;
+      }
+      .counts {
+        display: flex;
+        gap: 14px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        font-size: 14px;
+      }
+      .counts span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .filters {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-left: auto;
+      }
+      .fbtn {
+        font: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--ink);
+        border-radius: 999px;
+        padding: 5px 12px;
+        cursor: pointer;
+      }
+      .fbtn[aria-pressed='true'] {
+        background: var(--navy);
+        color: var(--surface);
+        border-color: var(--navy);
+      }
+      .who {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--muted);
+      }
+      .who input {
+        font: inherit;
+        font-size: 14px;
+        font-weight: 500;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 5px 12px;
+        background: var(--bg);
+        color: var(--ink);
+        width: 180px;
+      }
+      .who input:focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 2px;
+      }
+      .note {
+        font-size: 13px;
+        color: var(--muted);
+        width: 100%;
+      }
+      .note:empty {
+        display: none;
+      }
+      section.grp {
+        padding-block: 26px 6px;
+      }
+      .grp-h {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 8px 16px;
+        margin-bottom: 14px;
+      }
+      .grp-h h2 {
+        font-size: 20px;
+        font-weight: 800;
+        margin: 0;
+        color: var(--navy);
+      }
+      .grp-h p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .grp-h .btn {
+        margin-left: auto;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 540px), 1fr));
+        gap: 18px;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 0;
+      }
+      .card[hidden] {
+        display: none !important;
+      }
+      .ch {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .num {
+        font-weight: 800;
+        font-size: 13px;
+        color: var(--teal-ink);
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.04em;
+      }
+      .ch h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        flex: 1;
+        min-width: 0;
+      }
+      .chip {
+        font-size: 12px;
+        font-weight: 700;
+        border-radius: 999px;
+        padding: 3px 10px;
+        white-space: nowrap;
+        background: var(--idle-bg);
+        color: var(--muted);
+      }
+      .chip.aprovado {
+        background: var(--ok-bg);
+        color: var(--ok);
+      }
+      .chip.ajustes {
+        background: var(--warn-bg);
+        color: var(--warn);
+      }
+      .fmts {
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+      }
+      .fmts figure {
+        margin: 0;
+        min-width: 0;
+      }
+      .fmts button.th {
+        display: block;
+        width: 100%;
+        padding: 0;
+        border: 0;
+        background: none;
+        cursor: zoom-in;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 0 1px var(--line);
+      }
+      .fmts img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .fmts figcaption {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--muted);
+        text-align: center;
+        margin-top: 5px;
+        letter-spacing: 0.06em;
+      }
+      label.lb {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      textarea {
+        font: inherit;
+        font-size: 14px;
+        width: 100%;
+        min-height: 68px;
+        resize: vertical;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 9px 11px;
+        background: var(--bg);
+        color: var(--ink);
+      }
+      .acts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+      .btn {
+        font: inherit;
+        font-size: 14px;
+        font-weight: 700;
+        border-radius: 999px;
+        padding: 8px 16px;
+        cursor: pointer;
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--ink);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      .btn.ok {
+        border-color: var(--ok);
+        color: var(--ok);
+      }
+      .btn.ok.on {
+        background: var(--ok);
+        color: var(--surface);
+      }
+      .btn.aj {
+        border-color: var(--warn);
+        color: var(--warn);
+      }
+      .btn.aj.on {
+        background: var(--warn);
+        color: var(--surface);
+      }
+      .btn.dl {
+        margin-left: auto;
+      }
+      .btn:focus-visible,
+      .fbtn:focus-visible,
+      button.th:focus-visible,
+      textarea:focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 2px;
+      }
+      .meta {
+        font-size: 12px;
+        color: var(--muted);
+        min-height: 18px;
+      }
+      .lbx {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        background: rgba(3, 12, 24, 0.86);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: calc(16px + env(safe-area-inset-top, 0px))
+          max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px))
+          max(16px, env(safe-area-inset-left, 0px));
+        cursor: zoom-out;
+      }
+      .lbx img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        border-radius: 6px;
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+        transform: translateX(-50%);
+        background: var(--navy);
+        color: var(--surface);
+        font-weight: 600;
+        font-size: 14px;
+        padding: 9px 16px;
+        border-radius: 999px;
+        z-index: 30;
+      }
+      footer {
+        padding-block: 30px 40px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      @media (max-width: 520px) {
+        .btn.dl {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top wrap">
+      <div class="eyebrow">Q4 Educação · Meta Ads · Cursos Vethis</div>
+      <h1>Aprovação dos criativos</h1>
+      <p class="lede">
+        23 peças, cada uma nos formatos 1:1, 4:5 e 9:16. Toque numa imagem para ver em tamanho real.
+        Deixe um comentário e marque <b>Aprovado</b> ou <b>Ajustes</b>; tudo fica salvo e aparece
+        para quem abrir esta página. Preencha o campo Seu nome uma vez, para sabermos quem avaliou.
+      </p>
+    </header>
+
+    <div class="bar">
+      <div class="wrap">
+        <div class="counts" aria-live="polite">
+          <span><i class="dot" style="background: var(--ok)"></i><b id="nOk">0</b> aprovadas</span>
+          <span
+            ><i class="dot" style="background: var(--warn)"></i><b id="nAj">0</b> com ajustes</span
+          >
+          <span
+            ><i class="dot" style="background: var(--muted)"></i
+            ><b id="nPend">23</b> pendentes</span
+          >
+        </div>
+        <div class="filters" role="group" aria-label="Filtrar">
+          <button class="fbtn" data-f="all" aria-pressed="true">Todas</button>
+          <button class="fbtn" data-f="pend" aria-pressed="false">Pendentes</button>
+          <button class="fbtn" data-f="aprovado" aria-pressed="false">Aprovadas</button>
+          <button class="fbtn" data-f="ajustes" aria-pressed="false">Ajustes</button>
+        </div>
+        <label class="who" for="who"
+          >Seu nome <input id="who" maxlength="60" autocomplete="name" placeholder="ex.: Ana · Q4"
+        /></label>
+        <div class="note" id="note">Carregando as avaliações…</div>
+      </div>
+    </div>
+
+    <main id="main" class="wrap"></main>
+    <footer class="wrap">
+      Arquivos em PNG, 1080 px de largura. O botão Baixar gera um .zip com os 3 formatos da peça.
+    </footer>
+
+    <script>
+      const FMTS = [
+        ['1x1', '1:1', 1],
+        ['4x5', '4:5', 0.8],
+        ['9x16', '9:16', 0.5625],
+      ];
+      const CONCEPTS = [
+        ['01', 'Destaque do curso'],
+        ['02', 'Pergunta'],
+        ['03', 'O que você aprende'],
+        ['04', 'Módulos'],
+        ['05', 'Número em destaque'],
+        ['06', 'Coordenação'],
+        ['07', 'Dividido em cores'],
+        ['08', 'Para quem é'],
+        ['09', 'Minimalista'],
+        ['10', 'Diferenciais'],
+      ];
+      const mk = (c) => CONCEPTS.map(([n, t]) => ({ id: c + '-' + n, num: n, title: t }));
+      const GROUPS = [
+        {
+          id: 'clinica',
+          title: 'Pós em Clínica Médica de Cães e Gatos',
+          sub: '10 peças',
+          items: mk('clinica'),
+        },
+        {
+          id: 'mielo',
+          title: 'Formação em Mielograma e Hematopatologia Medular',
+          sub: '10 peças',
+          items: mk('mielo'),
+        },
+        {
+          id: 'cintia',
+          title: 'Coordenação · fotos novas da Dra. Cintia',
+          sub: 'Conjunto extra da Pós em Clínica Médica · 3 peças',
+          items: [
+            { id: 'cintia-a', num: 'A', title: 'Apresentando (mão aberta)' },
+            { id: 'cintia-b', num: 'B', title: 'Apontando' },
+            { id: 'cintia-c', num: 'C', title: 'Com os pets' },
+          ],
+        },
+      ];
+      const ALL = GROUPS.flatMap((g) => g.items);
+      const BASE = '/Criativos/';
+      const file = (id, f, ext) =>
+        BASE + (ext === 'png' ? 'png/' : 'th/') + 'Q4_' + id + '_' + f + '.' + ext;
+      const state = {}; // id -> {status,comment,reviewer,updatedAt}
+      let filter = 'all';
+      const $ = (s, r = document) => r.querySelector(s);
+      const STATUS_TXT = { aprovado: 'Aprovado', ajustes: 'Ajustes', pend: 'Pendente' };
+      const store = {
+        get(k) {
+          try {
+            return localStorage.getItem(k) || '';
+          } catch {
+            return '';
+          }
+        },
+        set(k, v) {
+          try {
+            localStorage.setItem(k, v);
+          } catch {}
+        },
+      };
+
+      function el(tag, attrs = {}, ...kids) {
+        const e = document.createElement(tag);
+        for (const [k, v] of Object.entries(attrs)) {
+          if (k === 'class') e.className = v;
+          else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+          else e.setAttribute(k, v);
+        }
+        for (const k of kids) if (k != null) e.append(k);
+        return e;
+      }
+
+      function build() {
+        const main = $('#main');
+        for (const g of GROUPS) {
+          const grid = el('div', { class: 'grid' });
+          const sec = el(
+            'section',
+            { class: 'grp', id: g.id },
+            el(
+              'div',
+              { class: 'grp-h' },
+              el('h2', {}, g.title),
+              el('p', {}, g.sub),
+              el(
+                'button',
+                {
+                  class: 'btn',
+                  type: 'button',
+                  onclick: (e) => dlZip(g.items, 'Q4_' + g.id + '_todas.zip', e.currentTarget),
+                },
+                'Baixar todas (.zip)',
+              ),
+            ),
+            grid,
+          );
+          for (const it of g.items) {
+            const figs = el('div', { class: 'fmts' });
+            for (const [f, lab, r] of FMTS) {
+              figs.append(
+                el(
+                  'figure',
+                  { style: 'flex:' + r + ' 1 0' },
+                  el(
+                    'button',
+                    {
+                      class: 'th',
+                      type: 'button',
+                      'aria-label': 'Ampliar ' + it.title + ' ' + lab,
+                      onclick: () => openLbx(file(it.id, f, 'png')),
+                    },
+                    el('img', {
+                      src: file(it.id, f, 'jpg'),
+                      alt: it.title + ' ' + lab,
+                      loading: 'lazy',
+                      width: '560',
+                      height: String(Math.round(560 / r)),
+                    }),
+                  ),
+                  el('figcaption', {}, lab),
+                ),
+              );
+            }
+            const ta = el('textarea', {
+              id: 'c_' + it.id,
+              maxlength: '2000',
+              placeholder: 'Comentário (opcional para aprovar, obrigatório para ajustes)',
+            });
+            const card = el(
+              'article',
+              { class: 'card', id: 'k_' + it.id },
+              el(
+                'div',
+                { class: 'ch' },
+                el('span', { class: 'num' }, it.num),
+                el('h3', {}, it.title),
+                el('span', { class: 'chip' }, 'Pendente'),
+              ),
+              figs,
+              el('label', { class: 'lb', for: 'c_' + it.id }, 'Comentário'),
+              ta,
+              el(
+                'div',
+                { class: 'acts' },
+                el(
+                  'button',
+                  {
+                    class: 'btn ok',
+                    type: 'button',
+                    onclick: (e) => save(it, 'aprovado', e.currentTarget),
+                  },
+                  '✓ Aprovado',
+                ),
+                el(
+                  'button',
+                  {
+                    class: 'btn aj',
+                    type: 'button',
+                    onclick: (e) => save(it, 'ajustes', e.currentTarget),
+                  },
+                  '✎ Ajustes',
+                ),
+                el(
+                  'button',
+                  {
+                    class: 'btn dl',
+                    type: 'button',
+                    onclick: (e) => dlZip([it], 'Q4_' + it.id + '.zip', e.currentTarget),
+                  },
+                  '↓ Baixar',
+                ),
+              ),
+              el('div', { class: 'meta' }),
+            );
+            grid.append(card);
+          }
+          main.append(sec);
+        }
+      }
+
+      function paint() {
+        let ok = 0,
+          aj = 0;
+        for (const it of ALL) {
+          const s = state[it.id] || {},
+            st = s.status || 'pend',
+            card = $('#k_' + it.id);
+          if (st === 'aprovado') ok++;
+          if (st === 'ajustes') aj++;
+          const chip = $('.chip', card);
+          chip.className = 'chip ' + (st === 'pend' ? '' : st);
+          chip.textContent = STATUS_TXT[st];
+          $('.btn.ok', card).classList.toggle('on', st === 'aprovado');
+          $('.btn.aj', card).classList.toggle('on', st === 'ajustes');
+          const ta = $('textarea', card);
+          if (document.activeElement !== ta && !ta.dataset.dirty) ta.value = s.comment || '';
+          $('.meta', card).textContent = s.updatedAt
+            ? STATUS_TXT[st] +
+              (s.reviewer ? ' por ' + s.reviewer : '') +
+              ' em ' +
+              new Date(s.updatedAt).toLocaleString('pt-BR', {
+                dateStyle: 'short',
+                timeStyle: 'short',
+              })
+            : '';
+          card.hidden = !(filter === 'all' || filter === st);
+        }
+        $('#nOk').textContent = ok;
+        $('#nAj').textContent = aj;
+        $('#nPend').textContent = ALL.length - ok - aj;
+      }
+
+      async function load() {
+        try {
+          const r = await fetch(BASE + 'reviews', { cache: 'no-store' });
+          if (!r.ok) throw 0;
+          const { reviews } = await r.json();
+          for (const k of Object.keys(state)) delete state[k];
+          for (const v of reviews) state[v.key] = v;
+          $('#note').textContent = '';
+        } catch {
+          $('#note').textContent =
+            'Não foi possível carregar as avaliações agora. Recarregue a página em instantes.';
+        }
+        paint();
+      }
+
+      async function save(it, status, btn) {
+        const ta = $('#c_' + it.id),
+          comment = ta.value.trim(),
+          reviewer = $('#who').value.trim();
+        if (status === 'ajustes' && !comment) {
+          ta.focus();
+          toast('Escreva no comentário o que precisa ajustar.');
+          return;
+        }
+        btn.disabled = true;
+        try {
+          const r = await fetch(BASE + 'reviews/' + it.id, {
+            method: 'PUT',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(reviewer ? { status, comment, reviewer } : { status, comment }),
+          });
+          if (r.status === 429) {
+            toast('Muitas avaliações seguidas. Espere um minuto e tente de novo.');
+            return;
+          }
+          if (!r.ok) throw 0;
+          state[it.id] = await r.json();
+          delete ta.dataset.dirty;
+          paint();
+          toast(status === 'aprovado' ? 'Peça aprovada' : 'Ajuste registrado');
+        } catch {
+          toast('Não salvou. Verifique a conexão e tente de novo.');
+        } finally {
+          btn.disabled = false;
+        }
+      }
+
+      // Zip sem compressão (PNG já é comprimido): cabeçalhos locais + diretório central.
+      const CRC = (() => {
+        const t = new Uint32Array(256);
+        for (let n = 0; n < 256; n++) {
+          let c = n;
+          for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+          t[n] = c >>> 0;
+        }
+        return t;
+      })();
+      function crc32(b) {
+        let c = 0xffffffff;
+        for (let i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8);
+        return (c ^ 0xffffffff) >>> 0;
+      }
+      function makeZip(files) {
+        const enc = new TextEncoder(),
+          parts = [],
+          central = [];
+        let off = 0;
+        for (const f of files) {
+          const name = enc.encode(f.name),
+            crc = crc32(f.data),
+            n = f.data.length;
+          const h = new DataView(new ArrayBuffer(30));
+          h.setUint32(0, 0x04034b50, true);
+          h.setUint16(4, 20, true);
+          h.setUint16(8, 0, true);
+          h.setUint16(12, 0x21, true);
+          h.setUint32(14, crc, true);
+          h.setUint32(18, n, true);
+          h.setUint32(22, n, true);
+          h.setUint16(26, name.length, true);
+          parts.push(h, name, f.data);
+          const c = new DataView(new ArrayBuffer(46));
+          c.setUint32(0, 0x02014b50, true);
+          c.setUint16(4, 20, true);
+          c.setUint16(6, 20, true);
+          c.setUint16(14, 0x21, true);
+          c.setUint32(16, crc, true);
+          c.setUint32(20, n, true);
+          c.setUint32(24, n, true);
+          c.setUint16(28, name.length, true);
+          c.setUint32(42, off, true);
+          central.push(c, name);
+          off += 30 + name.length + n;
+        }
+        const size = central.reduce((a, x) => a + x.byteLength, 0),
+          e = new DataView(new ArrayBuffer(22));
+        e.setUint32(0, 0x06054b50, true);
+        e.setUint16(8, files.length, true);
+        e.setUint16(10, files.length, true);
+        e.setUint32(12, size, true);
+        e.setUint32(16, off, true);
+        return new Blob([...parts, ...central, e], { type: 'application/zip' });
+      }
+
+      async function dlZip(items, name, btn) {
+        const old = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Preparando…';
+        try {
+          const files = [];
+          for (const it of items)
+            for (const [f] of FMTS) {
+              const r = await fetch(file(it.id, f, 'png'));
+              if (!r.ok) throw 0;
+              files.push({
+                name: 'Q4_' + it.id + '_' + f + '.png',
+                data: new Uint8Array(await r.arrayBuffer()),
+              });
+            }
+          const url = URL.createObjectURL(makeZip(files));
+          const a = el('a', { href: url, download: name });
+          document.body.append(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 30000);
+        } catch {
+          toast('Não foi possível baixar. Tente de novo.');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = old;
+        }
+      }
+
+      function openLbx(src) {
+        const box = el(
+          'div',
+          {
+            class: 'lbx',
+            role: 'dialog',
+            'aria-label': 'Imagem ampliada',
+            tabindex: '-1',
+            onclick: () => box.remove(),
+            onkeydown: (e) => {
+              if (e.key === 'Escape') box.remove();
+            },
+          },
+          el('img', { src, alt: '' }),
+        );
+        document.body.append(box);
+        box.focus();
+      }
+      let tt;
+      function toast(m) {
+        document.querySelectorAll('.toast').forEach((t) => t.remove());
+        const t = el('div', { class: 'toast', role: 'status' }, m);
+        document.body.append(t);
+        clearTimeout(tt);
+        tt = setTimeout(() => t.remove(), 2600);
+      }
+
+      document.querySelectorAll('.fbtn').forEach((b) =>
+        b.addEventListener('click', () => {
+          filter = b.dataset.f;
+          document
+            .querySelectorAll('.fbtn')
+            .forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+          paint();
+        }),
+      );
+      document.addEventListener('input', (e) => {
+        if (e.target.tagName === 'TEXTAREA') e.target.dataset.dirty = '1';
+      });
+      const who = $('#who');
+      who.value = store.get('criativos.nome');
+      who.addEventListener('change', () => store.set('criativos.nome', who.value.trim()));
+
+      build();
+      paint();
+      load();
+      // Mostra avaliações de outras pessoas sem recarregar (a cada 30 s, só com a aba visível).
+      setInterval(() => {
+        if (!document.hidden) load();
+      }, 30000);
+    </script>
+  </body>
+</html>

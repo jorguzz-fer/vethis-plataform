@@ -15,6 +15,9 @@ const nextConfig = {
     return [
       // Plano de marketing (documento interno, noindex).
       { source: '/plano-mkt', destination: '/plano-mkt.html' },
+      // Aprovação dos criativos de anúncio (noindex; avaliações via /Criativos/reviews).
+      // O casamento de rotas ignora maiúsculas, então /criativos também abre.
+      { source: '/Criativos', destination: '/Criativos/index.html' },
       // Guia de gravação (noindex).
       { source: '/guia-gravacao', destination: '/guia-gravacao/index.html' },
       // Aulas interativas (HTML autônomo + assets em /public/Aula/...).
