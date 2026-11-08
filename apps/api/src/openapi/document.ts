@@ -48,6 +48,11 @@ import {
 import { aiCourseDraftInputSchema, aiCourseDraftSchema, aiStatusSchema } from '../ai/dto';
 import { planTaskSchema, planTasksSchema, setPlanTaskSchema } from '../plan/dto';
 import {
+  creativeReviewSchema,
+  creativeReviewsSchema,
+  setCreativeReviewSchema,
+} from '../creatives/dto';
+import {
   adminCourseDetailSchema,
   adminCourseSchema,
   adminEnrollmentSchema,
@@ -157,6 +162,12 @@ export function buildOpenApiDocument() {
   const PlanTask = registry.register('PlanTask', planTaskSchema);
   const PlanTasks = registry.register('PlanTasks', planTasksSchema);
   const SetPlanTaskInput = registry.register('SetPlanTaskInput', setPlanTaskSchema);
+  const CreativeReview = registry.register('CreativeReview', creativeReviewSchema);
+  const CreativeReviews = registry.register('CreativeReviews', creativeReviewsSchema);
+  const SetCreativeReviewInput = registry.register(
+    'SetCreativeReviewInput',
+    setCreativeReviewSchema,
+  );
 
   const json = (schema: z.ZodTypeAny) => ({ content: { 'application/json': { schema } } });
 
@@ -812,6 +823,27 @@ export function buildOpenApiDocument() {
     },
     responses: {
       200: { description: 'OK', ...json(PlanTask) },
+      400: { description: 'Chave ou corpo inválido' },
+    },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/creatives/reviews',
+    tags: ['creatives'],
+    summary: 'Avaliações dos criativos de anúncio (público)',
+    responses: { 200: { description: 'OK', ...json(CreativeReviews) } },
+  });
+  registry.registerPath({
+    method: 'put',
+    path: '/v1/creatives/reviews/{key}',
+    tags: ['creatives'],
+    summary: 'Aprova ou pede ajustes numa peça (público, nome informativo)',
+    request: {
+      params: z.object({ key: z.string().regex(/^[a-z0-9-]{2,40}$/) }),
+      body: json(SetCreativeReviewInput),
+    },
+    responses: {
+      200: { description: 'OK', ...json(CreativeReview) },
       400: { description: 'Chave ou corpo inválido' },
     },
   });

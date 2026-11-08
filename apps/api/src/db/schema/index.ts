@@ -12,4 +12,5 @@ export * from './commerce';
 export * from './crm';
 export * from './channels';
 export * from './plan-tasks';
+export * from './creative-reviews';
 export * from './audit';
