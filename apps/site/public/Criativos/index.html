@@ -429,7 +429,7 @@
       <div class="eyebrow">Q4 Educação · Meta Ads · Cursos Vethis</div>
       <h1>Aprovação dos criativos</h1>
       <p class="lede">
-        23 peças, cada uma nos formatos 1:1, 4:5 e 9:16. Toque numa imagem para ver em tamanho real.
+        25 peças, cada uma nos formatos 1:1, 4:5 e 9:16. Toque numa imagem para ver em tamanho real.
         Deixe um comentário e marque <b>Aprovado</b> ou <b>Ajustes</b>; tudo fica salvo e aparece
         para quem abrir esta página. Preencha o campo Seu nome uma vez, para sabermos quem avaliou.
       </p>
@@ -444,7 +444,7 @@
           >
           <span
             ><i class="dot" style="background: var(--muted)"></i
-            ><b id="nPend">23</b> pendentes</span
+            ><b id="nPend">25</b> pendentes</span
           >
         </div>
         <div class="filters" role="group" aria-label="Filtrar">
@@ -485,6 +485,15 @@
       ];
       const mk = (c) => CONCEPTS.map(([n, t]) => ({ id: c + '-' + n, num: n, title: t }));
       const GROUPS = [
+        {
+          id: 'duo',
+          title: 'Novas · Coordenação Dra. Cintia e Dra. Roberta',
+          sub: 'Pós em Clínica Médica · versões das peças 01 e 06 com as duas coordenadoras',
+          items: [
+            { id: 'duo-01', num: '01', title: 'Destaque do curso (com as duas)' },
+            { id: 'duo-06', num: '06', title: 'Coordenação (com as duas)' },
+          ],
+        },
         {
           id: 'clinica',
           title: 'Pós em Clínica Médica de Cães e Gatos',
