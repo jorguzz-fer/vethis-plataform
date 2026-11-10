@@ -34,6 +34,18 @@ function ImageSlide({ slide }: { slide: CarouselImageSlide }) {
   return (
     <div className="hc-image-slide">
       <img className="hc-image" src={slide.src} alt={slide.alt} />
+      {/* Slide sem área clicável cadastrada no admin: a imagem inteira leva
+          aos cursos, para nenhum botão desenhado ficar sem destino. */}
+      {slide.hotspots.length === 0 ? (
+        <Link
+          href="/cursos"
+          className="hc-hotspot hc-hotspot-full"
+          aria-label={slide.alt || 'Conhecer os cursos'}
+          style={{ left: 0, top: 0, width: '100%', height: '100%' } as CSSProperties}
+        >
+          <span className="sr-only">{slide.alt || 'Conhecer os cursos'}</span>
+        </Link>
+      ) : null}
       {slide.hotspots.map((h) => (
         <Link
           key={h.label}

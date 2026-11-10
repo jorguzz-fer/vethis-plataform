@@ -410,6 +410,13 @@ p {
 .hc-hotspot:hover {
   background: rgba(255, 255, 255, 0.12);
 }
+/* Slide sem botões cadastrados: a imagem inteira é o link (sem o clarão/pílula). */
+.hc-hotspot-full {
+  border-radius: 0;
+}
+.hc-hotspot-full:hover {
+  background: transparent;
+}
 .hc-hotspot:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.85);
