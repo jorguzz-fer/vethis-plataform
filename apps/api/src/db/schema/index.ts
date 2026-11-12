@@ -8,6 +8,7 @@ export * from './identity';
 export * from './catalog';
 export * from './hero';
 export * from './enrollment';
+export * from './coupons';
 export * from './commerce';
 export * from './crm';
 export * from './channels';

@@ -3,6 +3,7 @@ import { createVethisClient, type components } from '@vethis/api-client';
 export type OrderDto = components['schemas']['Order'];
 export type AuthUser = components['schemas']['AuthUser'];
 export type CheckoutConfig = components['schemas']['CheckoutConfig'];
+export type CouponPreview = components['schemas']['CouponPreview'];
 export type PaymentMethod = 'pix' | 'card' | 'boleto';
 
 /**
