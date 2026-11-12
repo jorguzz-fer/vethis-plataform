@@ -14,7 +14,12 @@ import {
 } from '@nestjs/common';
 import type { Request } from 'express';
 import { CurrentUser, type AuthUser } from '../common/auth-user';
-import { SkipThrottle } from '@nestjs/throttler';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
+import {
+  couponPreviewInputSchema,
+  type CouponPreviewDto,
+  type CouponPreviewInputDto,
+} from '../coupons/dto';
 import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 import { SessionGuard } from '../auth/guards/session.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -51,6 +56,16 @@ export class CheckoutController {
   @Roles('staff', 'admin')
   reconcile(): Promise<{ checked: number; confirmed: number }> {
     return this.reconciler.run();
+  }
+
+  /** Público: valida um cupom e mostra o desconto (não consome o cupom). */
+  @Post('checkout/coupon')
+  @HttpCode(200)
+  @Throttle({ default: { limit: 20, ttl: 60_000 } })
+  previewCoupon(
+    @Body(new ZodValidationPipe(couponPreviewInputSchema)) dto: CouponPreviewInputDto,
+  ): Promise<CouponPreviewDto> {
+    return this.checkout.previewCoupon(dto);
   }
 
   /** Público: provedor de cada meio (o site escolhe Stripe.js ou campos próprios). */

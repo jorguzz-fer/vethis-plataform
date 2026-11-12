@@ -16,6 +16,7 @@ export type AdminUser = components['schemas']['AdminUser'];
 export type AdminEnrollment = components['schemas']['AdminEnrollment'];
 export type Instructor = components['schemas']['Instructor'];
 export type AdminHeroSlide = components['schemas']['AdminHeroSlide'];
+export type AdminCoupon = components['schemas']['AdminCoupon'];
 export type HeroHotspot = AdminHeroSlide['hotspots'][number];
 export type Specialty = components['schemas']['Specialty'];
 export type AiCourseDraft = components['schemas']['AiCourseDraft'];

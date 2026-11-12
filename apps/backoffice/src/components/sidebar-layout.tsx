@@ -6,6 +6,7 @@ const nav = [
   { to: '/', label: 'Painel', end: true },
   { to: '/cursos', label: 'Cursos' },
   { to: '/slides', label: 'Slides' },
+  { to: '/cupons', label: 'Cupons' },
   { to: '/usuarios', label: 'Usuários' },
   { to: '/alunos', label: 'Alunos' },
   { to: '/crm', label: 'CRM' },

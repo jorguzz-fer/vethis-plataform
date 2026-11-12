@@ -48,6 +48,13 @@ import {
 import { aiCourseDraftInputSchema, aiCourseDraftSchema, aiStatusSchema } from '../ai/dto';
 import { planTaskSchema, planTasksSchema, setPlanTaskSchema } from '../plan/dto';
 import {
+  adminCouponSchema,
+  couponPreviewInputSchema,
+  couponPreviewSchema,
+  createCouponSchema,
+  updateCouponSchema,
+} from '../coupons/dto';
+import {
   creativeReviewSchema,
   creativeReviewsSchema,
   setCreativeReviewSchema,
@@ -96,6 +103,11 @@ export function buildOpenApiDocument() {
   const Specialty = registry.register('Specialty', specialtySchema);
   const HeroSlide = registry.register('HeroSlide', heroSlideSchema);
   const AdminHeroSlide = registry.register('AdminHeroSlide', adminHeroSlideSchema);
+  const AdminCoupon = registry.register('AdminCoupon', adminCouponSchema);
+  const CreateCouponInput = registry.register('CreateCouponInput', createCouponSchema);
+  const UpdateCouponInput = registry.register('UpdateCouponInput', updateCouponSchema);
+  const CouponPreviewInput = registry.register('CouponPreviewInput', couponPreviewInputSchema);
+  const CouponPreview = registry.register('CouponPreview', couponPreviewSchema);
   const CreateHeroSlideInput = registry.register('CreateHeroSlideInput', createHeroSlideSchema);
   const UpdateHeroSlideInput = registry.register('UpdateHeroSlideInput', updateHeroSlideSchema);
   const CourseSummary = registry.register('CourseSummary', courseSummarySchema);
@@ -287,6 +299,17 @@ export function buildOpenApiDocument() {
     responses: { 201: { description: 'Criado', ...json(SecretariaRequest) } },
   });
 
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/checkout/coupon',
+    tags: ['checkout'],
+    summary: 'Valida um cupom e mostra o desconto (não consome o cupom)',
+    request: { body: json(CouponPreviewInput) },
+    responses: {
+      200: { description: 'Cupom válido', ...json(CouponPreview) },
+      400: { description: 'Cupom inválido (mensagem com o motivo)' },
+    },
+  });
   registry.registerPath({
     method: 'get',
     path: '/v1/checkout/config',
@@ -642,6 +665,43 @@ export function buildOpenApiDocument() {
     summary: 'Remove um slide do Hero',
     request: { ...idParam },
     responses: { 200: { description: 'Removido' } },
+  });
+  registry.registerPath({
+    method: 'get',
+    path: '/v1/admin/coupons',
+    tags: ['backoffice'],
+    summary: 'Lista cupons de desconto',
+    responses: { 200: { description: 'OK', ...json(z.array(AdminCoupon)) } },
+  });
+  registry.registerPath({
+    method: 'post',
+    path: '/v1/admin/coupons',
+    tags: ['backoffice'],
+    summary: 'Cria um cupom (um ou mais cursos, ou todos)',
+    request: { body: json(CreateCouponInput) },
+    responses: {
+      201: { description: 'Criado', ...json(AdminCoupon) },
+      409: { description: 'Código já existe' },
+    },
+  });
+  registry.registerPath({
+    method: 'patch',
+    path: '/v1/admin/coupons/{id}',
+    tags: ['backoffice'],
+    summary: 'Atualiza um cupom',
+    request: { ...idParam, body: json(UpdateCouponInput) },
+    responses: {
+      200: { description: 'OK', ...json(AdminCoupon) },
+      409: { description: 'Código já existe' },
+    },
+  });
+  registry.registerPath({
+    method: 'delete',
+    path: '/v1/admin/coupons/{id}',
+    tags: ['backoffice'],
+    summary: 'Exclui um cupom (libera o código)',
+    request: { ...idParam },
+    responses: { 204: { description: 'Excluído' } },
   });
   registry.registerPath({
     method: 'get',
