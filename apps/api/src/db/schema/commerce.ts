@@ -3,6 +3,7 @@ import { orderStatusEnum, paymentMethodEnum, paymentStatusEnum } from './enums';
 import { attributionColumns } from './attribution';
 import { users } from './identity';
 import { courses } from './catalog';
+import { coupons } from './coupons';
 
 /**
  * Pedido de compra de um curso (ADR 0004). Dinheiro em centavos (inteiro).
@@ -20,6 +21,10 @@ export const orders = pgTable('orders', {
   status: orderStatusEnum('status').notNull().default('pending'),
   amountCents: integer('amount_cents').notNull(),
   currency: text('currency').notNull().default('BRL'),
+  /** Cupom aplicado (se houver) e o desconto que ele deu, já abatido de `amountCents`. */
+  couponId: uuid('coupon_id').references(() => coupons.id, { onDelete: 'set null' }),
+  couponCode: text('coupon_code'),
+  discountCents: integer('discount_cents').notNull().default(0),
   // Atribuição first-touch do comprador (propagada ao lead na compra confirmada).
   ...attributionColumns(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

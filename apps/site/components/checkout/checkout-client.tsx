@@ -27,24 +27,54 @@ import {
   browserApi,
   type AuthUser,
   type CheckoutConfig,
+  type CouponPreview,
   type OrderDto,
   type PaymentMethod,
 } from '@/lib/browser-api';
 import { getStripe, stripeConfigured } from '@/lib/stripe';
 
-/** Valor cobrado para o meio escolhido (Pix à vista tem desconto; cartão/boleto, o plano). */
-function netPriceCents(method: PaymentMethod, course: Priced, installments: number): number {
+/** Cupom aplicado no checkout (a API valida de novo e decide o valor final). */
+type AppliedCoupon = Pick<CouponPreview, 'code' | 'discountType' | 'discountValue'>;
+
+/** Desconto do cupom sobre um valor — espelha `couponDiscountCents` da API. */
+function couponDiscount(coupon: AppliedCoupon | null, baseCents: number): number {
+  if (!coupon || baseCents <= 0) return 0;
+  const raw =
+    coupon.discountType === 'percent'
+      ? Math.round((baseCents * Math.min(coupon.discountValue, 100)) / 100)
+      : coupon.discountValue;
+  return Math.min(raw, baseCents);
+}
+
+/** Valor do meio escolhido antes do cupom (Pix à vista tem desconto; cartão/boleto, o plano). */
+function basePriceCents(method: PaymentMethod, course: Priced, installments: number): number {
   return method === 'pix'
     ? pixAmountCents(course.priceCents)
     : cardAmountCents(course, installments);
 }
 
+/** Valor cobrado no meio escolhido, já com o cupom. */
+function netPriceCents(
+  method: PaymentMethod,
+  course: Priced,
+  installments: number,
+  coupon: AppliedCoupon | null = null,
+): number {
+  const base = basePriceCents(method, course, installments);
+  return base - couponDiscount(coupon, base);
+}
+
 /** Opções de parcelamento até o teto (do curso ou do meio), com o total do plano. */
-function installmentOptions(course: Priced, max?: number): { n: number; label: string }[] {
+function installmentOptions(
+  course: Priced,
+  max?: number,
+  coupon: AppliedCoupon | null = null,
+): { n: number; label: string }[] {
   const limit = Math.min(maxInstallmentsOf(course), max ?? Number.POSITIVE_INFINITY);
   return Array.from({ length: Math.max(1, limit) }, (_, i) => {
     const n = i + 1;
-    return { n, label: `${n}x de ${formatBRL(Math.round(cardAmountCents(course, n) / n))}` };
+    const total = netPriceCents('card', course, n, coupon);
+    return { n, label: `${n}x de ${formatBRL(Math.round(total / n))}` };
   });
 }
 
@@ -54,12 +84,14 @@ function InstallmentsField({
   value,
   onChange,
   max,
+  coupon = null,
 }: {
   course: Priced;
   value: number;
   onChange: (n: number) => void;
   /** Teto do meio de pagamento (ex.: carnê), abaixo do teto do curso. */
   max?: number;
+  coupon?: AppliedCoupon | null;
 }) {
   const hasPlans = (course.installmentPlans ?? []).length > 0;
   return (
@@ -70,7 +102,7 @@ function InstallmentsField({
         onChange={(e) => onChange(Number(e.target.value))}
         className="rounded-[10px] border-[1.5px] border-border px-3.5 py-3 text-[15px]"
       >
-        {installmentOptions(course, max).map((o) => (
+        {installmentOptions(course, max, coupon).map((o) => (
           <option key={o.n} value={o.n}>
             {o.label}
           </option>
@@ -152,6 +184,7 @@ export function CheckoutClient({ course }: { course: CourseDetail }) {
   // Meio/parcelas ficam aqui em cima para o resumo espelhar preço e parcela.
   const [method, setMethod] = useState<PaymentMethod>('pix');
   const [installments, setInstallments] = useState(1);
+  const [coupon, setCoupon] = useState<AppliedCoupon | null>(null);
   // Provedor de cada meio (Stripe/Asaas) e teto do carnê — define o formulário.
   const [checkoutConfig, setCheckoutConfig] = useState<CheckoutConfig | null>(null);
 
@@ -212,13 +245,21 @@ export function CheckoutClient({ course }: { course: CourseDetail }) {
             installments={installments}
             setInstallments={setInstallments}
             config={checkoutConfig}
+            coupon={coupon}
+            setCoupon={setCoupon}
           />
         ) : (
           <AuthPanel onAuthed={setMe} />
         )}
       </div>
 
-      <OrderSummary course={course} order={order} method={method} installments={installments} />
+      <OrderSummary
+        course={course}
+        order={order}
+        method={method}
+        installments={installments}
+        coupon={coupon}
+      />
     </div>
   );
 }
@@ -360,6 +401,8 @@ function PaymentPanel({
   installments,
   setInstallments,
   config,
+  coupon,
+  setCoupon,
 }: {
   course: CourseDetail;
   me: AuthUser;
@@ -371,6 +414,8 @@ function PaymentPanel({
   installments: number;
   setInstallments: (n: number) => void;
   config: CheckoutConfig | null;
+  coupon: AppliedCoupon | null;
+  setCoupon: (c: AppliedCoupon | null) => void;
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -448,6 +493,7 @@ function PaymentPanel({
           customer,
           card,
           installments: method === 'pix' ? 1 : installments,
+          couponCode: coupon?.code,
           attribution: readAttribution(),
         },
       });
@@ -550,7 +596,12 @@ function PaymentPanel({
                 required
               />
               <StripeCardField onReady={onStripeReady} />
-              <InstallmentsField course={course} value={installments} onChange={setInstallments} />
+              <InstallmentsField
+                course={course}
+                value={installments}
+                onChange={setInstallments}
+                coupon={coupon}
+              />
             </>
           ) : (
             <p className="rounded-xl bg-paper px-4 py-3 text-sm text-muted">
@@ -591,7 +642,12 @@ function PaymentPanel({
                 required
               />
             </div>
-            <InstallmentsField course={course} value={installments} onChange={setInstallments} />
+            <InstallmentsField
+              course={course}
+              value={installments}
+              onChange={setInstallments}
+              coupon={coupon}
+            />
             <p className="text-xs text-muted">
               Dados de cobrança exigidos pela operadora do cartão:
             </p>
@@ -631,6 +687,7 @@ function PaymentPanel({
               value={installments}
               onChange={setInstallments}
               max={boletoMax}
+              coupon={coupon}
             />
             <p className="rounded-xl bg-paper px-4 py-3 text-sm text-muted">
               {installments > 1
@@ -645,6 +702,14 @@ function PaymentPanel({
           </p>
         )}
 
+        <CouponField
+          course={course}
+          method={method}
+          installments={installments}
+          coupon={coupon}
+          setCoupon={setCoupon}
+        />
+
         {error ? <p className="text-sm text-error">{error}</p> : null}
 
         <Button
@@ -656,18 +721,136 @@ function PaymentPanel({
           {busy
             ? 'Processando…'
             : method === 'pix'
-              ? `Gerar Pix e pagar ${formatBRL(pixAmountCents(course.priceCents))}`
+              ? `Gerar Pix e pagar ${formatBRL(netPriceCents('pix', course, 1, coupon))}`
               : method === 'boleto'
                 ? installments > 1
                   ? `Gerar carnê de ${installments}x`
                   : 'Gerar boleto'
-                : `Pagar ${formatBRL(cardAmountCents(course, installments))}`}
+                : `Pagar ${formatBRL(netPriceCents('card', course, installments, coupon))}`}
         </Button>
         <p className="text-center text-xs text-muted">
           🔒 Pagamento seguro · Garantia de 7 dias · Dados do cartão não são armazenados
         </p>
       </form>
     </section>
+  );
+}
+
+/**
+ * Cupom de desconto: valida na API (prévia, sem consumir o cupom) e passa a
+ * refletir o desconto em preços, parcelas e resumo. A API revalida no pagamento.
+ */
+function CouponField({
+  course,
+  method,
+  installments,
+  coupon,
+  setCoupon,
+}: {
+  course: CourseDetail;
+  method: PaymentMethod;
+  installments: number;
+  coupon: AppliedCoupon | null;
+  setCoupon: (c: AppliedCoupon | null) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [code, setCode] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function apply() {
+    const value = code.trim();
+    if (!value) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const { data, error: err } = await browserApi.POST('/v1/checkout/coupon', {
+        body: {
+          code: value,
+          courseSlug: course.slug,
+          method,
+          installments: method === 'pix' ? 1 : installments,
+        },
+      });
+      if (err || !data) {
+        const body = err as { message?: string | string[] } | undefined;
+        const msg = Array.isArray(body?.message) ? body?.message.join('; ') : body?.message;
+        throw new Error(msg || 'Cupom inválido.');
+      }
+      setCoupon({
+        code: data.code,
+        discountType: data.discountType,
+        discountValue: data.discountValue,
+      });
+      setCode('');
+      setOpen(false);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Cupom inválido.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (coupon) {
+    return (
+      <div className="flex items-center justify-between rounded-xl border border-green-700/30 bg-green-50 px-4 py-3 text-sm">
+        <span className="text-green-800">
+          Cupom <strong>{coupon.code}</strong> aplicado ·{' '}
+          {coupon.discountType === 'percent'
+            ? `${coupon.discountValue}% de desconto`
+            : `${formatBRL(coupon.discountValue)} de desconto`}
+        </span>
+        <button
+          type="button"
+          onClick={() => setCoupon(null)}
+          className="font-semibold text-green-700 underline-offset-2 hover:underline"
+        >
+          Remover
+        </button>
+      </div>
+    );
+  }
+
+  if (!open) {
+    return (
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="self-start text-sm font-semibold text-green-700 underline-offset-2 hover:underline"
+      >
+        Tem um cupom de desconto?
+      </button>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <div className="flex gap-2">
+        <input
+          value={code}
+          onChange={(e) => setCode(e.target.value.toUpperCase())}
+          onKeyDown={(e) => {
+            // Enter aplica o cupom em vez de enviar o pagamento.
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              void apply();
+            }
+          }}
+          placeholder="Código do cupom"
+          aria-label="Código do cupom"
+          className="min-w-0 flex-1 rounded-[10px] border-[1.5px] border-border px-3.5 py-2.5 text-[15px] uppercase outline-none focus:border-green-700"
+        />
+        <Button
+          type="button"
+          variant="outline"
+          disabled={busy || !code.trim()}
+          onClick={() => void apply()}
+        >
+          {busy ? 'Aplicando…' : 'Aplicar'}
+        </Button>
+      </div>
+      {error ? <span className="text-sm text-error">{error}</span> : null}
+    </div>
   );
 }
 
@@ -905,18 +1088,24 @@ function OrderSummary({
   order,
   method,
   installments,
+  coupon,
 }: {
   course: CourseDetail;
   order: OrderDto | null;
   method: PaymentMethod;
   installments: number;
+  coupon: AppliedCoupon | null;
 }) {
   const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
   // Antes do pedido, espelha a regra do método escolhido; depois, usa o pedido.
+  const payMethod = order?.method ?? method;
   const parcels = order?.installments ?? (method === 'pix' ? 1 : installments);
-  const subtotal = method === 'pix' ? course.priceCents : cardAmountCents(course, parcels);
-  const total = order?.amountCents ?? netPriceCents(method, course, parcels);
-  const pixDiscount = method === 'pix' && !order ? subtotal - total : 0;
+  const subtotal = payMethod === 'pix' ? course.priceCents : cardAmountCents(course, parcels);
+  const beforeCoupon = basePriceCents(payMethod, course, parcels);
+  const couponCents = order ? order.discountCents : couponDiscount(coupon, beforeCoupon);
+  const couponCode = order ? order.couponCode : (coupon?.code ?? null);
+  const total = order?.amountCents ?? beforeCoupon - couponCents;
+  const pixDiscount = payMethod === 'pix' ? subtotal - beforeCoupon : 0;
   return (
     <aside className="h-fit rounded-2xl border border-border bg-white p-6 shadow-sm lg:sticky lg:top-6">
       <div
@@ -945,6 +1134,12 @@ function OrderSummary({
           <div className="mt-2 flex items-center justify-between text-green-700">
             <span>Desconto Pix ({PIX_DISCOUNT_PERCENT}%)</span>
             <span>−{formatBRL(pixDiscount)}</span>
+          </div>
+        ) : null}
+        {couponCents > 0 && couponCode ? (
+          <div className="mt-2 flex items-center justify-between text-green-700">
+            <span>Cupom {couponCode}</span>
+            <span>−{formatBRL(couponCents)}</span>
           </div>
         ) : null}
         <div className="mt-2 flex items-center justify-between">

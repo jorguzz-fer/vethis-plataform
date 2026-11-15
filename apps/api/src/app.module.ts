@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { CheckoutModule } from './checkout/checkout.module';
+import { CouponsModule } from './coupons/coupons.module';
 import { MeModule } from './me/me.module';
 import { CrmModule } from './crm/crm.module';
 import { ChannelsModule } from './channels/channels.module';
@@ -36,6 +37,7 @@ import { OpenApiModule } from './openapi/openapi.module';
     AuthModule,
     CatalogModule,
     CheckoutModule,
+    CouponsModule,
     MeModule,
     CrmModule,
     ChannelsModule,

@@ -295,6 +295,242 @@
           "active"
         ]
       },
+      "AdminCoupon": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "discountType": {
+            "type": "string",
+            "enum": [
+              "percent",
+              "fixed"
+            ]
+          },
+          "discountValue": {
+            "type": "integer"
+          },
+          "appliesToAllCourses": {
+            "type": "boolean"
+          },
+          "courseIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "maxUses": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "usedCount": {
+            "type": "integer"
+          },
+          "expiresAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "discountType",
+          "discountValue",
+          "appliesToAllCourses",
+          "courseIds",
+          "maxUses",
+          "usedCount",
+          "expiresAt",
+          "active",
+          "createdAt"
+        ]
+      },
+      "CreateCouponInput": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "discountType": {
+            "type": "string",
+            "enum": [
+              "percent",
+              "fixed"
+            ]
+          },
+          "discountValue": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "appliesToAllCourses": {
+            "type": "boolean",
+            "default": true
+          },
+          "courseIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "maxItems": 200,
+            "default": []
+          },
+          "maxUses": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "default": null
+          },
+          "expiresAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "default": null
+          },
+          "active": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "code",
+          "discountType",
+          "discountValue"
+        ]
+      },
+      "UpdateCouponInput": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "discountType": {
+            "type": "string",
+            "enum": [
+              "percent",
+              "fixed"
+            ]
+          },
+          "discountValue": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "appliesToAllCourses": {
+            "type": "boolean"
+          },
+          "courseIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "maxItems": 200
+          },
+          "maxUses": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "expiresAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CouponPreviewInput": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "courseSlug": {
+            "type": "string",
+            "minLength": 1
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "pix",
+              "card",
+              "boleto"
+            ],
+            "default": "pix"
+          },
+          "installments": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 24,
+            "default": 1
+          }
+        },
+        "required": [
+          "code",
+          "courseSlug"
+        ]
+      },
+      "CouponPreview": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "discountType": {
+            "type": "string",
+            "enum": [
+              "percent",
+              "fixed"
+            ]
+          },
+          "discountValue": {
+            "type": "integer"
+          },
+          "originalCents": {
+            "type": "integer"
+          },
+          "discountCents": {
+            "type": "integer"
+          },
+          "finalCents": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "code",
+          "discountType",
+          "discountValue",
+          "originalCents",
+          "discountCents",
+          "finalCents"
+        ]
+      },
       "CreateHeroSlideInput": {
         "type": "object",
         "properties": {
@@ -1245,6 +1481,10 @@
             "maximum": 24,
             "default": 1
           },
+          "couponCode": {
+            "type": "string",
+            "maxLength": 40
+          },
           "attribution": {
             "type": "object",
             "properties": {
@@ -1323,6 +1563,15 @@
           "currency": {
             "type": "string"
           },
+          "discountCents": {
+            "type": "integer"
+          },
+          "couponCode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "installments": {
             "type": "integer"
           },
@@ -1385,6 +1634,8 @@
           "method",
           "amountCents",
           "currency",
+          "discountCents",
+          "couponCode",
           "installments",
           "course",
           "pixQrCode",
@@ -3835,6 +4086,38 @@
         }
       }
     },
+    "/v1/checkout/coupon": {
+      "post": {
+        "tags": [
+          "checkout"
+        ],
+        "summary": "Valida um cupom e mostra o desconto (não consome o cupom)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CouponPreviewInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cupom válido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CouponPreview"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cupom inválido (mensagem com o motivo)"
+          }
+        }
+      }
+    },
     "/v1/checkout/config": {
       "get": {
         "tags": [
@@ -5011,6 +5294,122 @@
         "responses": {
           "200": {
             "description": "Removido"
+          }
+        }
+      }
+    },
+    "/v1/admin/coupons": {
+      "get": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Lista cupons de desconto",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminCoupon"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Cria um cupom (um ou mais cursos, ou todos)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCouponInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCoupon"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Código já existe"
+          }
+        }
+      }
+    },
+    "/v1/admin/coupons/{id}": {
+      "patch": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Atualiza um cupom",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCouponInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCoupon"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Código já existe"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "backoffice"
+        ],
+        "summary": "Exclui um cupom (libera o código)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Excluído"
           }
         }
       }

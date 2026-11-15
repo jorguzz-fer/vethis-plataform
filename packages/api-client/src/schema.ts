@@ -515,6 +515,53 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/checkout/coupon": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Valida um cupom e mostra o desconto (não consome o cupom) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CouponPreviewInput"];
+                };
+            };
+            responses: {
+                /** @description Cupom válido */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CouponPreview"];
+                    };
+                };
+                /** @description Cupom inválido (mensagem com o motivo) */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/checkout/config": {
         parameters: {
             query?: never;
@@ -1983,6 +2030,142 @@ export interface paths {
         };
         trace?: never;
     };
+    "/v1/admin/coupons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista cupons de desconto */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCoupon"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Cria um cupom (um ou mais cursos, ou todos) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateCouponInput"];
+                };
+            };
+            responses: {
+                /** @description Criado */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCoupon"];
+                    };
+                };
+                /** @description Código já existe */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/coupons/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Exclui um cupom (libera o código) */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Excluído */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Atualiza um cupom */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateCouponInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCoupon"];
+                    };
+                };
+                /** @description Código já existe */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        trace?: never;
+    };
     "/v1/admin/users": {
         parameters: {
             query?: never;
@@ -2895,6 +3078,68 @@ export interface components {
             sortOrder: number;
             active: boolean;
         };
+        AdminCoupon: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            /** @enum {string} */
+            discountType: "percent" | "fixed";
+            discountValue: number;
+            appliesToAllCourses: boolean;
+            courseIds: string[];
+            maxUses: number | null;
+            usedCount: number;
+            expiresAt: string | null;
+            active: boolean;
+            createdAt: string;
+        };
+        CreateCouponInput: {
+            code: string;
+            /** @enum {string} */
+            discountType: "percent" | "fixed";
+            discountValue: number;
+            /** @default true */
+            appliesToAllCourses: boolean;
+            /** @default [] */
+            courseIds: string[];
+            /** @default null */
+            maxUses: number | null;
+            /** @default null */
+            expiresAt: string | null;
+            /** @default true */
+            active: boolean;
+        };
+        UpdateCouponInput: {
+            code?: string;
+            /** @enum {string} */
+            discountType?: "percent" | "fixed";
+            discountValue?: number;
+            appliesToAllCourses?: boolean;
+            courseIds?: string[];
+            maxUses?: number | null;
+            expiresAt?: string | null;
+            active?: boolean;
+        };
+        CouponPreviewInput: {
+            code: string;
+            courseSlug: string;
+            /**
+             * @default pix
+             * @enum {string}
+             */
+            method: "pix" | "card" | "boleto";
+            /** @default 1 */
+            installments: number;
+        };
+        CouponPreview: {
+            code: string;
+            /** @enum {string} */
+            discountType: "percent" | "fixed";
+            discountValue: number;
+            originalCents: number;
+            discountCents: number;
+            finalCents: number;
+        };
         CreateHeroSlideInput: {
             title: string;
             imageUrl: string;
@@ -3102,6 +3347,7 @@ export interface components {
             };
             /** @default 1 */
             installments: number;
+            couponCode?: string;
             attribution?: {
                 utmSource?: string;
                 utmMedium?: string;
@@ -3123,6 +3369,8 @@ export interface components {
             method: "pix" | "card" | "boleto";
             amountCents: number;
             currency: string;
+            discountCents: number;
+            couponCode: string | null;
             installments: number;
             course: {
                 slug: string;

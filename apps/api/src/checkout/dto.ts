@@ -55,6 +55,8 @@ export const createCheckoutSchema = z
     // Parcelas para cartão e boleto/carnê (Pix é sempre à vista). O teto real
     // (15x) é aplicado no pricing; aqui só barra valores absurdos.
     installments: z.coerce.number().int().min(1).max(24).default(1),
+    /** Cupom de desconto (validado e aplicado no servidor). */
+    couponCode: z.string().trim().max(40).optional(),
     attribution: attributionInputSchema.optional(),
   })
   .refine((v) => v.method !== 'card' || v.card != null, {
@@ -94,6 +96,9 @@ export const orderSchema = z.object({
   method: paymentMethodSchema,
   amountCents: z.number().int(),
   currency: z.string(),
+  /** Desconto do cupom já abatido de `amountCents` (0 sem cupom). */
+  discountCents: z.number().int(),
+  couponCode: z.string().nullable(),
   installments: z.number().int(),
   course: orderCourseSchema,
   pixQrCode: z.string().nullable(),

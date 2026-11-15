@@ -34,6 +34,13 @@ import {
   netAmountCents,
 } from './pricing';
 import { MailerService } from '../mail/mailer.service';
+import { CouponsService } from '../coupons/coupons.service';
+import {
+  COUPON_PROBLEM_MESSAGE,
+  MIN_CHARGE_CENTS,
+  couponDiscountCents,
+} from '../coupons/coupon-pricing';
+import type { CouponPreviewDto, CouponPreviewInputDto } from '../coupons/dto';
 import { orderCreatedMail, paymentConfirmedMail, salesNoticeMail } from '../mail/templates';
 
 @Injectable()
@@ -45,6 +52,7 @@ export class CheckoutService {
     @Inject(PAYMENT_GATEWAYS) private readonly gateways: PaymentGateways,
     @Inject(APP_CONFIG) private readonly config: AppConfig,
     @Inject(MailerService) private readonly mailer: MailerService,
+    @Inject(CouponsService) private readonly coupons: CouponsService,
   ) {}
 
   /** Como o checkout deve se comportar: provedor de cada meio e teto do carnê. */
@@ -56,6 +64,55 @@ export class CheckoutService {
         boleto: this.gateways.forMethod('boleto').provider,
       },
       boletoMaxInstallments: BOLETO_MAX_INSTALLMENTS,
+    };
+  }
+
+  /**
+   * Prévia do cupom para o checkout: valida e calcula o desconto sobre o valor
+   * do meio/parcelas escolhidos. Não reserva nem consome o cupom.
+   */
+  async previewCoupon(dto: CouponPreviewInputDto): Promise<CouponPreviewDto> {
+    const [course] = await this.db
+      .select({
+        id: courses.id,
+        priceCents: courses.priceCents,
+        maxInstallments: courses.maxInstallments,
+        installmentPlans: courses.installmentPlans,
+      })
+      .from(courses)
+      .where(
+        and(
+          eq(courses.slug, dto.courseSlug),
+          eq(courses.status, 'published'),
+          isNull(courses.deletedAt),
+        ),
+      )
+      .limit(1);
+    if (!course) throw new NotFoundException('Curso não encontrado');
+    const coupon = await this.coupons.findUsable(dto.code, course.id);
+    const installments = effectiveInstallments(
+      dto.method,
+      dto.installments,
+      courseMaxInstallments(course.maxInstallments, course.installmentPlans),
+    );
+    const originalCents = netAmountCents(
+      dto.method,
+      course.priceCents,
+      installments,
+      course.installmentPlans,
+    );
+    const discountCents = couponDiscountCents(coupon, originalCents);
+    const finalCents = originalCents - discountCents;
+    if (finalCents < MIN_CHARGE_CENTS) {
+      throw new BadRequestException(COUPON_PROBLEM_MESSAGE.minimum);
+    }
+    return {
+      code: coupon.code,
+      discountType: coupon.discountType,
+      discountValue: coupon.discountValue,
+      originalCents,
+      discountCents,
+      finalCents,
     };
   }
 
@@ -100,12 +157,20 @@ export class CheckoutService {
       dto.installments,
       courseMaxInstallments(course.maxInstallments, course.installmentPlans),
     );
-    const amountCents = netAmountCents(
+    const baseCents = netAmountCents(
       dto.method,
       course.priceCents,
       installments,
       course.installmentPlans,
     );
+
+    // Cupom: incide sobre o valor do meio escolhido; o uso só conta no pagamento.
+    const coupon = dto.couponCode ? await this.coupons.findUsable(dto.couponCode, course.id) : null;
+    const discountCents = coupon ? couponDiscountCents(coupon, baseCents) : 0;
+    const amountCents = baseCents - discountCents;
+    if (coupon && amountCents < MIN_CHARGE_CENTS) {
+      throw new BadRequestException(COUPON_PROBLEM_MESSAGE.minimum);
+    }
 
     const [order] = await this.db
       .insert(orders)
@@ -113,6 +178,9 @@ export class CheckoutService {
         userId: user.id,
         courseId: course.id,
         amountCents,
+        couponId: coupon?.id ?? null,
+        couponCode: coupon?.code ?? null,
+        discountCents,
         ...(dto.attribution ?? {}),
       })
       .returning();
@@ -439,6 +507,13 @@ export class CheckoutService {
       .values({ userId: order.userId, courseId: order.courseId, status: 'active' })
       .onConflictDoNothing({ target: [enrollments.userId, enrollments.courseId] });
 
+    // Uso do cupom conta só no pagamento (pedido abandonado não gasta o cupom).
+    if (order.couponId) {
+      await this.coupons.redeem(order.couponId).catch((err) => {
+        this.logger.warn(`Falha ao contar uso do cupom ${order.couponCode}: ${String(err)}`);
+      });
+    }
+
     await this.recordCrmPurchase(order).catch((err) => {
       // CRM é efeito secundário — nunca bloqueia a matrícula.
       this.logger.warn(`Falha ao registrar compra no CRM: ${String(err)}`);
@@ -593,6 +668,8 @@ export class CheckoutService {
       method: payment.method,
       amountCents: order.amountCents,
       currency: order.currency,
+      discountCents: order.discountCents,
+      couponCode: order.couponCode,
       installments: payment.installments,
       course: { slug: course.slug, title: course.title, coverUrl: course.coverUrl },
       pixQrCode: payment.pixQrCode,

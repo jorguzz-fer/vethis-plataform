@@ -69,3 +69,6 @@ export type ChannelGroup = (typeof channelGroupEnum.enumValues)[number];
 export type OrderStatus = (typeof orderStatusEnum.enumValues)[number];
 export type PaymentMethod = (typeof paymentMethodEnum.enumValues)[number];
 export type PaymentStatus = (typeof paymentStatusEnum.enumValues)[number];
+
+/** Tipo de desconto do cupom: percentual (1–100) ou valor fixo em centavos. */
+export const couponDiscountTypeEnum = pgEnum('coupon_discount_type', ['percent', 'fixed']);

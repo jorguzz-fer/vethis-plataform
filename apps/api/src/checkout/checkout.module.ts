@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
+import { CouponsModule } from '../coupons/coupons.module';
 import { APP_CONFIG, type AppConfig } from '../config/configuration';
 import { CheckoutController } from './checkout.controller';
 import { CheckoutService } from './checkout.service';
@@ -14,7 +15,7 @@ import { PAYMENT_GATEWAYS } from './payment-gateway';
  * e/ou `asaas` em produção (ADR 0004) — sem tocar no serviço.
  */
 @Module({
-  imports: [AuthModule, UsersModule],
+  imports: [AuthModule, UsersModule, CouponsModule],
   controllers: [CheckoutController],
   providers: [
     CheckoutService,
