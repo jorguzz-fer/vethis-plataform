@@ -753,7 +753,6 @@ function CouponField({
   coupon: AppliedCoupon | null;
   setCoupon: (c: AppliedCoupon | null) => void;
 }) {
-  const [open, setOpen] = useState(false);
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -783,7 +782,6 @@ function CouponField({
         discountValue: data.discountValue,
       });
       setCode('');
-      setOpen(false);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Cupom inválido.');
     } finally {
@@ -811,22 +809,14 @@ function CouponField({
     );
   }
 
-  if (!open) {
-    return (
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="self-start text-sm font-semibold text-green-700 underline-offset-2 hover:underline"
-      >
-        Tem um cupom de desconto?
-      </button>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-1.5">
+      <label htmlFor="checkout-coupon" className="text-sm font-semibold text-ink">
+        Cupom de desconto <span className="font-normal text-muted">(opcional)</span>
+      </label>
       <div className="flex gap-2">
         <input
+          id="checkout-coupon"
           value={code}
           onChange={(e) => setCode(e.target.value.toUpperCase())}
           onKeyDown={(e) => {
@@ -836,9 +826,8 @@ function CouponField({
               void apply();
             }
           }}
-          placeholder="Código do cupom"
-          aria-label="Código do cupom"
-          className="min-w-0 flex-1 rounded-[10px] border-[1.5px] border-border px-3.5 py-2.5 text-[15px] uppercase outline-none focus:border-green-700"
+          placeholder="Digite o código do cupom"
+          className="min-w-0 flex-1 rounded-[10px] border-[1.5px] border-border px-3.5 py-2.5 text-[15px] uppercase outline-none placeholder:normal-case focus:border-green-700"
         />
         <Button
           type="button"
